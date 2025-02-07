@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import ParameterPanel from '@/components/ConfiguratorPage/ParameterPanel/ParameterPanel';
 
@@ -42,7 +42,7 @@ const ConfiguratorPage = () => {
             </div>
           }>
             <ThreeViewer 
-              modelPath="/models/Bike Frame.glb" 
+              modelPath="/models/bikeFrame3.glb" 
               color={frameColor}
             />
           </Suspense>
