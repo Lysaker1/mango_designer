@@ -5,24 +5,34 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
-import modelConfigs from './defaults';
+import modelConfigs, { ModelConfig } from './defaults';
 
 interface ModelProps {
   modelPath: string;
   color: string;
-  setUpdatedConfigs: React.Dispatch<React.SetStateAction<typeof modelConfigs>>;
+  setUpdatedConfigs: (configs: ModelConfig[]) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  configs: ModelConfig[];
 }
 
-const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading }, ref) => {
+
+const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading, configs }, ref) => {
   const { scene } = useGLTF(modelPath);
 
   useEffect(() => {
-    const updatedConfigs = [...modelConfigs];
+    console.log('Loaded GLB scene:', scene);
+
+    const updatedConfigs = [...configs];
+    
 
     scene.traverse((node) => {
       if (node instanceof Mesh && node.material instanceof MeshStandardMaterial) {
         node.material.color.set(color);
+      }
+
+      if(node instanceof Mesh) {
+        console.log(node.name);
+        console.log(node)
       }
 
       const configIndex = updatedConfigs.findIndex((config) => config.meshRequired === node.name);
@@ -79,14 +89,13 @@ const Component = React.forwardRef<Group, { modelPath: string; position: THREE.V
 Component.displayName = 'Component';
 
 interface ThreeViewerProps {
-  modelPath: string;
-  color: string;
+  configs: ModelConfig[];
+  setConfigs: (configs: ModelConfig[]) => void;
 }
 
-const ThreeViewer: React.FC<ThreeViewerProps> = ({ modelPath, color }) => {
+const ThreeViewer: React.FC<ThreeViewerProps> = ({ configs, setConfigs }) => {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [updatedConfigs, setUpdatedConfigs] = useState(modelConfigs);
 
   useEffect(() => {
     setIsClient(true);
@@ -94,8 +103,8 @@ const ThreeViewer: React.FC<ThreeViewerProps> = ({ modelPath, color }) => {
 
   if (!isClient) {
     return (
-      <div className="w-full h-full min-h-[500px] bg-gray-800 flex items-center justify-center">
-        <div className="text-white text-lg">Loading 3D Viewer...</div>
+      <div className="w-full h-full min-h-[500px] flex items-center justify-center">
+        <div className="text-gray-300 text-lg">Loading 3D Viewer...</div>
       </div>
     );
   }
@@ -105,9 +114,9 @@ const ThreeViewer: React.FC<ThreeViewerProps> = ({ modelPath, color }) => {
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }}>
         <Suspense fallback={null}>
           <Stage environment="city" intensity={0.5}>
-            <Model modelPath={modelPath} color={color} setUpdatedConfigs={setUpdatedConfigs} setIsLoading={setIsLoading} />
+            <Model modelPath={configs[0].path} color={configs[0].color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} />
             {!isLoading &&
-              updatedConfigs.map(
+             configs.map(
                 (model, index) =>
                   model.position && model.rotation && (
                     <Component key={index} modelPath={model.path} position={model.position} rotation={model.rotation} color={model.color}/>

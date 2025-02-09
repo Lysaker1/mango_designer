@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Add any custom colors here
+        mangoOrange: '#f35417',
       },
       boxShadow: {
         'glow': '0 0 10px rgba(255, 255, 255, 0.3)',
