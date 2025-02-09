@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 interface DropdownProps {
   value: string;
-  options: string[];
+  options: { label: string; value: string }[];
   onChange: (value: string) => void;
   label: string;
 }
@@ -30,8 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, []);
 
   return (
-    <div className="p-4 rounded-lg bg-neutral-800/50" ref={dropdownRef}>
-      <div className="mb-2 text-white/90">{label}</div>
+    <div className="p-4 rounded-lg" ref={dropdownRef}>
       <div className="relative">
         <button 
           className="w-full px-4 py-2.5 flex justify-between items-center rounded-lg
@@ -40,7 +39,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                      text-white/90 transition-all"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span>{value}</span>
+          <span>{options.find(option => option.value === value)?.label || value}</span>
           <span className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}>▼</span>
         </button>
         
@@ -50,15 +49,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
                          rounded-lg overflow-hidden z-50">
             {options.map((option) => (
               <button
-                key={option}
+                key={option.value}
                 className="w-full p-3 text-left text-white/90 
                            hover:bg-neutral-700/50 transition-colors"
                 onClick={() => {
-                  onChange(option);
+                  onChange(option.value);
                   setIsOpen(false);
                 }}
               >
-                {option}
+                {option.label}
               </button>
             ))}
           </div>

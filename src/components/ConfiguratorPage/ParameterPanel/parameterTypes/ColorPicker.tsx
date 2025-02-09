@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-interface Color {
+export interface Color {
   hex: string;
   label: string;
 }
@@ -21,39 +21,34 @@ export const colorPalette: Record<string, Color> = {
 interface ColorPickerProps {
   value: string;
   onChange: (color: string) => void;
-  label?: string;
+  colors?: Record<string, Color>;
 }
 
 export const ColorPicker: React.FC<ColorPickerProps> = ({
   value,
   onChange,
-  label = 'Frame Color'
+  colors
 }) => {
+
+  const availableColors = colors || colorPalette;
   return (
-    <div className="p-4 rounded-lg bg-neutral-800/50">
-      <div className="mb-2 text-white/90">{label}</div>
-      <div className="grid grid-cols-4 gap-2">
-        {Object.entries(colorPalette).map(([key, color]) => (
+    <div className="rounded-lg">
+      <div className="grid grid-cols-6 gap-4">
+        {Object.entries(availableColors).map(([key, color]) => (
           <button
             key={key}
-            className={`aspect-square rounded-full border-2 transition-all
+            className={`aspect-square w-7 h-7 rounded-full border transition-all
                       ${value === color.hex 
-                        ? 'border-white scale-110 shadow-glow' 
-                        : 'border-transparent hover:scale-105'}`}
+                        ? 'border-white scale-105 shadow-glow'
+                        : 'border-neutral-500 hover:scale-100'}`}
             style={{ backgroundColor: color.hex }}
-            onClick={() => onChange(color.hex)}
+            onClick={() => {
+              onChange(color.hex)
+            }}
+
             title={color.label}
           />
         ))}
-      </div>
-      <div className="mt-4">
-        <label className="block text-white/90 mb-2">Custom Color</label>
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full h-10 rounded cursor-pointer bg-neutral-700/50"
-        />
       </div>
     </div>
   );
