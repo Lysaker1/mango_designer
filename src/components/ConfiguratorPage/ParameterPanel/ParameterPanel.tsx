@@ -6,6 +6,7 @@ import { PARAMETER_DEFINITIONS, type ParameterDefinition } from './parameterDefi
 import { Grid } from './parameterTypes/Grid/Grid';
 import { ModelConfig } from '../Viewer/defaults';
 import { Dropdown } from './parameterTypes/Dropdown';
+import { Color } from "./parameterTypes/ColorPicker";
 
 interface ParameterPanelProps {
   configs: ModelConfig[];
@@ -15,14 +16,23 @@ interface ParameterPanelProps {
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
   const [activeTab, setActiveTab] = useState<'frame' | 'handlebars' | 'wheels' | 'saddle' | 'pedals' | undefined >();
 
-  const handleColorChange = (color: string, model: string) => {
+  const handleColorChange = (color: Color, model: string ,subPart?:string) => {
     const updatedConfigs = configs.map(config => {
-      if (config.name === model) {
+      if (config.name === model && config.color) {
         return {
           ...config,
-          color: color
+          color: color.hex
         };
       }
+      if (config.name === model && config.subParts) {
+        return {
+          ...config,
+          subParts: config.subParts.map((part) =>
+            part.name === subPart ? { ...part, color: color } : part
+          ),
+        };
+      }
+      
       return config;
     });
     onConfigChange(updatedConfigs);
@@ -40,7 +50,6 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
   const renderParameters = (category: string) => {
     const params = PARAMETER_DEFINITIONS.filter(param => param.category === category);
-    console.log(params);
 
     return params.map(param => (
       <div key={param.id} className="space-y-2">
@@ -82,7 +91,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         {param.type === 'color' && (
           <ColorPicker
             value={configs.find(config => config.name === param.model)?.color || param.value}
-            onChange={(color) => handleColorChange(color, param.model)}
+            onChange={(color) => handleColorChange(color, param.model,param?.subPart)}
             colors={param.colors}
           />
         )}
@@ -130,7 +139,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         </button>
       </div>
       {activeTab && (
-        <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-6 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
+        <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-2 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
           <div className="flex flex-col items-center justify-center">
             <button className="text-gray-300 text-sm font-medium">
               {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}

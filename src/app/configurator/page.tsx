@@ -25,7 +25,7 @@ const ConfiguratorPage = () => {
 
   // Funksjon for å oppdatere konfigurasjonen
   const handleConfigChange = (newConfigs: ModelConfig[]) => {
-    console.log(newConfigs);
+    console.log(newConfigs,"newConfigs");
     setConfigs(newConfigs);
   };
 
