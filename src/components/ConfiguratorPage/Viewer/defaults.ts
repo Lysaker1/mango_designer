@@ -7,7 +7,8 @@ export interface ModelConfig {
   color?: string;
   position: THREE.Vector3; 
   rotation: THREE.Quaternion; 
-  correctAxis:boolean
+  correctAxis:boolean;
+  containsPlain:boolean;
   subParts?:{name:string,color:{hex:string,label:string}}[]
 }
 
@@ -28,53 +29,62 @@ const colors = {
 const modelConfigs: ModelConfig[] = [
   {
     name: "Frame",
-    path: "/models/MangoOSSFrameFinal.glb",
+    path: "/models/Mango_OSS_Frame.glb",
     meshRequired: "frame_mesh",
-    color: "#000000",
+    color: "#0000ff",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
+    containsPlain:true,
     correctAxis:true,
   },
   {
     name: "Rear Wheel",
-    path: "/models/WheelType1.glb",
+    path: "/models/Mango_Wheels_Rear_3SpokeMag.glb",
     meshRequired: "rearTyre_plane",
     // color: "#0000ff",
     position: new THREE.Vector3(0, 0, 0), 
     rotation: new THREE.Quaternion(),
-    correctAxis:true,
-    subParts:[
-      { name: "Tube", color: colors.black },
-      { name: "Rim", color: colors.green },
-      { name: "Cog", color: colors.yellow },
-      { name: "Logo", color: colors.purple },
-    ]
-  },
-  {
-    name: "Front Wheel",
-    path: "/models/WheelType2.glb",
-    meshRequired: "fronTyre_plane",
-    // color: "#ff0000",
-    position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(),
+    containsPlain:false,
     correctAxis:true,
     subParts:[
       { name: "Tube", color: colors.black },
       { name: "Rim", color: colors.silver },
-      { name: "Cog", color: colors.silver },
-      { name: "Logo", color: colors.white },
-      { name: "Hub", color: colors.orange },
+      { name: "Cog", color: colors.black },
+      { name: "Logo", color: colors.black },
+    ]
+  },
+  {
+    name: "Front Wheel",
+    path: "/models/Mango_Wheels_Front_MultiSpokes.glb",
+    meshRequired: "fronTyre_plane",
+    // color: "#ff0000",
+    position: new THREE.Vector3(0, 0, 0),
+    rotation: new THREE.Quaternion(),
+    containsPlain:false,
+    correctAxis:true,
+    subParts:[
+      { name: "Tube", color: colors.black },
+      { name: "Rim", color: colors.silver },
+      { name: "Cog", color: colors.black },
+      // { name: "Logo", color: colors.white },
+      // { name: "Hub", color: colors.orange },
       { name: "Spokes", color: colors.black },
     ]
   },
   {
     name: "Saddle",
-    path: "/models/Saddle1.glb",
+    path: "/models/Mango_Saddle.glb",
     meshRequired: "seat_plane",
-    color: "#0000ff",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
+    containsPlain:false,
     correctAxis:false,
+    subParts:[
+      { name: "saddleSide_mesh", color: colors.purple },
+      { name: "saddleTop_mesh", color: colors.black },
+      { name: "saddleFrame_mesh", color: colors.silver },
+      { name: "seatPost_mesh", color: colors.silver },
+    ]
   },
   {
     name: "Handlebar",
@@ -83,26 +93,69 @@ const modelConfigs: ModelConfig[] = [
     color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
+    containsPlain:false,
     correctAxis:false,
+    subParts:[
+      { name: "stem_mesh", color: colors.purple },
+      { name: "handlebar_mesh", color: colors.black },
+      { name: "grip_mesh", color: colors.silver },
+      { name: "levers_mesh", color: colors.silver },
+      { name: "headsetSpacers_mesh", color: colors.silver },
+    ]
   },
   {
     name: "Fork",
-    path: "/models/Fork.glb",
+    path: "/models/Mango_OSS_Fork.glb",
     meshRequired: "fork_plane",
     color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
+    containsPlain:true,
     correctAxis:false,
   },
   {
     name: "Crank",
-    path: "/models/CrankSet.glb",
+    path: "/models/Mango_OSS_CrankSet.glb",
     meshRequired: "crank_plane",
     color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
+    containsPlain:false,
     correctAxis:true,
   },
+  {
+    name: "Pedals",
+    path: "/models/Mango_Pedals_Platform.glb",
+    meshRequired: "crank_plane",
+    position: new THREE.Vector3(0, 0, 0),
+    rotation: new THREE.Quaternion(),
+    containsPlain:false,
+    correctAxis:true,
+    subParts:[
+      { name: "pedalTread_mesh", color: colors.aquaBlue },
+      { name: "pedalShaft_mesh", color: colors.black },
+    ]
+  },
+  {
+    name: "Rear Brakes",
+    path: "/models/Mango_Brake_Front.glb",
+    meshRequired: "rearBrake_plane",
+    color: "#000000",
+    position: new THREE.Vector3(0, 0, 0),
+    rotation: new THREE.Quaternion(),
+    containsPlain:false,
+    correctAxis:false,
+  },
+  // {
+  //   name: "Front Brakes",
+  //   path: "/models/Mango_Brake_Front.glb",
+  //   meshRequired: "brake_plane",
+  //   color: "#000000",
+  //   position: new THREE.Vector3(0, 0, 0),
+  //   rotation: new THREE.Quaternion(),
+  //   containsPlain:false,
+  //   correctAxis:false,
+  // },
 ];
 
 export default modelConfigs;

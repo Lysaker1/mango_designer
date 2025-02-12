@@ -33,42 +33,48 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
     scene.traverse((child) => {
       modelConfigs.forEach((config) => {
         if (child.name === config.meshRequired) {
-          const configIndex = updatedConfigs.findIndex((config) => config.meshRequired === child.name);
-
+          const matchingIndices = updatedConfigs
+            .map((config, index) => (config.meshRequired === child.name ? index : -1))
+            .filter(index => index !== -1);
+      
           child.traverse((node) => {
-            if (configIndex !== -1 && node instanceof Mesh) {
+            if (matchingIndices.length > 0 && node instanceof Mesh) {
               node.geometry.computeBoundingBox();
               const bbox = node.geometry.boundingBox;
               if (bbox) {
                 const localCenter = new THREE.Vector3();
                 bbox.getCenter(localCenter);
                 const correctedCenter = new THREE.Vector3(localCenter.x, localCenter.z, localCenter.y);
-          
+      
                 const normal = new THREE.Vector3();
                 const normals = node.geometry.attributes.normal.array as Float32Array;
                 if (normals.length >= 3) {
-                  if(modelConfigs[configIndex].correctAxis)
-                    normal.set(normals[0], normals[1], normals[2]); 
+                  if (config.correctAxis)
+                    normal.set(normals[0], normals[1], normals[2]);
                   else
-                    normal.set(normals[0], normals[2], normals[1]); 
+                    normal.set(normals[0], normals[2], normals[1]);
                 }
-        
+      
                 const upDirection = new THREE.Vector3(0, 1, 0);
                 const axis = new THREE.Vector3();
                 axis.crossVectors(upDirection, normal).normalize();
                 const angle = upDirection.angleTo(normal);
                 const quaternion = new THREE.Quaternion().setFromAxisAngle(axis, angle);
-                  
-                updatedConfigs[configIndex] = {
-                  ...updatedConfigs[configIndex],
-                  position: correctedCenter, 
-                  rotation: quaternion,
-                };
+      
+                // Update all matching indices
+                matchingIndices.forEach(index => {
+                  updatedConfigs[index] = {
+                    ...updatedConfigs[index],
+                    position: correctedCenter,
+                    rotation: quaternion,
+                  };
+                });
               }
             }
           });
         }
       });
+      
     });
     setUpdatedConfigs([...updatedConfigs]);
     setIsLoading(false);
@@ -85,7 +91,6 @@ const Component = React.forwardRef<Group, { modelPath: string; position: THREE.V
   ({ modelPath, position, rotation, color ,subParts }, ref) => {
     const { scene } = useGLTF(modelPath);
     const newScene = SkeletonUtils.clone(scene);
-
     if(color){
       newScene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -161,7 +166,7 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
             {/* <Box scale={[19.9, 11.9, 11.9]} /> */}
             <Model modelPath={configs[0].path} meshRequired={configs[0].meshRequired} color={configs[0]?.color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} />
             {/* <Model2 modelPath={configs[1].path} meshRequired={configs[1].meshRequired} color={configs[1].color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} x={0} /> */}
-            {/* <Model modelPath={configs[2].path} meshRequired={configs[2].meshRequired} color={configs[2].color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} x={0} /> */}
+            {/* <Model modelPath={configs[5].path} meshRequired={configs[5].meshRequired} color={configs[5].color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs}  />  */}
             {/* <Model modelPath={configs[3].path} meshRequired={configs[3].meshRequired} color={configs[3].color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} x={0} /> */}
             {!isLoading &&
               configs.map(
