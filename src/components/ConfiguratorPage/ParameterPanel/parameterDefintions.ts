@@ -11,6 +11,7 @@ export interface ParameterDefinition {
   options?: { label: string; value: string}[];
   category: 'frame' | 'handlebars' | 'wheels' | 'saddle' | 'pedals';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle';
+  subPart?:string
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
@@ -47,15 +48,14 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'frontWheelType',
     name: 'Front Wheel Type',
     type: 'grid',
-    value: '/models/Wheel1_spoke.glb',
+    value: '/models/testWheel2.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/FrontWheel1_spoke.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/FrontWheel2_3spokeMag.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/WheelType2.glb" },
+      { label: '3 Spoke Mag Wheel', value: "/models/WheelType1.glb" },
     ],
     category: 'wheels',
-    model: 'Front Wheel'
+    model: 'Front Wheel',
   },
-
   {
     id: 'frontWheelColor',
     name: 'Front Wheel Color',
@@ -73,24 +73,37 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       red: { hex: '#ff0000', label: 'Red' },
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
-    }
+    },
+    subPart:'Rim'
   },
-/*   {
+  {
     id: 'frontTireColor',
     name: 'Front Tire Color',
     type: 'color',
-    value: '#FF0000',
-    category: 'parts',
-    model: 'Front Wheel'
-  }, */
+    value: '#00ff00',
+    category: 'wheels',
+    model: 'Front Wheel',
+    colors: {
+      black: { hex: '#000000', label: 'Black' },
+      blue: { hex: '#0000ff', label: 'Blue' },
+      green: { hex: '#008000', label: 'Green' },
+      orange: { hex: '#ff7f00', label: 'Orange' },
+      pink: { hex: '#ffc0cb', label: 'Pink' },
+      purple: { hex: '#800080', label: 'Purple' },
+      red: { hex: '#ff0000', label: 'Red' },
+      white: { hex: '#ffffff', label: 'White' },
+      yellow: { hex: '#ffff00', label: 'Yellow' },
+    },
+    subPart:'Tube'
+  },
   {
     id: 'rearWheelType',
     name: 'Rear Wheel Type',
     type: 'grid',
-    value: '/models/Wheel2_3spokeMag.glb',
+    value: '/models/WheelType1.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/RearWheel1_spoke.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/RearWheel2_3spokeMag.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/WheelType2.glb" },
+      { label: '3 Spoke Mag Wheel', value: "/models/WheelType1.glb" },
     ],
     category: 'wheels',
     model: 'Rear Wheel'
@@ -112,16 +125,30 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       red: { hex: '#ff0000', label: 'Red' },
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
-    }
+    },
+    subPart:'Rim',
   },
-/*   {
+
+  {
     id: 'rearTireColor',
     name: 'Rear Tire Color',
     type: 'color',
-    value: '#FF0000',
-    category: 'parts',
-    model: 'Rear Wheel'
-  }, */
+    value: '#00ff00',
+    category: 'wheels',
+    model: 'Rear Wheel',
+    colors: {
+      black: { hex: '#000000', label: 'Black' },
+      blue: { hex: '#0000ff', label: 'Blue' },
+      green: { hex: '#008000', label: 'Green' },
+      orange: { hex: '#ff7f00', label: 'Orange' },
+      pink: { hex: '#ffc0cb', label: 'Pink' },
+      purple: { hex: '#800080', label: 'Purple' },
+      red: { hex: '#ff0000', label: 'Red' },
+      white: { hex: '#ffffff', label: 'White' },
+      yellow: { hex: '#ffff00', label: 'Yellow' },
+    },
+    subPart:'Tube'
+  },
   {
     id: 'Handlebar_id',
     name: 'Handlebar',

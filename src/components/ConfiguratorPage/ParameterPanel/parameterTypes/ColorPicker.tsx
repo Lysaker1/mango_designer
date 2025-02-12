@@ -20,7 +20,7 @@ export const colorPalette: Record<string, Color> = {
 
 interface ColorPickerProps {
   value: string;
-  onChange: (color: string) => void;
+  onChange: (color: Color) => void;
   colors?: Record<string, Color>;
 }
 
@@ -43,7 +43,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         : 'border-neutral-500 hover:scale-100'}`}
             style={{ backgroundColor: color.hex }}
             onClick={() => {
-              onChange(color.hex)
+              onChange(color)
             }}
 
             title={color.label}
