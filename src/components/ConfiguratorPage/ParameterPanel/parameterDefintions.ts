@@ -39,8 +39,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'tubingType',
     name: 'Tubing Type',
     type: 'dropdown',
-    value: 'OSS',
-    options: [{ label: 'OSS', value: '/models/bikeFrame1_oss.glb' }, { label: 'OG', value: '/models/bikeFrame2_og.glb' }/* , { label: 'DOG', value: '/models/bikeFrame3_dog.glb' }, { label: 'Moosher', value: '/models/bikeFrame4_moosher.glb' } */],
+    value: '/models/Mango_OSS_Frame.glb',
+    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/bikeFrame4_moosher.glb' }],
     category: 'frame',
     model: 'Frame'
   },
@@ -48,10 +48,10 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'frontWheelType',
     name: 'Front Wheel Type',
     type: 'grid',
-    value: '/models/testWheel2.glb',
+    value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/WheelType2.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/WheelType1.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpokes.glb" },
+      { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_3SpokeMag.glb" },
     ],
     category: 'wheels',
     model: 'Front Wheel',
@@ -100,10 +100,10 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'rearWheelType',
     name: 'Rear Wheel Type',
     type: 'grid',
-    value: '/models/WheelType1.glb',
+    value: '/models/Mango_Wheels_Rear_3SpokeMag.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/WheelType2.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/WheelType1.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_MultiSpokes.glb" },
+      { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_3SpokeMag.glb" },
     ],
     category: 'wheels',
     model: 'Rear Wheel'
