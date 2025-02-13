@@ -1,4 +1,5 @@
 import { Color } from "./parameterTypes/ColorPicker";
+import { colors } from "../Viewer/defaults";
 
 export interface ParameterDefinition {
   id: string;
@@ -9,44 +10,44 @@ export interface ParameterDefinition {
   min?: number;
   max?: number;
   options?: { label: string; value: string}[];
-  category: 'frame' | 'handlebars' | 'wheels' | 'saddle' | 'pedals';
-  model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle';
+  category: 'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals';
+  model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?:string
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   {
     id: 'frameColor',
-    name: 'Frame Color',
+    name: 'Color',
     type: 'color',
-    value: '#ff0000',
+    value: colors.orange.hex,
     category: 'frame',
     model: 'Frame',
     colors: {
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
-      darkBlue: { hex: '#000080', label: 'Dark Blue' },
-      babyBlue: { hex: '#87ceeb', label: 'Baby Blue' },
-      purple: { hex: '#800080', label: 'Purple' },
-      green: { hex: '#008000', label: 'Green' },
-      black: { hex: '#000000', label: 'Black' },
-      silver: { hex: '#c0c0c0', label: 'Silver' },
-      creamClassic: { hex: '#f5f5dc', label: 'Cream Classic' },
-      aquaBlue: { hex: '#00ffff', label: 'Aqua Blue' },
+      orange: colors.orange,
+      yellow: colors.yellow,
+      darkBlue: colors.darkBlue,
+      babyBlue: colors.babyBlue,
+      purple: colors.purple,
+      green: colors.green,
+      black: colors.black,
+      silver: colors.silver,
+      creamClassic: colors.creamClassic,
+      aquaBlue: colors.aquaBlue,
     }
   },
   {
     id: 'tubingType',
-    name: 'Tubing Type',
-    type: 'dropdown',
+    name: 'Type',
+    type: 'grid',
     value: '/models/Mango_OSS_Frame.glb',
-    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/bikeFrame4_moosher.glb' }],
+    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }],
     category: 'frame',
     model: 'Frame'
   },
   {
     id: 'frontWheelType',
-    name: 'Front Wheel Type',
+    name: 'Front Type',
     type: 'grid',
     value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
@@ -58,47 +59,47 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   },
   {
     id: 'frontWheelColor',
-    name: 'Front Wheel Color',
+    name: 'Front Color',
     type: 'color',
-    value: '#00ff00',
+    value: colors.green.hex,
     category: 'wheels',
     model: 'Front Wheel',
     colors: {
-      black: { hex: '#000000', label: 'Black' },
-      blue: { hex: '#0000ff', label: 'Blue' },
-      green: { hex: '#008000', label: 'Green' },
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      pink: { hex: '#ffc0cb', label: 'Pink' },
-      purple: { hex: '#800080', label: 'Purple' },
-      red: { hex: '#ff0000', label: 'Red' },
-      white: { hex: '#ffffff', label: 'White' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
     },
-    subPart:'Rim'
+    subPart: 'Rim'
   },
   {
     id: 'frontTireColor',
-    name: 'Front Tire Color',
+    name: 'Front Color',
     type: 'color',
-    value: '#00ff00',
-    category: 'wheels',
+    value: colors.green.hex,
+    category: 'tyres',
     model: 'Front Wheel',
     colors: {
-      black: { hex: '#000000', label: 'Black' },
-      blue: { hex: '#0000ff', label: 'Blue' },
-      green: { hex: '#008000', label: 'Green' },
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      pink: { hex: '#ffc0cb', label: 'Pink' },
-      purple: { hex: '#800080', label: 'Purple' },
-      red: { hex: '#ff0000', label: 'Red' },
-      white: { hex: '#ffffff', label: 'White' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
     },
-    subPart:'Tube'
+    subPart: 'Tube'
   },
   {
     id: 'rearWheelType',
-    name: 'Rear Wheel Type',
+    name: 'Rear Type',
     type: 'grid',
     value: '/models/Mango_Wheels_Rear_3SpokeMag.glb',
     options: [
@@ -110,48 +111,47 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   },
   {
     id: 'rearWheelColor',
-    name: 'Rear Wheel Color',
+    name: 'Rear Color',
     type: 'color',
-    value: '#ff0000',
+    value: colors.red.hex,
     category: 'wheels',
     model: 'Rear Wheel',
     colors: {
-      black: { hex: '#000000', label: 'Black' },
-      blue: { hex: '#0000ff', label: 'Blue' },
-      green: { hex: '#008000', label: 'Green' },
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      pink: { hex: '#ffc0cb', label: 'Pink' },
-      purple: { hex: '#800080', label: 'Purple' },
-      red: { hex: '#ff0000', label: 'Red' },
-      white: { hex: '#ffffff', label: 'White' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
     },
     subPart:'Rim',
   },
-
   {
     id: 'rearTireColor',
-    name: 'Rear Tire Color',
+    name: 'Rear Color',
     type: 'color',
-    value: '#00ff00',
-    category: 'wheels',
+    value: colors.green.hex,
+    category: 'tyres',
     model: 'Rear Wheel',
     colors: {
-      black: { hex: '#000000', label: 'Black' },
-      blue: { hex: '#0000ff', label: 'Blue' },
-      green: { hex: '#008000', label: 'Green' },
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      pink: { hex: '#ffc0cb', label: 'Pink' },
-      purple: { hex: '#800080', label: 'Purple' },
-      red: { hex: '#ff0000', label: 'Red' },
-      white: { hex: '#ffffff', label: 'White' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
     },
     subPart:'Tube'
   },
   {
     id: 'Handlebar_id',
-    name: 'Handlebar',
+    name: 'Type',
     type: 'grid',
     value: '1',
     options: [
@@ -163,39 +163,119 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       { label: 'Jeb', value: "/models/Mango_Handle_Jeb.glb" },
     ],
     category: 'handlebars',
-    model: 'Handlebar'
+    model: 'Handlebar',
+    subPart: 'stem_mesh'
   },
   {
     id: 'handlebarColor',
     name: 'Handlebar Color',
     type: 'color',
-    value: '#ff0000',
+    value: colors.black.hex,
     category: 'handlebars',
     colors: {
-      black: { hex: '#000000', label: 'Black' },
-      gold: { hex: '#ffd700', label: 'Gold' },
-      silver: { hex: '#c0c0c0', label: 'Silver' },
+      black: colors.black,
+      gold: colors.gold,
+      silver: colors.silver,
     },
-    model: 'Handlebar'
+    model: 'Handlebar',
+    subPart: 'handlebar_mesh'
+  },
+  {
+    id: 'stemColor',
+    name: 'Stem Color',
+    type: 'color',
+    value: colors.black.hex,
+    category: 'handlebars',
+    colors: {
+      black: colors.black,
+      gold: colors.gold,
+      silver: colors.silver,
+    },
+    model: 'Handlebar',
+    subPart: 'stem_mesh'
+  },
+  {
+    id: 'gripColor',
+    name: 'Grip Color',
+    type: 'color',
+    value: colors.black.hex,
+    category: 'handlebars',
+    colors: {
+      black: colors.black,
+      red: colors.red,
+      orange: colors.orange,
+      yellow: colors.yellow,
+      green: colors.green,
+      blue: colors.blue,
+      purple: colors.purple,
+      pink: colors.pink,
+      white: colors.white,
+    },
+    model: 'Handlebar',
+    subPart: 'grip_mesh'
   },
   {
     id: 'saddleColor',
-    name: 'Saddle Color',
+    name: 'Color',
     type: 'color',
-    value: '#ff0000',
+    value: colors.brown.hex,
     colors: {
-      brown: { hex: '#a52a2a', label: 'Brown' },
-      black: { hex: '#000000', label: 'Black' },
-      white: { hex: '#ffffff', label: 'White' },
-      pink: { hex: '#ffc0cb', label: 'Pink' },
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      green: { hex: '#008000', label: 'Green' },
-      purple: { hex: '#800080', label: 'Purple' },
-      blue: { hex: '#0000ff', label: 'Blue' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
-      red: { hex: '#ff0000', label: 'Red' },
+      brown: colors.brown,
+      black: colors.black,
+      white: colors.white,
+      pink: colors.pink,
+      orange: colors.orange,
+      green: colors.green,
+      purple: colors.purple,
+      blue: colors.blue,
+      yellow: colors.yellow,
+      red: colors.red,
     },
     category: 'saddle',
-    model: 'Saddle'
+    model: 'Saddle',
+    subPart:'saddleSide_mesh'
+  },
+  {
+    id: 'seatPostColor',
+    name: 'Post Color',
+    type: 'color',
+    value: colors.silver.hex,
+    category: 'saddle',
+    model: 'Saddle',
+    subPart:'seatPost_mesh',
+    colors: {
+      black: colors.black,
+      silver: colors.silver,
+      gold: colors.gold,      
+    }
+  },
+  {
+    id: 'pedalType',
+    name: 'Type',
+    type: 'grid',
+    value: '/models/Mango_Pedals_Standard.glb',
+    options: [{ label: 'Standard', value: '/models/Mango_Pedals_Standard.glb' }, {label: 'Platform', value: '/models/Mango_Pedals_Platform.glb'}],
+    category: 'pedals',
+    model: 'Pedals',
+  },
+  {
+    id: 'pedalColor',
+    name: 'Color',
+    type: 'color',
+    value: colors.red.hex,
+    category: 'pedals',
+    colors: {
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
+    },
+    model: 'Pedals',
+    subPart:'pedalTread_mesh'
   }
 ];
