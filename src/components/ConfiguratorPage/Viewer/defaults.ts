@@ -88,9 +88,9 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Handlebar",
-    path: "/models/Handle1_Riser.glb",
+    path: "/models/Mango_Handle_Riser.glb",
     meshRequired: "handle_plane",
-    color: "#000000",
+    // color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain:false,

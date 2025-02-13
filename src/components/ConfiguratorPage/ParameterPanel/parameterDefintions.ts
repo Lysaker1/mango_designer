@@ -155,12 +155,12 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     type: 'grid',
     value: '1',
     options: [
-      { label: 'Riser', value: "/models/Handle1_Riser.glb" },
-      { label: 'Drop Bars', value: "/models/Handle2_Drop.glb" },
-      { label: 'Track Bar', value: "/models/Handle4_Track.glb" },
-      { label: 'Flat Bars', value: "/models/Handle5_Flat.glb" },
-      { label: 'Cruiser Bars', value: "/models/Handle6_Cruiser.glb" },
-      { label: 'Jeb Bar', value: "/models/Handle7_Jeb.glb" },
+      { label: 'Riser', value: "/models/Mango_Handle_Riser.glb" },
+      { label: 'Drop', value: "/models/Mango_Handle_Drop.glb" },
+      { label: 'Track', value: "/models/Mango_Handle_Track.glb" },
+      { label: 'Flat', value: "/models/Mango_Handle_Flat.glb" },
+      { label: 'Cruiser', value: "/models/Mango_Handle_Cruiser.glb" },
+      { label: 'Jeb', value: "/models/Mango_Handle_Jeb.glb" },
     ],
     category: 'handlebars',
     model: 'Handlebar'
