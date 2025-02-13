@@ -5,7 +5,7 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { Box, OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
-import modelConfigs, { ModelConfig } from './defaults';
+import { ModelConfig } from './defaults';
 import { GLTFLoader, SkeletonUtils } from 'three/examples/jsm/Addons.js';
 
 interface ModelProps {
@@ -17,7 +17,7 @@ interface ModelProps {
   configs: ModelConfig[];
 }
 
-const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading }, ref) => {
+const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading, configs }, ref,) => {
   const { scene } = useGLTF(modelPath);
   if(color){
     scene.traverse((node) => {
@@ -28,10 +28,10 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
   }
 
   useEffect(() => {
-    const updatedConfigs=[...modelConfigs]
+    const updatedConfigs=[...configs]
   
     scene.traverse((child) => {
-      modelConfigs.forEach((config) => {
+      configs.forEach((config) => {
         if (child.name === config.meshRequired) {
           const matchingIndices = updatedConfigs
             .map((config, index) => (config.meshRequired === child.name ? index : -1))
