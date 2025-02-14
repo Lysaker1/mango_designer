@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export interface ModelConfig {
   name: string;
   path: string;
-  meshRequired: string; 
+  meshRequired: string;
   color?: string;
   position: THREE.Vector3; 
   rotation: THREE.Quaternion; 
@@ -31,11 +31,15 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_OSS_Frame.glb",
     meshRequired: "frame_mesh",
-    color: "#0000ff",
+    // color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    containsPlain:true,
-    correctAxis:true,
+    containsPlain: true,
+    correctAxis: true,
+    subParts: [
+      { name: "frame_mesh", color: colors.orange },
+      { name: "fork_mesh", color: colors.orange },
+    ]
   },
   {
     name: "Rear Wheel",
@@ -66,8 +70,6 @@ const modelConfigs: ModelConfig[] = [
       { name: "Tube", color: colors.black },
       { name: "Rim", color: colors.silver },
       { name: "Cog", color: colors.black },
-      // { name: "Logo", color: colors.white },
-      // { name: "Hub", color: colors.orange },
       { name: "Spokes", color: colors.black },
     ]
   },
@@ -104,26 +106,6 @@ const modelConfigs: ModelConfig[] = [
     ]
   },
   {
-    name: "Fork",
-    path: "/models/Mango_OSS_Fork.glb",
-    meshRequired: "fork_plane",
-    color: "#000000",
-    position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(),
-    containsPlain:true,
-    correctAxis:false,
-  },
-  {
-    name: "Crank",
-    path: "/models/Mango_OSS_CrankSet.glb",
-    meshRequired: "crank_plane",
-    color: "#000000",
-    position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:true,
-  },
-  {
     name: "Pedals",
     path: "/models/Mango_Pedals_Platform.glb",
     meshRequired: "crank_plane",
@@ -136,26 +118,6 @@ const modelConfigs: ModelConfig[] = [
       { name: "pedalShaft_mesh", color: colors.black },
     ]
   },
-  {
-    name: "Rear Brakes",
-    path: "/models/Mango_Brake_Front.glb",
-    meshRequired: "rearBrake_plane",
-    color: "#000000",
-    position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:false,
-  },
-  // {
-  //   name: "Front Brakes",
-  //   path: "/models/Mango_Brake_Front.glb",
-  //   meshRequired: "brake_plane",
-  //   color: "#000000",
-  //   position: new THREE.Vector3(0, 0, 0),
-  //   rotation: new THREE.Quaternion(),
-  //   containsPlain:false,
-  //   correctAxis:false,
-  // },
 ];
 
 export default modelConfigs;

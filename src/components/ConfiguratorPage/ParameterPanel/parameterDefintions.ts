@@ -11,7 +11,8 @@ export interface ParameterDefinition {
   options?: { label: string; value: string}[];
   category: 'frame' | 'handlebars' | 'wheels' | 'saddle' | 'pedals';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle';
-  subPart?:string
+  subPart?: string[]; 
+  material?: { type: string; properties: any }; 
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
@@ -19,7 +20,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'frameColor',
     name: 'Frame Color',
     type: 'color',
-    value: '#ff0000',
+    value: '#000000',
     category: 'frame',
     model: 'Frame',
     colors: {
@@ -33,14 +34,15 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: { hex: '#c0c0c0', label: 'Silver' },
       creamClassic: { hex: '#f5f5dc', label: 'Cream Classic' },
       aquaBlue: { hex: '#00ffff', label: 'Aqua Blue' },
-    }
+    },
+    subPart: ['fork_mesh', 'frame_mesh'] 
   },
   {
     id: 'tubingType',
     name: 'Tubing Type',
     type: 'dropdown',
     value: '/models/Mango_OSS_Frame.glb',
-    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/bikeFrame4_moosher.glb' }],
+    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb' }],
     category: 'frame',
     model: 'Frame'
   },
@@ -74,7 +76,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
     },
-    subPart:'Rim'
+    subPart:['Rim']
   },
   {
     id: 'frontTireColor',
@@ -94,7 +96,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
     },
-    subPart:'Tube'
+    subPart:['Tube']
   },
   {
     id: 'rearWheelType',
@@ -126,7 +128,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
     },
-    subPart:'Rim',
+    subPart:['Rim'],
   },
 
   {
@@ -147,7 +149,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: { hex: '#ffffff', label: 'White' },
       yellow: { hex: '#ffff00', label: 'Yellow' },
     },
-    subPart:'Tube'
+    subPart:['Tube']
   },
   {
     id: 'Handlebar_id',
@@ -180,7 +182,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   },
   {
     id: 'saddleColor',
-    name: 'Saddle Color',
+    name: 'Saddle Side Color',
     type: 'color',
     value: '#ff0000',
     colors: {
@@ -196,6 +198,28 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       red: { hex: '#ff0000', label: 'Red' },
     },
     category: 'saddle',
-    model: 'Saddle'
+    model: 'Saddle',
+    subPart:['saddleSide_mesh'],
+  },
+  {
+    id: 'saddleColor',
+    name: 'Saddle Top Color',
+    type: 'color',
+    value: '#ff0000',
+    colors: {
+      brown: { hex: '#a52a2a', label: 'Brown' },
+      black: { hex: '#000000', label: 'Black' },
+      white: { hex: '#ffffff', label: 'White' },
+      pink: { hex: '#ffc0cb', label: 'Pink' },
+      orange: { hex: '#ff7f00', label: 'Orange' },
+      green: { hex: '#008000', label: 'Green' },
+      purple: { hex: '#800080', label: 'Purple' },
+      blue: { hex: '#0000ff', label: 'Blue' },
+      yellow: { hex: '#ffff00', label: 'Yellow' },
+      red: { hex: '#ff0000', label: 'Red' },
+    },
+    category: 'saddle',
+    model: 'Saddle',
+    subPart:['saddleSide_mesh'],
   }
 ];
