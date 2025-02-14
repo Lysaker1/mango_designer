@@ -17,14 +17,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   const [activeTab, setActiveTab] = useState<'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals' | undefined >();
 
   const handleColorChange = (color: Color, model: string, subParts?: string[]) => {
-    const updatedConfigs = configs.map(config => {
-      if (config.name === model && config.color) {
-        return {
-          ...config,
-          color: color.hex
-        };
-      }
-  
+    const updatedConfigs = configs.map(config => {  
       if (config.name === model && config.subParts && subParts) {
         return {
           ...config,

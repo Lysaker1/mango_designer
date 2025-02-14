@@ -9,7 +9,7 @@ export interface ModelConfig {
   rotation: THREE.Quaternion; 
   correctAxis:boolean;
   containsPlain:boolean;
-  subParts?:{name:string,color:{hex:string,label:string}}[]
+  subParts: {name:string,color:{hex:string,label:string}}[]
 }
 
 export const colors = { 
@@ -36,7 +36,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_OSS_Frame.glb",
     meshRequired: "frame_mesh",
-    color: colors.aquaBlue.hex,
+    color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: true,
