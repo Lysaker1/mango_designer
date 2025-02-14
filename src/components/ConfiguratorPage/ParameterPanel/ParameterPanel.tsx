@@ -103,7 +103,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         )}
         {param.type === 'color' && (
           <ColorPicker
-            value={findCurrentColor(param.model, param?.subPart) || param.value}
+            value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
             onChange={(color) => handleColorChange(color, param.model, param.subPart)} // Pass array of subparts
             colors={param.colors}
           />

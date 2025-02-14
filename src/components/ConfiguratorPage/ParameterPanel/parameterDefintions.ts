@@ -10,6 +10,8 @@ export interface ParameterDefinition {
   min?: number;
   max?: number;
   options?: { label: string; value: string}[];
+  category: 'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals';
+  model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?: string[]; 
   material?: { type: string; properties: any }; 
 }
@@ -23,16 +25,16 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     category: 'frame',
     model: 'Frame',
     colors: {
-      orange: { hex: '#ff7f00', label: 'Orange' },
-      yellow: { hex: '#ffff00', label: 'Yellow' },
-      darkBlue: { hex: '#000080', label: 'Dark Blue' },
-      babyBlue: { hex: '#87ceeb', label: 'Baby Blue' },
-      purple: { hex: '#800080', label: 'Purple' },
-      green: { hex: '#008000', label: 'Green' },
-      black: { hex: '#000000', label: 'Black' },
-      silver: { hex: '#c0c0c0', label: 'Silver' },
-      creamClassic: { hex: '#f5f5dc', label: 'Cream Classic' },
-      aquaBlue: { hex: '#00ffff', label: 'Aqua Blue' },
+      orange: colors.orange,
+      yellow: colors.yellow,
+      darkBlue: colors.darkBlue,
+      babyBlue: colors.babyBlue,
+      purple: colors.purple,
+      green: colors.green,
+      black: colors.black,
+      silver: colors.silver,
+      creamClassic: colors.creamClassic,
+      aquaBlue: colors.aquaBlue,
     },
     subPart: ['fork_mesh', 'frame_mesh'] 
   },
@@ -263,7 +265,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: colors.silver.hex,
     category: 'saddle',
     model: 'Saddle',
-    subPart:'seatPost_mesh',
+    subPart: ['seatPost_mesh'],
     colors: {
       black: colors.black,
       silver: colors.silver,
