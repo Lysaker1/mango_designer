@@ -16,27 +16,22 @@ interface ParameterPanelProps {
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
   const [activeTab, setActiveTab] = useState<'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals' | undefined >();
 
-  const handleColorChange = (color: Color, model: string ,subPart?:string) => {
-    const updatedConfigs = configs.map(config => {
-      if (config.name === model && config.color) {
-        return {
-          ...config,
-          color: color.hex
-        };
-      }
-      if (config.name === model && config.subParts) {
+  const handleColorChange = (color: Color, model: string, subParts?: string[]) => {
+    const updatedConfigs = configs.map(config => {  
+      if (config.name === model && config.subParts && subParts) {
         return {
           ...config,
           subParts: config.subParts.map((part) =>
-            part.name === subPart ? { ...part, color: color } : part
+            subParts.includes(part.name) ? { ...part, color: color } : part
           ),
         };
       }
-      
+  
       return config;
     });
     onConfigChange(updatedConfigs);
   };
+  
 
   const handleTypeChange = (value: string, model: string) => {
     const updatedConfigs = configs.map(config => {
@@ -101,8 +96,8 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         )}
         {param.type === 'color' && (
           <ColorPicker
-            value={findCurrentColor(param.model, param?.subPart) || param.value}
-            onChange={(color) => handleColorChange(color, param.model,param?.subPart)}
+            value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
+            onChange={(color) => handleColorChange(color, param.model, param.subPart)} // Pass array of subparts
             colors={param.colors}
           />
         )}
@@ -149,4 +144,4 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   );
 };
 
-export default ParameterPanel; 
+export default ParameterPanel;

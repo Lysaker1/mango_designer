@@ -12,7 +12,8 @@ export interface ParameterDefinition {
   options?: { label: string; value: string}[];
   category: 'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
-  subPart?:string
+  subPart?: string[]; 
+  material?: { type: string; properties: any }; 
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
@@ -20,7 +21,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'frameColor',
     name: 'Color',
     type: 'color',
-    value: colors.orange.hex,
+    value: '#000000',
     category: 'frame',
     model: 'Frame',
     colors: {
@@ -34,14 +35,15 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
-    }
+    },
+    subPart: ['fork_mesh', 'frame_mesh'] 
   },
   {
     id: 'tubingType',
     name: 'Type',
     type: 'grid',
     value: '/models/Mango_OSS_Frame.glb',
-    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }],
+    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb' }],
     category: 'frame',
     model: 'Frame'
   },
@@ -75,7 +77,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart: 'Rim'
+    subPart:['Rim']
   },
   {
     id: 'frontTireColor',
@@ -95,7 +97,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart: 'Tube'
+    subPart:['Tube']
   },
   {
     id: 'rearWheelType',
@@ -127,7 +129,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:'Rim',
+    subPart:['Rim'],
   },
   {
     id: 'rearTireColor',
@@ -147,7 +149,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:'Tube'
+    subPart:['Tube']
   },
   {
     id: 'Handlebar_id',
@@ -164,7 +166,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     ],
     category: 'handlebars',
     model: 'Handlebar',
-    subPart: 'stem_mesh'
+    subPart: ['stem_mesh']
   },
   {
     id: 'handlebarColor',
@@ -178,7 +180,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
     },
     model: 'Handlebar',
-    subPart: 'handlebar_mesh'
+    subPart: ['handlebar_mesh']
   },
   {
     id: 'stemColor',
@@ -192,7 +194,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
     },
     model: 'Handlebar',
-    subPart: 'stem_mesh'
+    subPart: ['stem_mesh']
   },
   {
     id: 'gripColor',
@@ -212,28 +214,28 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
     },
     model: 'Handlebar',
-    subPart: 'grip_mesh'
+    subPart: ['grip_mesh']
   },
   {
     id: 'saddleColor',
-    name: 'Color',
+    name: 'Side Color',
     type: 'color',
-    value: colors.brown.hex,
+    value: '#ff0000',
     colors: {
-      brown: colors.brown,
-      black: colors.black,
-      white: colors.white,
-      pink: colors.pink,
-      orange: colors.orange,
-      green: colors.green,
-      purple: colors.purple,
-      blue: colors.blue,
-      yellow: colors.yellow,
-      red: colors.red,
+      brown: { hex: '#a52a2a', label: 'Brown' },
+      black: { hex: '#000000', label: 'Black' },
+      white: { hex: '#ffffff', label: 'White' },
+      pink: { hex: '#ffc0cb', label: 'Pink' },
+      orange: { hex: '#ff7f00', label: 'Orange' },
+      green: { hex: '#008000', label: 'Green' },
+      purple: { hex: '#800080', label: 'Purple' },
+      blue: { hex: '#0000ff', label: 'Blue' },
+      yellow: { hex: '#ffff00', label: 'Yellow' },
+      red: { hex: '#ff0000', label: 'Red' },
     },
     category: 'saddle',
     model: 'Saddle',
-    subPart:'saddleSide_mesh'
+    subPart:['saddleSide_mesh'],
   },
   {
     id: 'seatPostColor',
@@ -242,7 +244,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: colors.silver.hex,
     category: 'saddle',
     model: 'Saddle',
-    subPart:'seatPost_mesh',
+    subPart: ['seatPost_mesh'],
     colors: {
       black: colors.black,
       silver: colors.silver,
@@ -276,6 +278,6 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       yellow: colors.yellow,
     },
     model: 'Pedals',
-    subPart:'pedalTread_mesh'
+    subPart: ['pedalTread_mesh']
   }
 ];
