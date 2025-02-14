@@ -14,7 +14,7 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
-  const [activeTab, setActiveTab] = useState<'frame' | 'handlebars' | 'wheels' | 'saddle' | 'pedals' | undefined >();
+  const [activeTab, setActiveTab] = useState<'frame' | 'handlebars' | 'wheels' | 'tyres' | 'saddle' | 'pedals' | undefined >();
 
   const handleColorChange = (color: Color, model: string ,subPart?:string) => {
     const updatedConfigs = configs.map(config => {
@@ -46,6 +46,17 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       return config;
     });
     onConfigChange(updatedConfigs);
+  };
+
+  const findCurrentColor = (model: string, subPart?: string): string | undefined => {
+    const config = configs.find(config => config.name === model);
+    if (config && config.subParts) {
+      const subPartConfig = config.subParts.find(part => part.name === subPart);
+      return subPartConfig?.color?.hex || config.color;
+    }
+    if (config && !config.subParts) {
+      return config.color;
+    }
   };
 
   const renderParameters = (category: string) => {
@@ -90,7 +101,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         )}
         {param.type === 'color' && (
           <ColorPicker
-            value={configs.find(config => config.name === param.model)?.color || param.value}
+            value={findCurrentColor(param.model, param?.subPart) || param.value}
             onChange={(color) => handleColorChange(color, param.model,param?.subPart)}
             colors={param.colors}
           />
@@ -102,54 +113,38 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   return (
     <div className={`h-full flex w-24 bg-black transition-width duration-300`}>
       <div className="flex flex-col items-center justify-center py-4 space-y-6 text-white align-middle flex-1">
-        <button 
-          className="flex flex-col items-center justify-center"
-          onClick={() => { activeTab === 'frame' ? setActiveTab(undefined) : setActiveTab('frame');  }}
-        >
-          <img src="assets/icons/frame.png" alt="Frame" className="w-10 h-10" />
-          <span>Frame</span>
-        </button>
-        <button 
-          className="flex flex-col items-center justify-center"
-          onClick={() => { activeTab === 'handlebars' ? setActiveTab(undefined) : setActiveTab('handlebars'); }}
-        >
-          <img src="assets/icons/handlebars.png" alt="Handlebars" className="w-10 h-10" />
-          <span>Handlebars</span>
-        </button>
-        <button 
-          className="flex flex-col items-center justify-center"
-          onClick={() => { activeTab === 'wheels' ? setActiveTab(undefined) : setActiveTab('wheels'); }}
-        >
-          <img src="assets/icons/wheels.png" alt="Wheels" className="w-10 h-10" />
-          <span>Wheels</span>
-        </button>
-        <button 
-          className="flex flex-col items-center justify-center"
-          onClick={() => { activeTab === 'saddle' ? setActiveTab(undefined) : setActiveTab('saddle'); }}
-        >
-          <img src="assets/icons/saddle.png" alt="Saddle" className="w-10 h-10" />
-          <span>Saddle</span>
-        </button>
-        <button 
-          className="flex flex-col items-center justify-center"
-          onClick={() => { activeTab === 'pedals' ? setActiveTab(undefined) : setActiveTab('pedals'); }}
-        >
-          <img src="assets/icons/pedals.png" alt="Pedals" className="w-10 h-10" />
-          <span>Pedals</span>
-        </button>
+        {['frame', 'handlebars', 'wheels', 'tyres', 'saddle', 'pedals'].map((tab) => (
+          <button 
+            key={tab}
+            className={`relative flex flex-col items-center justify-center bg-transparent p-0 m-0 pb-1`}
+            onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
+          >
+            <img src={`assets/icons/${tab}.png`} alt={tab} className="w-10 h-10" />
+            <span>{tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
+            <div 
+              className={`absolute bottom-0 left-0 h-0.5 bg-mangoOrange transition-all duration-300 transform origin-left ${activeTab === tab ? 'scale-x-100' : 'scale-x-0'}`}
+              style={{ width: '100%' }}
+            ></div>
+          </button>
+        ))}
       </div>
+      
       {activeTab && (
         <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-2 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
           <div className="flex flex-col items-center justify-center">
             <button className="text-gray-300 text-sm font-medium">
               {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
             </button>
+            <button 
+              className="text-gray-300 text-sm font-medium absolute right-5"
+              onClick={() => setActiveTab(undefined)}
+            >
+              &#10006;&#xfe0e;
+            </button>
           </div>
           {renderParameters(activeTab)}
         </div>
       )}
-
-
     </div>
   );
 };

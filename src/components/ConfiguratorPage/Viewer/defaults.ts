@@ -12,18 +12,23 @@ export interface ModelConfig {
   subParts?:{name:string,color:{hex:string,label:string}}[]
 }
 
-const colors = { 
+export const colors = { 
   orange: { hex: '#ff7f00', label: 'Orange' },
   yellow: { hex: '#ffff00', label: 'Yellow' },
   darkBlue: { hex: '#000080', label: 'Dark Blue' },
   babyBlue: { hex: '#87ceeb', label: 'Baby Blue' },
-  purple: { hex: '#800080', label: 'Purple' },
-  green: { hex: '#008000', label: 'Green' },
-  white: { hex: '#000000', label: 'White' },
+  purple: { hex: '#bf77f6', label: 'Purple' },
+  green: { hex: '#00FF00', label: 'Green' },
+  white: { hex: '#ffffff', label: 'White' },
   black: { hex: '#000000', label: 'Black' },
   silver: { hex: '#c0c0c0', label: 'Silver' },
   creamClassic: { hex: '#f5f5dc', label: 'Cream Classic' },
   aquaBlue: { hex: '#00ffff', label: 'Aqua Blue' },
+  red: { hex: '#ff0000', label: 'Red' },
+  brown: { hex: '#964B00', label: 'Brown' },
+  blue: { hex: '#0000ff', label: 'Blue' },
+  pink: { hex: '#fc8eac', label: 'Pink' },
+  gold: { hex: '#ffd700', label: 'Gold' },
 };
 
 const modelConfigs: ModelConfig[] = [
@@ -31,7 +36,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_OSS_Frame.glb",
     meshRequired: "frame_mesh",
-    color: "#0000ff",
+    color: colors.aquaBlue.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain:true,
@@ -48,7 +53,7 @@ const modelConfigs: ModelConfig[] = [
     correctAxis:true,
     subParts:[
       { name: "Tube", color: colors.black },
-      { name: "Rim", color: colors.silver },
+      { name: "Rim", color: colors.green },
       { name: "Cog", color: colors.black },
       { name: "Logo", color: colors.black },
     ]
@@ -63,8 +68,8 @@ const modelConfigs: ModelConfig[] = [
     containsPlain:false,
     correctAxis:true,
     subParts:[
-      { name: "Tube", color: colors.black },
-      { name: "Rim", color: colors.silver },
+      { name: "Tube", color: colors.pink },
+      { name: "Rim", color: colors.orange },
       { name: "Cog", color: colors.black },
       // { name: "Logo", color: colors.white },
       // { name: "Hub", color: colors.orange },
@@ -80,7 +85,7 @@ const modelConfigs: ModelConfig[] = [
     containsPlain:false,
     correctAxis:false,
     subParts:[
-      { name: "saddleSide_mesh", color: colors.purple },
+      { name: "saddleSide_mesh", color: colors.brown },
       { name: "saddleTop_mesh", color: colors.black },
       { name: "saddleFrame_mesh", color: colors.silver },
       { name: "seatPost_mesh", color: colors.silver },
@@ -96,18 +101,18 @@ const modelConfigs: ModelConfig[] = [
     containsPlain:false,
     correctAxis:false,
     subParts:[
-      { name: "stem_mesh", color: colors.purple },
+      { name: "stem_mesh", color: colors.silver },
       { name: "handlebar_mesh", color: colors.black },
-      { name: "grip_mesh", color: colors.silver },
-      { name: "levers_mesh", color: colors.silver },
-      { name: "headsetSpacers_mesh", color: colors.silver },
+      { name: "grip_mesh", color: colors.purple },
+      { name: "levers_mesh", color: colors.black },
+      { name: "headsetSpacers_mesh", color: colors.black },
     ]
   },
   {
     name: "Fork",
     path: "/models/Mango_OSS_Fork.glb",
     meshRequired: "fork_plane",
-    color: "#000000",
+    color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain:true,
@@ -117,7 +122,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Crank",
     path: "/models/Mango_OSS_CrankSet.glb",
     meshRequired: "crank_plane",
-    color: "#000000",
+    color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain:false,
@@ -132,7 +137,7 @@ const modelConfigs: ModelConfig[] = [
     containsPlain:false,
     correctAxis:true,
     subParts:[
-      { name: "pedalTread_mesh", color: colors.aquaBlue },
+      { name: "pedalTread_mesh", color: colors.purple },
       { name: "pedalShaft_mesh", color: colors.black },
     ]
   },
@@ -140,7 +145,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Rear Brakes",
     path: "/models/Mango_Brake_Front.glb",
     meshRequired: "rearBrake_plane",
-    color: "#000000",
+    color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain:false,
