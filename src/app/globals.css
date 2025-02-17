@@ -26,6 +26,38 @@
   background: #555;
 }
 
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  display: none;
+}
+
+
+/* .custom-scrollbar {
+  overflow-y: auto;
+  direction: rtl;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  direction: ltr;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #f35417;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #f86937;
+} */
+
 /* Custom slider styles */
 input[type="range"] {
   @apply h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer;

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { ComponentProps, Suspense, useEffect, useState } from 'react';
+import React, { ComponentProps, Suspense, useEffect, useMemo, useState } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { Box, OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
 import { ModelConfig } from './defaults';
 import { GLTFLoader, SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { PARAMETER_DEFINITIONS } from '../ParameterPanel/parameterDefintions';
 
 interface ModelProps {
   modelPath: string;
@@ -153,6 +154,25 @@ Component.displayName = 'Component';
 const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: ModelConfig[]) => void }> = ({ configs, setConfigs }) => {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Find all model paths based on the parameter definitions
+  const allModelPaths = useMemo(() => {
+    const paths = new Set<string>();
+    PARAMETER_DEFINITIONS.forEach(definition => {
+      definition.options?.forEach(option => {
+        paths.add(option.value);
+      });
+    });
+    return Array.from(paths);
+  }, []);
+
+  // Pre-load all models
+  const preloadedScenes = useMemo(() => {
+    return allModelPaths.map(path => {
+      const { scene } = useGLTF(path);
+      return { path, scene };
+    });
+  }, [allModelPaths]);
 
   useEffect(() => {
     setIsClient(true);

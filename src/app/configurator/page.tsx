@@ -44,7 +44,7 @@ const ConfiguratorPage = () => {
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
         {/* Parameter Panel */}
-        <div className="border-l border-neutral-800">
+        <div>
           <ParameterPanel 
             onConfigChange={handleConfigChange}
             configs={configs}

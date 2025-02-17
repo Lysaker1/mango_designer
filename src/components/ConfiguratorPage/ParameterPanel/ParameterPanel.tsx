@@ -7,6 +7,7 @@ import { Grid } from './parameterTypes/Grid/Grid';
 import { ModelConfig } from '../Viewer/defaults';
 import { Dropdown } from './parameterTypes/Dropdown';
 import { Color } from "./parameterTypes/ColorPicker";
+import { LeftMenuIcons } from './LeftMenuIcons';
 
 interface ParameterPanelProps {
   configs: ModelConfig[];
@@ -26,7 +27,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           ),
         };
       }
-  
+      
       return config;
     });
     onConfigChange(updatedConfigs);
@@ -106,20 +107,25 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
 
   return (
-    <div className={`h-full flex w-24 bg-black transition-width duration-300`}>
-      <div className="flex flex-col items-center justify-center py-4 space-y-6 text-white align-middle flex-1">
-        {['frame', 'handlebars', 'wheels', 'tyres', 'saddle', 'pedals'].map((tab) => (
+    <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
+      <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
+        {['Frame', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
           <button 
             key={tab}
-            className={`relative flex flex-col items-center justify-center bg-transparent p-0 m-0 pb-1`}
+            className={`relative w-full flex flex-col items-center justify-center pt-1 pb-1 rounded-lg ${activeTab === tab && 'bg-mangoOrange'}`}
             onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
           >
-            <img src={`assets/icons/${tab}.png`} alt={tab} className="w-10 h-10" />
-            <span>{tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
-            <div 
+
+            <div className='w-10 h-10 flex justify-center items-center'>
+              {
+                LeftMenuIcons[tab as keyof typeof LeftMenuIcons] || <img src={`assets/icons/${tab}.png`} alt={tab} className="w-10 h-10" />
+              }
+            </div>
+            <span>{tab}</span>
+            {/* <div 
               className={`absolute bottom-0 left-0 h-0.5 bg-mangoOrange transition-all duration-300 transform origin-left ${activeTab === tab ? 'scale-x-100' : 'scale-x-0'}`}
               style={{ width: '100%' }}
-            ></div>
+            ></div> */}
           </button>
         ))}
       </div>
@@ -127,9 +133,9 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       {activeTab && (
         <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-2 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
           <div className="flex flex-col items-center justify-center">
-            <button className="text-gray-300 text-sm font-medium">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-            </button>
+            <p className="text-gray-300 text-sm font-medium">
+              {activeTab}
+            </p>
             <button 
               className="text-gray-300 text-sm font-medium absolute right-5"
               onClick={() => setActiveTab(undefined)}
