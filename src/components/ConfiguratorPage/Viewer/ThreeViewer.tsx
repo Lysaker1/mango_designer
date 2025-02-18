@@ -6,7 +6,8 @@ import { Box, OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
 import { frames, ModelConfig } from './defaults';
-import { GLTFLoader, SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { TextureLoader } from 'three';
 
 interface ModelProps {
   modelPath: string;
@@ -107,39 +108,49 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
 
 Model.displayName = 'Model';
 
-const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string }}[];frameType:string|undefined }>(({ modelName, modelPath, position, rotation, color, subParts, frameType }, ref) => {
+const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string },texturePath?:string}[];frameType:string|undefined }>(({ modelName, modelPath, position, rotation, color, subParts, frameType }, ref) => {
   const { scene } = useGLTF(modelPath);
   const newScene = SkeletonUtils.clone(scene);
+  console.log(newScene)
   const hiddenObjects = frameType && modelName && frames[frameType]?.[modelName] || [];
+
   // Apply color to the new scene if provided
   if (color) {
     newScene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        // Ensure each child has a separate material instance
         child.material = child.material.clone(); 
         child.castShadow = true;
-
-        // Default base color (applies to entire object first)
         child.material.color.set(color);
       }
     });
-  } else {
-    // Handle subParts coloring
+  } 
     if (subParts) {
-      subParts.forEach(({ name, color }) => {
-        const part = newScene.getObjectByName(name); // 🔍 Find specific part by name
+      subParts.forEach(({ name, color , texturePath}) => {
+        const part = newScene.getObjectByName(name); 
+        let texture=null;
+        if(texturePath){
+          texture = useLoader(TextureLoader, texturePath);
+        }
         if (part) {
           part.traverse((child) => {
             if (child instanceof THREE.Mesh && child.material) {
-              // Clone material only for subpart meshes (so base color remains for other parts)
               child.material = child.material.clone();  
+              if (texture) {
+                texture.flipY = false;
+                texture.wrapS = THREE.RepeatWrapping;  // Repeat along the X axis
+                texture.wrapT = THREE.RepeatWrapping;  // Repeat along the Y axis
+                // Apply the texture to the material
+                child.material.color.set(color.hex);
+                child.material.map = texture;
+                child.material.transparent = true;
+                child.material.needsUpdate = true;
+              }
               child.material.color.set(color.hex);
               child.material.needsUpdate = true; 
             }
           });
         }
       });
-    }
   }
   hiddenObjects.forEach((name) => {
     const part = newScene.getObjectByName(name); // 🔍 Find specific part by name
@@ -190,7 +201,7 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
               configs.map(
                 (model, index) =>
                   model.position && model.rotation && index !=0 && (
-                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type} />
+                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type}/>
                   )
               )}
           </Stage>

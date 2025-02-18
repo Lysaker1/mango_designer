@@ -10,19 +10,19 @@ export interface ModelConfig {
   rotation: THREE.Quaternion; 
   correctAxis:boolean;
   containsPlain:boolean;
-  subParts: {name:string,color:{hex:string,label:string}}[]
+  subParts: {name:string,color:{hex:string,label:string},texturePath?:string}[]
 }
 
 //array contains those meshes which we want to hide for a specfic frame
 export const frames: Record<string, Record<string, string[]>> = {
-  OSS: {"Rear Wheel":["Rim"]},
+  OSS: {},
   OG: {},
   DOG: {
     "Handlebar": ["wire_mesh"], // Defines which objects to hide
   },
 };
 
-
+const textureURL="https://cdn11.bigcommerce.com/s-qmagntafvz/images/stencil/110x36/mango-logo-seo_1626684142__36638.original1_1700851933.original.png"
 
 export const colors = { 
   orange: { hex: '#ff7f00', label: 'Orange' },
@@ -61,7 +61,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_MultiSpokes.glb",
+    path: "/models/Mango_Wheels_Rear_3SpokeMag.glb",
     meshRequired: "rearTyre_plane",
     // color: "#0000ff",
     position: new THREE.Vector3(0, 0, 0), 
@@ -69,10 +69,10 @@ const modelConfigs: ModelConfig[] = [
     containsPlain:false,
     correctAxis:true,
     subParts:[
-      { name: "Tube", color: colors.black },
+      { name: "Tube", color: colors.black},
       { name: "Rim", color: colors.green },
       { name: "Cog", color: colors.black },
-      { name: "Logo", color: colors.purple },
+      { name: "Logo", color: colors.white ,texturePath:textureURL},
     ]
   },
   {
@@ -86,10 +86,10 @@ const modelConfigs: ModelConfig[] = [
     correctAxis:true,
     subParts:[
       { name: "Tube", color: colors.pink },
-      { name: "Rim", color: colors.orange },
+      { name: "Rim", color: colors.orange  },
       { name: "Cog", color: colors.black },
       { name: "Spokes", color: colors.black },
-      { name: "Logo", color: colors.purple },
+      { name: "Logo", color: colors.white ,texturePath:textureURL},
     ]
   },
   {
