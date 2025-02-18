@@ -5,7 +5,7 @@ import { GridIcons } from './GridIcons';
 interface GridProps {
   definition: ParameterDefinition;
   value: string | number;
-  onChange: (value: any, definition: ParameterDefinition) => void;
+  onChange: (value: any, definition: ParameterDefinition ,label:string) => void;
 }
 
 interface IconType {
@@ -65,7 +65,7 @@ export const Grid = ({
             className={`relative w-9/10 aspect-square flex flex-col items-center justify-center bg-white bg-opacity-10 rounded-lg cursor-pointer transition-all duration-200 ease-in-out border border-transparent ${
               value === option.value ? 'border-white bg-white bg-opacity-30' : ''
             }`}
-            onClick={() => onChange(option.value, definition)}
+            onClick={() => onChange(option.value, definition ,option.label)}
             title={option.label}
           >
             {/* {renderIcon(option)} */}

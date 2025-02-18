@@ -4,6 +4,7 @@ export interface ModelConfig {
   name: string;
   path: string;
   meshRequired: string;
+  type?:string;
   color?: string;
   position: THREE.Vector3; 
   rotation: THREE.Quaternion; 
@@ -11,6 +12,17 @@ export interface ModelConfig {
   containsPlain:boolean;
   subParts: {name:string,color:{hex:string,label:string}}[]
 }
+
+//array contains those meshes which we want to hide for a specfic frame
+export const frames: Record<string, Record<string, string[]>> = {
+  OSS: {"Rear Wheel":["Rim"]},
+  OG: {},
+  DOG: {
+    "Handlebar": ["wire_mesh"], // Defines which objects to hide
+  },
+};
+
+
 
 export const colors = { 
   orange: { hex: '#ff7f00', label: 'Orange' },
@@ -36,7 +48,8 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_OSS_Frame.glb",
     meshRequired: "frame_mesh",
-    color: colors.black.hex,
+    type:"OSS",
+    // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: true,
@@ -48,7 +61,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_3SpokeMag.glb",
+    path: "/models/Mango_Wheels_Rear_MultiSpokes.glb",
     meshRequired: "rearTyre_plane",
     // color: "#0000ff",
     position: new THREE.Vector3(0, 0, 0), 
@@ -59,7 +72,7 @@ const modelConfigs: ModelConfig[] = [
       { name: "Tube", color: colors.black },
       { name: "Rim", color: colors.green },
       { name: "Cog", color: colors.black },
-      { name: "Logo", color: colors.black },
+      { name: "Logo", color: colors.purple },
     ]
   },
   {
@@ -76,6 +89,7 @@ const modelConfigs: ModelConfig[] = [
       { name: "Rim", color: colors.orange },
       { name: "Cog", color: colors.black },
       { name: "Spokes", color: colors.black },
+      { name: "Logo", color: colors.purple },
     ]
   },
   {
@@ -108,6 +122,7 @@ const modelConfigs: ModelConfig[] = [
       { name: "grip_mesh", color: colors.purple },
       { name: "levers_mesh", color: colors.black },
       { name: "headsetSpacers_mesh", color: colors.black },
+      { name: "wire_mesh", color: colors.black },
     ]
   },
   {

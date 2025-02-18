@@ -5,7 +5,7 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { Box, OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
-import { ModelConfig } from './defaults';
+import { frames, ModelConfig } from './defaults';
 import { GLTFLoader, SkeletonUtils } from 'three/examples/jsm/Addons.js';
 
 interface ModelProps {
@@ -107,10 +107,10 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
 
 Model.displayName = 'Model';
 
-const Component = React.forwardRef<Group, { modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string }; }[]; }>(({ modelPath, position, rotation, color, subParts }, ref) => {
+const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string }}[];frameType:string|undefined }>(({ modelName, modelPath, position, rotation, color, subParts, frameType }, ref) => {
   const { scene } = useGLTF(modelPath);
   const newScene = SkeletonUtils.clone(scene);
-
+  const hiddenObjects = frameType && modelName && frames[frameType]?.[modelName] || [];
   // Apply color to the new scene if provided
   if (color) {
     newScene.traverse((child) => {
@@ -141,6 +141,19 @@ const Component = React.forwardRef<Group, { modelPath: string; position: THREE.V
       });
     }
   }
+  hiddenObjects.forEach((name) => {
+    const part = newScene.getObjectByName(name); // 🔍 Find specific part by name
+    if (part) {
+      part.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+          child.visible = false; // Hide the mesh
+        }
+      });
+    }
+    console.log(part,"parttt updated")
+
+  });
+  
 
   newScene.position.set(position.x, position.y, position.z);
 
@@ -176,8 +189,8 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
             {!isLoading &&
               configs.map(
                 (model, index) =>
-                  model.position && model.rotation && index !== 0 && (
-                    <Component key={index} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} />
+                  model.position && model.rotation && index !=0 && (
+                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type} />
                   )
               )}
           </Stage>
