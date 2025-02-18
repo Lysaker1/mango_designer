@@ -124,7 +124,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
                 </div>
               ) : (
                 <img 
-                  src={`/assets/icons/${tab}.png`} 
+                  src={`/assets/icons/${tab.toLowerCase()}.png`} 
                   alt={tab} 
                   className={`w-8 h-8 object-contain transition-opacity duration-200
                              ${activeTab === tab ? 'opacity-100' : 'opacity-70'}`}
