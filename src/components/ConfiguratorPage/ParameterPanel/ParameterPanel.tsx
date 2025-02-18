@@ -112,20 +112,25 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         {['Frame', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
           <button 
             key={tab}
-            className={`relative w-full flex flex-col items-center justify-center pt-1 pb-1 rounded-lg ${activeTab === tab && 'bg-mangoOrange'}`}
+            className={`relative w-full flex flex-col items-center justify-center p-2 rounded-lg ${
+              activeTab === tab ? 'bg-mangoOrange' : 'hover:bg-gray-800'
+            }`}
             onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
           >
-
-            <div className='w-10 h-10 flex justify-center items-center'>
-              {
-                LeftMenuIcons[tab as keyof typeof LeftMenuIcons] || <img src={`assets/icons/${tab}.png`} alt={tab} className="w-10 h-10" />
-              }
+            <div className='w-12 h-12 flex justify-center items-center mb-1'>
+              {LeftMenuIcons[tab as keyof typeof LeftMenuIcons] ? (
+                <div className="w-8 h-8">
+                  {LeftMenuIcons[tab as keyof typeof LeftMenuIcons]}
+                </div>
+              ) : (
+                <img 
+                  src={`assets/icons/${tab}.png`} 
+                  alt={tab} 
+                  className="w-8 h-8 object-contain" 
+                />
+              )}
             </div>
-            <span>{tab}</span>
-            {/* <div 
-              className={`absolute bottom-0 left-0 h-0.5 bg-mangoOrange transition-all duration-300 transform origin-left ${activeTab === tab ? 'scale-x-100' : 'scale-x-0'}`}
-              style={{ width: '100%' }}
-            ></div> */}
+            <span className="text-xs text-center">{tab}</span>
           </button>
         ))}
       </div>
