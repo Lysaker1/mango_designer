@@ -240,6 +240,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       case 'Seat Post':
       case 'Pedals':
       case 'Chain':
+      case 'Fork':
         return renderParameters(activeTab);
       default:
         return null;
@@ -258,7 +259,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           >
             <div className='w-12 h-12 flex justify-center items-center mb-1'>
               {LeftMenuIcons[tab as keyof typeof LeftMenuIcons] ? (
-                <div className={`w-8 h-8 transition-colors duration-200 
+                <div className={`w-8 h-8 transition-colors duration-200 flex justify-center items-center
                                 ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
                   {LeftMenuIcons[tab as keyof typeof LeftMenuIcons]}
                 </div>
