@@ -20,16 +20,14 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "next.config.js",
-    "src/types/**/*.d.ts"
+    "next.config.js"
   ],
   "exclude": ["node_modules"]
 }

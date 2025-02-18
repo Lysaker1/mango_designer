@@ -43,7 +43,7 @@ const modelConfigs: ModelConfig[] = [
     correctAxis: true,
     subParts: [
       { name: "frame_mesh", color: colors.orange },
-      { name: "fork_mesh", color: colors.orange },
+      { name: "fork_mesh", color: colors.black },
       { name: "chain_mesh", color: colors.black },
     ]
   },

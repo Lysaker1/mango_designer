@@ -10,7 +10,7 @@ export interface ParameterDefinition {
   min?: number;
   max?: number;
   options?: { label: string; value: string}[];
-  category: 'Frame' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain';
+  category: 'Frame' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'Fork';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?: string[]; 
   material?: { type: string; properties: any }; 
@@ -36,7 +36,28 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
     },
-    subPart: ['fork_mesh', 'frame_mesh'] 
+    subPart: ['frame_mesh']
+  },
+  {
+    id: 'forkColor',
+    name: 'Color',
+    type: 'color',
+    value: '#000000',
+    category: 'Fork',
+    model: 'Frame',
+    colors: {
+      orange: colors.orange,
+      yellow: colors.yellow,
+      darkBlue: colors.darkBlue,
+      babyBlue: colors.babyBlue,
+      purple: colors.purple,
+      green: colors.green,
+      black: colors.black,
+      silver: colors.silver,
+      creamClassic: colors.creamClassic,
+      aquaBlue: colors.aquaBlue,
+    },
+    subPart: ['fork_mesh']
   },
   {
     id: 'tubingType',
