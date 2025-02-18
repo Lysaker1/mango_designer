@@ -44,6 +44,7 @@ const modelConfigs: ModelConfig[] = [
     subParts: [
       { name: "frame_mesh", color: colors.orange },
       { name: "fork_mesh", color: colors.orange },
+      { name: "chain_mesh", color: colors.black },
     ]
   },
   {

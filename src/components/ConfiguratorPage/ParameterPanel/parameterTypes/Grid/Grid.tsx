@@ -23,7 +23,7 @@ export const Grid = ({
   const renderIcon = (option: { label: string; value: string }): ReactElement | null => {
     const icon = GridIcons[option.label.replace(' mount', ' Mount') as keyof typeof GridIcons] as IconType | ReactElement;
 
-    if (!icon) return null;
+    if (!icon) return <img src={`assets/gridImages/${option.label}.png`} alt={option.label} className="w-full h-full object-contain" />;
 
     if (typeof icon === 'object' && 'type' in icon && icon.type === 'svg' && 'icon' in icon) {
       return (
@@ -62,14 +62,13 @@ export const Grid = ({
         {definition.options?.map((option) => (
           <button
             key={option.value}
-            className={`relative w-9/10 aspect-square flex flex-col items-center justify-center bg-white bg-opacity-10 rounded-lg cursor-pointer transition-all duration-200 ease-in-out border border-transparent ${
+            className={`relative w-9/10 aspect-square p-1 flex flex-col items-center justify-center bg-white bg-opacity-10 rounded-lg cursor-pointer transition-all duration-200 ease-in-out border border-transparent ${
               value === option.value ? 'border-white bg-white bg-opacity-30' : ''
             }`}
             onClick={() => onChange(option.value, definition)}
             title={option.label}
           >
-            {/* {renderIcon(option)} */}
-            <img src={`assets/gridImages/${option.label}.png`} alt={option.label} className="w-full h-full object-contain" />
+            {renderIcon(option)}
           </button>
         ))}
       </div>
