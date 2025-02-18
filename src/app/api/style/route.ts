@@ -4,7 +4,6 @@ import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
-
 });
 
 interface ColorConfig {
