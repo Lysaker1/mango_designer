@@ -54,11 +54,11 @@ export const Grid = ({
             key={option.value}
             className={`relative aspect-square p-2
                        flex items-center justify-center 
-                       bg-neutral-800/50 rounded-lg
+                       rounded-lg
                        transition-colors duration-200
                        ${value === option.value 
                          ? 'bg-mangoOrange text-white' 
-                         : 'text-gray-400 hover:text-white hover:bg-neutral-700/50'}`}
+                         : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'}`}
             onClick={() => onChange(option.value, definition)}
             title={option.label}
           >
