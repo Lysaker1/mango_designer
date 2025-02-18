@@ -1,0 +1,982 @@
+[
+    {
+      "country": "Afghanistan",
+      "color_count": 4,
+      "colors": ["black", "red", "green", "white"]
+    },
+    {
+      "country": "Albania",
+      "color_count": 2,
+      "colors": ["red", "black"]
+    },
+    {
+      "country": "Algeria",
+      "color_count": 3,
+      "colors": ["green", "white", "red"]
+    },
+    {
+      "country": "Andorra",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "red"]
+    },
+    {
+      "country": "Angola",
+      "color_count": 3,
+      "colors": ["red", "black", "yellow"]
+    },
+    {
+      "country": "Antigua and Barbuda",
+      "color_count": 4,
+      "colors": ["red", "blue", "white", "yellow"]
+    },
+    {
+      "country": "Argentina",
+      "color_count": 3,
+      "colors": ["light blue", "white", "yellow"]
+    },
+    {
+      "country": "Armenia",
+      "color_count": 3,
+      "colors": ["red", "blue", "orange"]
+    },
+    {
+      "country": "Australia",
+      "color_count": 3,
+      "colors": ["blue", "red", "white"]
+    },
+    {
+      "country": "Austria",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Azerbaijan",
+      "color_count": 3,
+      "colors": ["blue", "red", "green"]
+    },
+    {
+      "country": "The Bahamas",
+      "color_count": 3,
+      "colors": ["aquamarine", "yellow", "black"]
+    },
+    {
+      "country": "Bahrain",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Bangladesh",
+      "color_count": 2,
+      "colors": ["green", "red"]
+    },
+    {
+      "country": "Barbados",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "black"]
+    },
+    {
+      "country": "Belarus",
+      "color_count": 3,
+      "colors": ["red", "green", "white"]
+    },
+    {
+      "country": "Belgium",
+      "color_count": 3,
+      "colors": ["black", "yellow", "red"]
+    },
+    {
+      "country": "Belize",
+      "color_count": 4,
+      "colors": ["red", "blue", "white", "green"]
+    },
+    {
+      "country": "Benin",
+      "color_count": 3,
+      "colors": ["green", "red", "yellow"]
+    },
+    {
+      "country": "Bhutan",
+      "color_count": 3,
+      "colors": ["orange", "green", "white"]
+    },
+    {
+      "country": "Bolivia",
+      "color_count": 3,
+      "colors": ["red", "yellow", "green"]
+    },
+    {
+      "country": "Bosnia and Herzegovina",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "white"]
+    },
+    {
+      "country": "Botswana",
+      "color_count": 3,
+      "colors": ["light blue", "black", "white"]
+    },
+    {
+      "country": "Brazil",
+      "color_count": 4,
+      "colors": ["green", "yellow", "blue", "white"]
+    },
+    {
+      "country": "Brunei",
+      "color_count": 4,
+      "colors": ["yellow", "black", "white", "red"]
+    },
+    {
+      "country": "Bulgaria",
+      "color_count": 3,
+      "colors": ["white", "green", "red"]
+    },
+    {
+      "country": "Burkina Faso",
+      "color_count": 3,
+      "colors": ["red", "green", "yellow"]
+    },
+    {
+      "country": "Burundi",
+      "color_count": 3,
+      "colors": ["green", "white", "red"]
+    },
+    {
+      "country": "Cabo Verde",
+      "color_count": 4,
+      "colors": ["blue", "red", "white", "yellow"]
+    },
+    {
+      "country": "Cambodia",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "Cameroon",
+      "color_count": 3,
+      "colors": ["green", "red", "yellow"]
+    },
+    {
+      "country": "Canada",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Central African Republic",
+      "color_count": 5,
+      "colors": ["blue", "white", "green", "yellow", "red"]
+    },
+    {
+      "country": "Chad",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "red"]
+    },
+    {
+      "country": "Chile",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "China",
+      "color_count": 2,
+      "colors": ["red", "yellow"]
+    },
+    {
+      "country": "Colombia",
+      "color_count": 3,
+      "colors": ["yellow", "blue", "red"]
+    },
+    {
+      "country": "Comoros",
+      "color_count": 5,
+      "colors": ["yellow", "white", "red", "blue", "green"]
+    },
+    {
+      "country": "Congo, Democratic Republic of the",
+      "color_count": 3,
+      "colors": ["blue", "red", "yellow"]
+    },
+    {
+      "country": "Congo, Republic of the",
+      "color_count": 3,
+      "colors": ["green", "yellow", "red"]
+    },
+    {
+      "country": "Costa Rica",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Côte d’Ivoire",
+      "color_count": 3,
+      "colors": ["orange", "white", "green"]
+    },
+    {
+      "country": "Croatia",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Cuba",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Cyprus",
+      "color_count": 3,
+      "colors": ["white", "copper", "green"]
+    },
+    {
+      "country": "Czech Republic",
+      "color_count": 3,
+      "colors": ["white", "red", "blue"]
+    },
+    {
+      "country": "Denmark",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Djibouti",
+      "color_count": 4,
+      "colors": ["blue", "green", "white", "red"]
+    },
+    {
+      "country": "Dominica",
+      "color_count": 5,
+      "colors": ["green", "yellow", "black", "white", "red"]
+    },
+    {
+      "country": "Dominican Republic",
+      "color_count": 4,
+      "colors": ["red", "white", "blue", "green"]
+    },
+    {
+      "country": "East Timor (Timor-Leste)",
+      "color_count": 4,
+      "colors": ["red", "black", "yellow", "white"]
+    },
+    {
+      "country": "Ecuador",
+      "color_count": 3,
+      "colors": ["yellow", "blue", "red"]
+    },
+    {
+      "country": "Egypt",
+      "color_count": 3,
+      "colors": ["red", "white", "black"]
+    },
+    {
+      "country": "El Salvador",
+      "color_count": 2,
+      "colors": ["blue", "white"]
+    },
+    {
+      "country": "Equatorial Guinea",
+      "color_count": 5,
+      "colors": ["green", "white", "red", "blue", "yellow"]
+    },
+    {
+      "country": "Eritrea",
+      "color_count": 4,
+      "colors": ["green", "blue", "red", "gold"]
+    },
+    {
+      "country": "Estonia",
+      "color_count": 3,
+      "colors": ["blue", "black", "white"]
+    },
+    {
+      "country": "Eswatini",
+      "color_count": 4,
+      "colors": ["red", "black", "yellow", "white"]
+    },
+    {
+      "country": "Ethiopia",
+      "color_count": 3,
+      "colors": ["green", "yellow", "red"]
+    },
+    {
+      "country": "Fiji",
+      "color_count": 4,
+      "colors": ["light blue", "red", "white", "yellow"]
+    },
+    {
+      "country": "Finland",
+      "color_count": 2,
+      "colors": ["blue", "white"]
+    },
+    {
+      "country": "France",
+      "color_count": 3,
+      "colors": ["blue", "white", "red"]
+    },
+    {
+      "country": "Gabon",
+      "color_count": 3,
+      "colors": ["green", "yellow", "blue"]
+    },
+    {
+      "country": "The Gambia",
+      "color_count": 4,
+      "colors": ["red", "blue", "green", "white"]
+    },
+    {
+      "country": "Georgia",
+      "color_count": 2,
+      "colors": ["white", "red"]
+    },
+    {
+      "country": "Germany",
+      "color_count": 3,
+      "colors": ["black", "red", "gold"]
+    },
+    {
+      "country": "Ghana",
+      "color_count": 4,
+      "colors": ["red", "yellow", "green", "black"]
+    },
+    {
+      "country": "Greece",
+      "color_count": 2,
+      "colors": ["blue", "white"]
+    },
+    {
+      "country": "Grenada",
+      "color_count": 4,
+      "colors": ["red", "yellow", "green", "blue"]
+    },
+    {
+      "country": "Guatemala",
+      "color_count": 3,
+      "colors": ["blue", "white", "red"]
+    },
+    {
+      "country": "Guinea",
+      "color_count": 3,
+      "colors": ["red", "yellow", "green"]
+    },
+    {
+      "country": "Guinea-Bissau",
+      "color_count": 4,
+      "colors": ["red", "yellow", "green", "black"]
+    },
+    {
+      "country": "Guyana",
+      "color_count": 5,
+      "colors": ["green", "white", "gold", "red", "black"]
+    },
+    {
+      "country": "Haiti",
+      "color_count": 3,
+      "colors": ["blue", "red", "white"]
+    },
+    {
+      "country": "Honduras",
+      "color_count": 2,
+      "colors": ["blue", "white"]
+    },
+    {
+      "country": "Hungary",
+      "color_count": 3,
+      "colors": ["red", "white", "green"]
+    },
+    {
+      "country": "Iceland",
+      "color_count": 3,
+      "colors": ["blue", "white", "red"]
+    },
+    {
+      "country": "India",
+      "color_count": 4,
+      "colors": ["saffron", "white", "green", "navy blue"]
+    },
+    {
+      "country": "Indonesia",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Iran",
+      "color_count": 3,
+      "colors": ["green", "white", "red"]
+    },
+    {
+      "country": "Iraq",
+      "color_count": 4,
+      "colors": ["red", "white", "black", "green"]
+    },
+    {
+      "country": "Ireland",
+      "color_count": 3,
+      "colors": ["green", "white", "orange"]
+    },
+    {
+      "country": "Israel",
+      "color_count": 2,
+      "colors": ["blue", "white"]
+    },
+    {
+      "country": "Italy",
+      "color_count": 3,
+      "colors": ["green", "white", "red"]
+    },
+    {
+      "country": "Jamaica",
+      "color_count": 3,
+      "colors": ["green", "yellow", "black"]
+    },
+    {
+      "country": "Japan",
+      "color_count": 2,
+      "colors": ["white", "red"]
+    },
+    {
+      "country": "Jordan",
+      "color_count": 4,
+      "colors": ["red", "white", "green", "black"]
+    },
+    {
+      "country": "Kazakhstan",
+      "color_count": 2,
+      "colors": ["sky blue", "gold"]
+    },
+    {
+      "country": "Kenya",
+      "color_count": 4,
+      "colors": ["black", "red", "green", "white"]
+    },
+    {
+      "country": "Kiribati",
+      "color_count": 4,
+      "colors": ["red", "white", "blue", "yellow"]
+    },
+    {
+      "country": "Korea, North",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Korea, South",
+      "color_count": 4,
+      "colors": ["white", "red", "blue", "black"]
+    },
+    {
+      "country": "Kosovo",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "white"]
+    },
+    {
+      "country": "Kuwait",
+      "color_count": 4,
+      "colors": ["green", "white", "red", "black"]
+    },
+    {
+      "country": "Kyrgyzstan",
+      "color_count": 2,
+      "colors": ["red", "yellow"]
+    },
+    {
+      "country": "Laos",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "Latvia",
+      "color_count": 2,
+      "colors": ["carmine", "white"]
+    },
+    {
+      "country": "Lebanon",
+      "color_count": 3,
+      "colors": ["red", "white", "green"]
+    },
+    {
+      "country": "Lesotho",
+      "color_count": 4,
+      "colors": ["blue", "white", "green", "black"]
+    },
+    {
+      "country": "Liberia",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Libya",
+      "color_count": 4,
+      "colors": ["red", "black", "green", "white"]
+    },
+    {
+      "country": "Liechtenstein",
+      "color_count": 3,
+      "colors": ["blue", "red", "gold"]
+    },
+    {
+      "country": "Lithuania",
+      "color_count": 3,
+      "colors": ["yellow", "green", "red"]
+    },
+    {
+      "country": "Luxembourg",
+      "color_count": 3,
+      "colors": ["red", "white", "light blue"]
+    },
+    {
+      "country": "Madagascar",
+      "color_count": 3,
+      "colors": ["red", "white", "green"]
+    },
+    {
+      "country": "Malawi",
+      "color_count": 3,
+      "colors": ["black", "red", "green"]
+    },
+    {
+      "country": "Malaysia",
+      "color_count": 4,
+      "colors": ["red", "white", "blue", "yellow"]
+    },
+    {
+      "country": "Maldives",
+      "color_count": 3,
+      "colors": ["red", "green", "white"]
+    },
+    {
+      "country": "Mali",
+      "color_count": 3,
+      "colors": ["green", "yellow", "red"]
+    },
+    {
+      "country": "Malta",
+      "color_count": 2,
+      "colors": ["white", "red"]
+    },
+    {
+      "country": "Marshall Islands",
+      "color_count": 3,
+      "colors": ["blue", "orange", "white"]
+    },
+    {
+      "country": "Mauritania",
+      "color_count": 3,
+      "colors": ["green", "gold", "red"]
+    },
+    {
+      "country": "Mauritius",
+      "color_count": 4,
+      "colors": ["red", "blue", "yellow", "green"]
+    },
+    {
+      "country": "Mexico",
+      "color_count": 3,
+      "colors": ["green", "white", "red"]
+    },
+    {
+      "country": "Micronesia, Federated States of",
+      "color_count": 2,
+      "colors": ["light blue", "white"]
+    },
+    {
+      "country": "Moldova",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "red"]
+    },
+    {
+      "country": "Monaco",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Mongolia",
+      "color_count": 3,
+      "colors": ["red", "blue", "yellow"]
+    },
+    {
+      "country": "Montenegro",
+      "color_count": 2,
+      "colors": ["red", "gold"]
+    },
+    {
+      "country": "Morocco",
+      "color_count": 2,
+      "colors": ["red", "green"]
+    },
+    {
+      "country": "Mozambique",
+      "color_count": 5,
+      "colors": ["green", "red", "black", "yellow", "white"]
+    },
+    {
+      "country": "Myanmar (Burma)",
+      "color_count": 4,
+      "colors": ["yellow", "green", "red", "white"]
+    },
+    {
+      "country": "Namibia",
+      "color_count": 5,
+      "colors": ["blue", "red", "green", "white", "yellow"]
+    },
+    {
+      "country": "Nauru",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "white"]
+    },
+    {
+      "country": "Nepal",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "Netherlands",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "New Zealand",
+      "color_count": 3,
+      "colors": ["blue", "red", "white"]
+    },
+    {
+      "country": "Nicaragua",
+      "color_count": 3,
+      "colors": ["blue", "white", "red"]
+    },
+    {
+      "country": "Niger",
+      "color_count": 3,
+      "colors": ["orange", "white", "green"]
+    },
+    {
+      "country": "Nigeria",
+      "color_count": 2,
+      "colors": ["green", "white"]
+    },
+    {
+      "country": "North Macedonia",
+      "color_count": 2,
+      "colors": ["red", "yellow"]
+    },
+    {
+      "country": "Norway",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Oman",
+      "color_count": 3,
+      "colors": ["red", "white", "green"]
+    },
+    {
+      "country": "Pakistan",
+      "color_count": 2,
+      "colors": ["green", "white"]
+    },
+    {
+      "country": "Palau",
+      "color_count": 2,
+      "colors": ["light blue", "yellow"]
+    },
+    {
+      "country": "Panama",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "Papua New Guinea",
+      "color_count": 4,
+      "colors": ["red", "black", "yellow", "white"]
+    },
+    {
+      "country": "Paraguay",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Peru",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Philippines",
+      "color_count": 4,
+      "colors": ["blue", "red", "white", "yellow"]
+    },
+    {
+      "country": "Poland",
+      "color_count": 2,
+      "colors": ["white", "red"]
+    },
+    {
+      "country": "Portugal",
+      "color_count": 5,
+      "colors": ["red", "green", "yellow", "blue", "white"]
+    },
+    {
+      "country": "Qatar",
+      "color_count": 2,
+      "colors": ["maroon", "white"]
+    },
+    {
+      "country": "Romania",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "red"]
+    },
+    {
+      "country": "Russia",
+      "color_count": 3,
+      "colors": ["white", "blue", "red"]
+    },
+    {
+      "country": "Rwanda",
+      "color_count": 3,
+      "colors": ["blue", "yellow", "green"]
+    },
+    {
+      "country": "Saint Kitts and Nevis",
+      "color_count": 4,
+      "colors": ["green", "yellow", "red", "black"]
+    },
+    {
+      "country": "Saint Lucia",
+      "color_count": 4,
+      "colors": ["blue", "yellow", "black", "white"]
+    },
+    {
+      "country": "Saint Vincent and the Grenadines",
+      "color_count": 4,
+      "colors": ["blue", "yellow", "green", "black"]
+    },
+    {
+      "country": "Samoa",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "San Marino",
+      "color_count": 2,
+      "colors": ["white", "light blue"]
+    },
+    {
+      "country": "Sao Tome and Principe",
+      "color_count": 4,
+      "colors": ["green", "yellow", "red", "black"]
+    },
+    {
+      "country": "Saudi Arabia",
+      "color_count": 2,
+      "colors": ["green", "white"]
+    },
+    {
+      "country": "Senegal",
+      "color_count": 3,
+      "colors": ["green", "yellow", "red"]
+    },
+    {
+      "country": "Serbia",
+      "color_count": 3,
+      "colors": ["red", "blue", "white"]
+    },
+    {
+      "country": "Seychelles",
+      "color_count": 5,
+      "colors": ["blue", "yellow", "red", "white", "green"]
+    },
+    {
+      "country": "Sierra Leone",
+      "color_count": 3,
+      "colors": ["green", "white", "blue"]
+    },
+    {
+      "country": "Singapore",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Slovakia",
+      "color_count": 3,
+      "colors": ["white", "blue", "red"]
+    },
+    {
+      "country": "Slovenia",
+      "color_count": 3,
+      "colors": ["white", "blue", "red"]
+    },
+    {
+      "country": "Solomon Islands",
+      "color_count": 4,
+      "colors": ["blue", "green", "yellow", "white"]
+    },
+    {
+      "country": "Somalia",
+      "color_count": 2,
+      "colors": ["light blue", "white"]
+    },
+    {
+      "country": "South Africa",
+      "color_count": 6,
+      "colors": ["red", "blue", "green", "yellow", "black", "white"]
+    },
+    {
+      "country": "Spain",
+      "color_count": 2,
+      "colors": ["red", "yellow"]
+    },
+    {
+      "country": "Sri Lanka",
+      "color_count": 4,
+      "colors": ["maroon", "yellow", "green", "orange"]
+    },
+    {
+      "country": "Sudan",
+      "color_count": 4,
+      "colors": ["red", "white", "black", "green"]
+    },
+    {
+      "country": "South Sudan",
+      "color_count": 6,
+      "colors": ["black", "red", "green", "white", "blue", "yellow"]
+    },
+    {
+      "country": "Suriname",
+      "color_count": 4,
+      "colors": ["green", "white", "red", "yellow"]
+    },
+    {
+      "country": "Sweden",
+      "color_count": 2,
+      "colors": ["blue", "yellow"]
+    },
+    {
+      "country": "Switzerland",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Syria",
+      "color_count": 4,
+      "colors": ["red", "white", "black", "green"]
+    },
+    {
+      "country": "Taiwan",
+      "color_count": 4,
+      "colors": ["red", "blue", "white", "yellow"]
+    },
+    {
+      "country": "Tajikistan",
+      "color_count": 4,
+      "colors": ["red", "white", "green", "gold"]
+    },
+    {
+      "country": "Tanzania",
+      "color_count": 4,
+      "colors": ["green", "yellow", "black", "blue"]
+    },
+    {
+      "country": "Thailand",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Togo",
+      "color_count": 4,
+      "colors": ["green", "yellow", "red", "white"]
+    },
+    {
+      "country": "Tonga",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Trinidad and Tobago",
+      "color_count": 3,
+      "colors": ["red", "white", "black"]
+    },
+    {
+      "country": "Tunisia",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Turkey",
+      "color_count": 2,
+      "colors": ["red", "white"]
+    },
+    {
+      "country": "Turkmenistan",
+      "color_count": 4,
+      "colors": ["green", "white", "red", "gold"]
+    },
+    {
+      "country": "Tuvalu",
+      "color_count": 3,
+      "colors": ["light blue", "yellow", "white"]
+    },
+    {
+      "country": "Uganda",
+      "color_count": 3,
+      "colors": ["black", "yellow", "red"]
+    },
+    {
+      "country": "Ukraine",
+      "color_count": 2,
+      "colors": ["blue", "yellow"]
+    },
+    {
+      "country": "United Arab Emirates",
+      "color_count": 4,
+      "colors": ["red", "green", "white", "black"]
+    },
+    {
+      "country": "United Kingdom",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "United States",
+      "color_count": 3,
+      "colors": ["red", "white", "blue"]
+    },
+    {
+      "country": "Uruguay",
+      "color_count": 3,
+      "colors": ["light blue", "white", "yellow"]
+    },
+    {
+      "country": "Uzbekistan",
+      "color_count": 5,
+      "colors": ["blue", "white", "green", "red", "gold"]
+    },
+    {
+      "country": "Vanuatu",
+      "color_count": 4,
+      "colors": ["red", "green", "black", "yellow"]
+    },
+    {
+      "country": "Vatican City",
+      "color_count": 2,
+      "colors": ["yellow", "white"]
+    },
+    {
+      "country": "Venezuela",
+      "color_count": 3,
+      "colors": ["yellow", "blue", "red"]
+    },
+    {
+      "country": "Vietnam",
+      "color_count": 2,
+      "colors": ["red", "yellow"]
+    },
+    {
+      "country": "Yemen",
+      "color_count": 3,
+      "colors": ["red", "white", "black"]
+    },
+    {
+      "country": "Zambia",
+      "color_count": 4,
+      "colors": ["green", "red", "black", "orange"]
+    },
+    {
+      "country": "Zimbabwe",
+      "color_count": 5,
+      "colors": ["green", "yellow", "red", "black", "white"]
+    }
+  ]
