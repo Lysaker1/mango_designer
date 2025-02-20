@@ -19,20 +19,7 @@ export interface StyleResponse {
 
 export async function POST(request: Request) {
   try {
-    // More detailed debug logging
-    console.log("Environment variables present:", {
-      env: process.env.NODE_ENV,
-      hasEnv: !!process.env.OPENAI_API_KEY,
-      keyStart: process.env.OPENAI_API_KEY?.substring(0, 10),
-      fromDotEnv: process.env.OPENAI_API_KEY === 'sk-proj-mfVr',
-      envFiles: {
-        hasEnvLocal: process.env.NEXT_RUNTIME === 'edge' ? 'N/A' : require('fs').existsSync('.env.local'),
-        hasEnv: process.env.NEXT_RUNTIME === 'edge' ? 'N/A' : require('fs').existsSync('.env')
-      }
-    });
-
     if (!process.env.OPENAI_API_KEY) {
-      console.error("OpenAI API key is missing");
       return NextResponse.json(
         { error: "OpenAI API key not configured" },
         { status: 500 }
@@ -43,17 +30,8 @@ export async function POST(request: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    console.log("Starting bike style mapping request with API key type:", 
-      process.env.OPENAI_API_KEY.startsWith('sk-') ? 'Standard key' : 'Unknown key type');
-
-    // Get the user's freeform styling prompt.
     const { prompt } = await request.json();
-    console.log("Received styling prompt:", prompt);
 
-    // STEP 1: Generate a weighted color theme from the user's prompt.
-    console.log("Step 1: Generating weighted color theme...");
-    // The system prompt now instructs the model to output a JSON with a "theme" object (with a "colors" array)
-    // and a short, minimal "message" that explains the interpretation.
     const themeSystemPrompt = `
 You are a bike style theme generator and mapper. Your task is to analyze a user's freeform styling prompt and generate a weighted color theme that will later be mapped to specific bike parts. You must determine the number of colors based on the input: if the input suggests a flag, pattern, or theme with more than two colors (e.g. "USA", "Russia", "rainbow", "multicolor"), output all the relevant colors with appropriate weights. If the input suggests only one or two colors, output exactly one or two colors with dominant and secondary weights. But you should analyze the input and determine if it suggests a single color or multiple colors.
 
@@ -116,7 +94,6 @@ Output exactly in JSON format with this structure:
 Do not include any extra text.
 `.trim();
 
-    console.log("Sending theme generation request to OpenAI...");
     const themeMessages: ChatCompletionMessageParam[] = [
       { role: "system", content: themeSystemPrompt },
       { role: "user", content: prompt }
@@ -129,32 +106,25 @@ Do not include any extra text.
       max_tokens: 600
     });
     const themeRaw = themeResponse.choices[0].message?.content || '';
-    console.log("Theme raw output:", themeRaw);
     let theme;
     try {
-      console.log("Parsing theme JSON response...");
       theme = JSON.parse(themeRaw);
     } catch (e) {
-      console.error("JSON parsing error for theme:", e);
       throw new Error("Failed to parse theme JSON: " + e);
     }
-    // Updated error check: Ensure theme.theme.colors is an array with at least two items.
+
     if (
       !theme.theme ||
       !Array.isArray(theme.theme.colors) ||
       theme.theme.colors.length < 1
     ) {
-      console.error("Invalid theme structure:", theme);
       throw new Error("Invalid theme structure: 'theme.colors' must be an array with at least one item.");
     }
-    // Optionally, if message is missing, we can add a default one.
+
     if (typeof theme.message !== 'string' || theme.message.trim() === "") {
-      console.log("No message provided, using default message");
       theme.message = "Style interpreted successfully.";
     }
 
-    // STEP 2: Map the weighted theme to bike parts based on your parameter definitions.
-    console.log("Step 2: Mapping colors to bike parts...");
     const mappingSystemPrompt = `
 You are a bike style mapper. You are given a weighted color theme in JSON format as shown below:
 ${JSON.stringify(theme, null, 2)}
@@ -285,7 +255,6 @@ Output exactly in JSON format with this structure:
 Do not include any extra text.
 `.trim();
 
-    console.log("Sending mapping request to OpenAI...");
     const mappingMessages: ChatCompletionMessageParam[] = [
       { role: "system", content: mappingSystemPrompt },
       { role: "user", content: JSON.stringify(theme) }
@@ -298,28 +267,21 @@ Do not include any extra text.
       max_tokens: 700
     });
     const mappingRaw = mappingResponse.choices[0].message?.content || '';
-    console.log("Mapping raw output:", mappingRaw);
     let finalResult;
     try {
-      console.log("Parsing mapping JSON response...");
       finalResult = JSON.parse(mappingRaw);
     } catch (e) {
-      console.error("JSON parsing error for mapping:", e);
       throw new Error("Failed to parse mapping JSON: " + e);
     }
     if (!finalResult.configs || !Array.isArray(finalResult.configs)) {
-      console.error("Invalid mapping structure:", finalResult);
       throw new Error("Invalid final mapping JSON structure");
     }
 
-    console.log("Successfully completed bike style mapping");
     return NextResponse.json({ configs: finalResult.configs, message: theme.message });
   } catch (error) {
-    console.error("Error in bike style mapping route:", error);
     return NextResponse.json(
       { error: "Failed to generate bike style", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
 }
-
