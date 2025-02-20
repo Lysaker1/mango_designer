@@ -36,8 +36,8 @@ export const Grid = ({
           style: {
             stroke: 'currentColor',
             strokeWidth: '1.5',
-            fill: 'none',
-            transform: 'scale(0.8)',
+            fill: icon.props.fill || '#E7E7E7',
+            transform: `${icon.props.style?.transform || ''} scale(0.8)`,
             maxWidth: '100%',
             maxHeight: '100%'
           }

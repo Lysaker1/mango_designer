@@ -265,7 +265,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         {['Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain', 'AI Style'].map((tab) => (
           <button 
             key={tab}
-            className={`relative w-full flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
+            className={`relative w-full h-16 flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
                        ${activeTab === tab ? 'bg-mangoOrange' : 'hover:bg-neutral-800/50'}`}
             onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
           >

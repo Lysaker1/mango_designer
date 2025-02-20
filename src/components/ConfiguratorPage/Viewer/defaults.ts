@@ -12,7 +12,8 @@ export interface ModelConfig {
   subParts: {name:string,color:{hex:string,label:string}}[]
 }
 
-export const colors = { 
+export const colors = {
+  mangoOrange: { hex: '#f35417', label: 'Mango Orange' },
   orange: { hex: '#ff7f00', label: 'Orange' },
   yellow: { hex: '#ffff00', label: 'Yellow' },
   darkBlue: { hex: '#000080', label: 'Dark Blue' },
