@@ -18,7 +18,7 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
-  const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'Style' | undefined>();
+  const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -70,26 +70,38 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       
       const updatedConfigs = configs.map(config => {
         const styleConfig = response.find((sc: any) => sc.name === config.name);
-        if (!styleConfig?.subParts) return config;
+        if (!styleConfig) return config;
 
-        // Get all parameter definitions that match this model
+        // Debug logging
+        console.log(`Processing config for: ${config.name}`);
+        console.log('StyleConfig:', styleConfig);
+
         const paramDefs = PARAMETER_DEFINITIONS.filter(
-          param => param.model === config.name
+          param => param.model === config.name || 
+                  (config.subParts?.some(part => param.subPart?.includes(part.name)))
         );
 
+        // Debug logging
+        console.log('Matching paramDefs:', paramDefs);
+
         const updatedSubParts = config.subParts?.map(part => {
-          const stylePart = styleConfig.subParts.find((sp: any) => 
+          const stylePart = styleConfig.subParts?.find((sp: any) => 
             sp.name === part.name
           );
           
+          // Debug logging
+          console.log(`Processing part: ${part.name}`);
+          console.log('StylePart found:', stylePart);
+
           if (!stylePart?.color?.label) return part;
 
-          // Find ALL parameter definitions that include this part
           const matchingParamDefs = paramDefs.filter(
             param => param.subPart?.includes(part.name)
           );
 
-          // Try each parameter definition until we find a matching color
+          // Debug logging
+          console.log('Matching paramDefs for part:', matchingParamDefs);
+
           for (const paramDef of matchingParamDefs) {
             if (paramDef?.colors) {
               const matchedColor = Object.entries(paramDef.colors).find(
@@ -128,7 +140,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
 
   const renderParameters = (category: string) => {
-    if (category === 'Style') {
+    if (category === 'AI Style') {
       return (
         <div className="p-4">
           <textarea
@@ -206,7 +218,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'Style':
+      case 'AI Style':
         return (
           <div className="rounded-3xl w-full mb-4">
             <textarea
@@ -250,7 +262,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   return (
     <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
       <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
-        {['Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain', 'Style'].map((tab) => (
+        {['Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain', 'AI Style'].map((tab) => (
           <button 
             key={tab}
             className={`relative w-full flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 

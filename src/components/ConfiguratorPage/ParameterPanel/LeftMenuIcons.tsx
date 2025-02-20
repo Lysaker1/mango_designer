@@ -44,10 +44,20 @@ export const LeftMenuIcons = {
       <path strokeWidth="1" d="M510.512 303.161C513.715 303.161 516.311 300.564 516.311 297.359C516.311 294.154 513.715 291.557 510.512 291.557C507.31 291.557 504.713 294.154 504.713 297.359C504.713 300.564 507.31 303.161 510.512 303.161Z" stroke="#A7A7A7" strokeMiterlimit="10"/>
     </svg>
   ),
-  'Style': (
+  'AI Style': (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth={1} overflow={"visible"}>
       <path 
-        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+        d="M12 2L15 9L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 9L12 2Z" 
+        stroke="#A7A7A7" 
+        strokeMiterlimit="10"
+      />
+      <path 
+        d="M7 7.5L4 6.5L3 3.5L6 4.5L7 7.5Z" 
+        stroke="#A7A7A7" 
+        strokeMiterlimit="10"
+      />
+      <path 
+        d="M17 7.5L20 6.5L21 3.5L18 4.5L17 7.5Z" 
         stroke="#A7A7A7" 
         strokeMiterlimit="10"
       />

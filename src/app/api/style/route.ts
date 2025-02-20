@@ -2,11 +2,6 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
-// IMPORTANT: In production, store your API key in .env.local
-const openai = new OpenAI({
-    apiKey: ""
-});
-
 export interface ColorConfig {
   hex: string;
   label: string;
@@ -24,7 +19,32 @@ export interface StyleResponse {
 
 export async function POST(request: Request) {
   try {
-    console.log("Starting bike style mapping request...");
+    // More detailed debug logging
+    console.log("Environment variables present:", {
+      env: process.env.NODE_ENV,
+      hasEnv: !!process.env.OPENAI_API_KEY,
+      keyStart: process.env.OPENAI_API_KEY?.substring(0, 10),
+      fromDotEnv: process.env.OPENAI_API_KEY === 'sk-proj-mfVr',
+      envFiles: {
+        hasEnvLocal: process.env.NEXT_RUNTIME === 'edge' ? 'N/A' : require('fs').existsSync('.env.local'),
+        hasEnv: process.env.NEXT_RUNTIME === 'edge' ? 'N/A' : require('fs').existsSync('.env')
+      }
+    });
+
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("OpenAI API key is missing");
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    console.log("Starting bike style mapping request with API key type:", 
+      process.env.OPENAI_API_KEY.startsWith('sk-') ? 'Standard key' : 'Unknown key type');
 
     // Get the user's freeform styling prompt.
     const { prompt } = await request.json();
@@ -64,8 +84,9 @@ Use the following source of truth for bike parts and their subparts:
     - The **first color** is the dominant color (for major parts like the Frame and Wheel Rim).
     - The subsequent colors are secondary, tertiary, etc. (for parts like Wheel Tube, Handlebar subparts, Saddle subparts, Pedals, and Chain).
 - **Dynamic Color Count:**
-  - If the prompt implies exactly one or two colors, output one or two colors.
-  - If the prompt implies three or more colors (for example, "USA" should yield red, white, and blue; "rainbow" should include multiple colors), output the full set with appropriate or equal weights.
+  - For single-color inputs, output only the main color with weight 1.0 
+  - If the prompt implies two or more colors, output all colors with appropriate weights
+  - For themed inputs (e.g., "USA", "rainbow"), output the full set of theme colors
 - Additionally, provide a short, concise, and smart message explaining your interpretation. Your explanation should be clear and nuanced. For example, for input "China" you might say:  
   "Interpreted as a dominant red balanced by a subtle yellow detail."
 
@@ -121,10 +142,10 @@ Do not include any extra text.
     if (
       !theme.theme ||
       !Array.isArray(theme.theme.colors) ||
-      theme.theme.colors.length < 2
+      theme.theme.colors.length < 1
     ) {
       console.error("Invalid theme structure:", theme);
-      throw new Error("Invalid theme structure: 'theme.colors' must be an array with at least two items.");
+      throw new Error("Invalid theme structure: 'theme.colors' must be an array with at least one item.");
     }
     // Optionally, if message is missing, we can add a default one.
     if (typeof theme.message !== 'string' || theme.message.trim() === "") {
@@ -138,26 +159,83 @@ Do not include any extra text.
 You are a bike style mapper. You are given a weighted color theme in JSON format as shown below:
 ${JSON.stringify(theme, null, 2)}
 
-Using only the available color labels, assign colors to the bike parts as follows. Determine the number of colors in the theme and use the weights to determine the importance of the colors. 1 is the most important, 0.1 is the least important. Big bike parts should be assigned the most important color, smaller parts should be assigned the least important color.
+Your goal is to map the weighted colors from the theme (i.e. "${JSON.stringify(theme, null, 2)}") to the specific bike parts using only the available color options for each part. Use the weights (1 is highest, 0.1 is lowest) to assign the dominant color to the largest parts and lesser weighted colors to smaller parts.
+
+IMPORTANT:
+1. ONLY use colors from the exact palettes listed for each part.
+2. Colors are case-sensitive – use the exact names provided.
+3. For Frame parts, if a blue tone is needed, use either 'darkBlue' or 'babyBlue'.
+4. If a theme color is not available in a part's palette, choose the most similar available color.
+5. Always refer back to the theme JSON: "${JSON.stringify(theme, null, 2)}" for the colors and their weights.
 
 Map the colors to these parts and subparts:
 
-1. **Frame** (Frame Palette):
-   - Top-level frame color.
-   - Subparts: "frame_mesh", "fork_mesh", "chain_mesh".
-2. **Rear Wheel** (Wheels Palette):
-   - Subparts: "Rim", "Tube", "Cog", "Logo".
-3. **Front Wheel** (Wheels Palette):
-   - Subparts: "Tube", "Rim", "Cog", "Spokes".
-4. **Saddle**:
-   - Use the Saddle Body Palette for "saddleSide_mesh", "saddleTop_mesh", and "saddleFrame_mesh".
-   - Use the Saddle Post Palette for "seatPost_mesh".
-5. **Handlebar**:
-   - Use the Handlebar (Main) Palette for "handlebar_mesh" and "stem_mesh".
-   - Use the Grip Palette for "grip_mesh".
-   - Also assign colors for "levers_mesh" and "headsetSpacers_mesh" using the Handlebar (Main) Palette.
-6. **Pedals** (Pedals Palette):
-   - Subparts: "pedalTread_mesh", "pedalShaft_mesh".
+1. **Frame**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Frame & Fork: [ orange, yellow, darkBlue, babyBlue, purple, green, black, silver, creamClassic, aquaBlue ]
+   - Available colors for Chain: [ black, silver, white, red, orange, yellow, green, blue, purple, pink ]
+   
+   Subparts:
+   - "frame_mesh" – MUST use Frame & Fork colors.
+   - "fork_mesh" – MUST use Frame & Fork colors.
+   - "chain_mesh" – MUST use Chain colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+2. **Rear Wheel**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts (all MUST use these colors):
+   - "Rim"
+   - "Tube"
+   - "Cog"
+   - "Logo"
+   - If the theme color is not in the available list, choose a similar option.
+
+3. **Front Wheel**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts (all MUST use these colors):
+   - "Tube"
+   - "Rim"
+   - "Cog"
+   - "Spokes"
+   - If the theme color is not in the available list, choose a similar option.
+
+4. **Saddle**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Saddle Body (saddleSide_mesh, saddleTop_mesh, saddleFrame_mesh): [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
+   - Available colors for Saddle Post (seatPost_mesh): [ black, silver, gold ]
+   
+   Subparts:
+   - "saddleSide_mesh" – MUST use Saddle Body colors.
+   - "saddleTop_mesh" – MUST use Saddle Body colors.
+   - "saddleFrame_mesh" – MUST use Saddle Body colors.
+   - "seatPost_mesh" – MUST use Saddle Post colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+5. **Handlebar**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Handlebar (handlebar_mesh, stem_mesh, levers_mesh, headsetSpacers_mesh): [ black, gold, silver ]
+   - Available colors for Grip (grip_mesh): [ black, red, orange, yellow, green, blue, purple, pink, white ]
+   
+   Subparts:
+   - "handlebar_mesh" – MUST use Handlebar colors.
+   - "stem_mesh" – MUST use Handlebar colors.
+   - "levers_mesh" – MUST use Handlebar colors.
+   - "headsetSpacers_mesh" – MUST use Handlebar colors.
+   - "grip_mesh" – MUST use Grip colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+6. **Pedals**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts:
+   - "pedalTread_mesh" – MUST use these colors.
+   - "pedalShaft_mesh" – MUST use these colors.
+   - If the theme color is not in the available list, choose a similar option.
 
 Output exactly in JSON format with this structure:
 {
@@ -190,11 +268,11 @@ Output exactly in JSON format with this structure:
       ]
     },
     { "name": "Handlebar", "subParts": [
-        { "name": "stem_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "handlebar_mesh", "color": { "label": "COLOR_NAME" } },
-        { "name": "grip_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "stem_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "levers_mesh", "color": { "label": "COLOR_NAME" } },
-        { "name": "headsetSpacers_mesh", "color": { "label": "COLOR_NAME" } }
+        { "name": "headsetSpacers_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "grip_mesh", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Pedals", "subParts": [
@@ -204,17 +282,6 @@ Output exactly in JSON format with this structure:
     }
   ]
 }
-
-**Available Color Palettes:**
-- Frame Palette: [ orange, yellow, darkBlue, babyBlue, purple, green, black, silver, creamClassic, aquaBlue ]
-- Wheels Palette: [ black, blue, green, orange, pink, purple, red, white, yellow ]
-- Handlebar (Main) Palette: [ black, gold, silver ]
-- Grip Palette: [ black, red, orange, yellow, green, blue, purple, pink, white ]
-- Saddle Body Palette: [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
-- Saddle Post Palette: [ black, silver, gold ]
-- Pedals Palette: [ black, blue, green, orange, pink, purple, red, white, yellow ]
-- Chain Palette: [ black, silver, white, red, orange, yellow, green, blue, purple, pink ]
-
 Do not include any extra text.
 `.trim();
 
