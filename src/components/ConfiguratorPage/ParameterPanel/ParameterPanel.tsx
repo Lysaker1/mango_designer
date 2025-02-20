@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, ReactElement, SVGProps } from 'react';
 import { ColorPicker } from './parameterTypes/ColorPicker';
 import { PARAMETER_DEFINITIONS, type ParameterDefinition } from './parameterDefintions';
 import { Grid } from './parameterTypes/Grid/Grid';
@@ -273,7 +273,16 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               {LeftMenuIcons[tab as keyof typeof LeftMenuIcons] ? (
                 <div className={`w-8 h-8 transition-colors duration-200 flex justify-center items-center
                                 ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
-                  {LeftMenuIcons[tab as keyof typeof LeftMenuIcons]}
+                  {React.cloneElement(LeftMenuIcons[tab as keyof typeof LeftMenuIcons] as ReactElement<SVGProps<SVGSVGElement>>, {
+                    className: 'w-full h-full',
+                    style: {
+                      stroke: 'currentColor',
+                      strokeWidth: '1.5',
+                      transform: 'scale(0.8)',
+                      maxWidth: '100%',
+                      maxHeight: '100%'
+                    }
+                  })}
                 </div>
               ) : (
                 <img 
