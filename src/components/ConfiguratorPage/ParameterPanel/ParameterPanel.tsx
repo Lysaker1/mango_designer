@@ -249,11 +249,11 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
   return (
     <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
-      <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
+      <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-1 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
         {['Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain', 'Style'].map((tab) => (
           <button 
             key={tab}
-            className={`relative w-full flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
+            className={`relative w-full h-16 flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
                        ${activeTab === tab ? 'bg-mangoOrange' : 'hover:bg-neutral-800/50'}`}
             onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
           >
