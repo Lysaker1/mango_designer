@@ -2,165 +2,286 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-interface ColorConfig {
+export interface ColorConfig {
   hex: string;
   label: string;
 }
 
-interface StyleConfig {
+export interface StyleConfig {
   name: string;
   color: ColorConfig;
   subParts?: StyleConfig[];
 }
 
-interface StyleResponse {
+export interface StyleResponse {
   configs: StyleConfig[];
 }
 
 export async function POST(request: Request) {
   try {
-    // Pull the user's prompt from the request body
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const { prompt } = await request.json();
-    console.log("Received prompt:", prompt);
 
-    // Build the messages array with system + user instructions
-    const messages = [
-      {
-        role: "system",
-        content: `
-You are a **bike style expert**. You can handle color references from:
-• Country flags (e.g., "Make it look like the Norwegian flag").
-• Sports teams, cities, or cultural references (e.g., "Barcelona style").
-• General descriptive prompts (e.g., "sunset," "forest," "Barbie style").
+    const themeSystemPrompt = `
+You are a bike style theme generator and mapper. Your task is to analyze a user's freeform styling prompt and generate a weighted color theme that will later be mapped to specific bike parts. You must determine the number of colors based on the input: if the input suggests a flag, pattern, or theme with more than two colors (e.g. "USA", "Russia", "rainbow", "multicolor"), output all the relevant colors with appropriate weights. If the input suggests only one or two colors, output exactly one or two colors with dominant and secondary weights. But you should analyze the input and determine if it suggests a single color or multiple colors.
 
-**Important**:
-- If a user references a well-known country or team, **double-check** the official/well-known colors. For instance:
-  - USA → red, white, navy/blue. (Map navy to "darkBlue" #000080, red to #ff0000, white to #ffffff.)
-  - Norway → red, white, blue.
-  - Germany → black, red, gold.
-  - FC Barcelona → red, blue, yellow.
-  - etc.
-- **Do not** introduce extra/unrelated colors. If the user says "USA," do not randomly choose orange or green, etc. **Strictly** use the recognized colors for that reference.
-- For general prompts like "sunset," pick warm oranges/reds/pinks from the available palette, etc.
+Use the following source of truth for bike parts and their subparts:
 
-Then map these colors to the **closest** available colors in the following palettes.
+**Bike Parts and Subparts:**
+- **Frame:** Uses a single color from the Frame Palette.
+- **Front Wheel:** Has two subparts:
+  - *Rim* (color from the Wheels Palette)
+  - *Tube* (color from the Wheels Palette)
+- **Rear Wheel:** Has two subparts:
+  - *Rim* (color from the Wheels Palette)
+  - *Tube* (color from the Wheels Palette)
+- **Handlebar:** Has three subparts:
+  - *handlebar_mesh* (main handlebar; use the Handlebar (Main) Palette)
+  - *stem_mesh* (handlebar stem; use the Handlebar (Main) Palette)
+  - *grip_mesh* (handlebar grips; use the Grip Palette)
+- **Saddle:** Has two subparts:
+  - *saddleSide_mesh* (main saddle body; use the Saddle Body Palette)
+  - *seatPost_mesh* (saddle post; use the Saddle Post Palette)
+- **Pedals:** Uses a single color from the Pedals Palette.
+- **Chain:** Uses a single color from the Chain Palette.
 
-AVAILABLE COLORS
+**Important Instructions:**
+- Do **not** include hex codes in your output; only output the color label.
+- Generate a weighted color theme by outputting an array of colors with assigned weight values.
+  - The order of colors reflects their prominence:
+    - The **first color** is the dominant color (for major parts like the Frame and Wheel Rim).
+    - The subsequent colors are secondary, tertiary, etc. (for parts like Wheel Tube, Handlebar subparts, Saddle subparts, Pedals, and Chain).
+- **Dynamic Color Count:**
+  - For single-color inputs, output only the main color with weight 1.0 
+  - If the prompt implies two or more colors, output all colors with appropriate weights
+  - For themed inputs (e.g., "USA", "rainbow"), output the full set of theme colors
+- Additionally, provide a short, concise, and smart message explaining your interpretation. Your explanation should be clear and nuanced. For example, for input "China" you might say:  
+  "Interpreted as a dominant red balanced by a subtle yellow detail."
 
-Frame
+**Available Color Palettes**  
+(Only use these color labels):
+
+- **Frame Palette:** [ orange, yellow, darkBlue, babyBlue, purple, green, black, silver, creamClassic, aquaBlue ]
+- **Wheels Palette:** [ black, blue, green, orange, pink, purple, red, white, yellow ]
+- **Handlebar (Main) Palette:** [ black, gold, silver ]
+- **Grip Palette:** [ black, red, orange, yellow, green, blue, purple, pink, white ]
+- **Saddle Body Palette:** [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
+- **Saddle Post Palette:** [ black, silver, gold ]
+- **Pedals Palette:** [ black, blue, green, orange, pink, purple, red, white, yellow ]
+- **Chain Palette:** [ black, silver, gold ]
+
+Output exactly in JSON format with this structure:
 {
-  "orange":      { "hex": "#ff7f00", "label": "Orange" },
-  "yellow":      { "hex": "#ffff00", "label": "Yellow" },
-  "darkBlue":    { "hex": "#000080", "label": "Dark Blue" },
-  "babyBlue":    { "hex": "#87ceeb", "label": "Baby Blue" },
-  "purple":      { "hex": "#800080", "label": "Purple" },
-  "green":       { "hex": "#008000", "label": "Green" },
-  "black":       { "hex": "#000000", "label": "Black" },
-  "silver":      { "hex": "#c0c0c0", "label": "Silver" },
-  "creamClassic":{ "hex": "#f5f5dc", "label": "Cream Classic" },
-  "aquaBlue":    { "hex": "#00ffff", "label": "Aqua Blue" }
+  "theme": {
+    "colors": [
+      { "label": "COLOR_NAME", "weight": number },
+      { "label": "COLOR_NAME", "weight": number },
+      ...
+    ]
+  },
+  "message": "SHORT MINIMAL MESSAGE EXPLAINING THE INTERPRETATION"
 }
+Do not include any extra text.
+`.trim();
 
-Wheels (both Front and Rear, for Rim and Tube)
-{
-  "black":  { "hex": "#000000", "label": "Black" },
-  "blue":   { "hex": "#0000ff", "label": "Blue" },
-  "green":  { "hex": "#008000", "label": "Green" },
-  "orange": { "hex": "#ff7f00", "label": "Orange" },
-  "pink":   { "hex": "#ffc0cb", "label": "Pink" },
-  "purple": { "hex": "#800080", "label": "Purple" },
-  "red":    { "hex": "#ff0000", "label": "Red" },
-  "white":  { "hex": "#ffffff", "label": "White" },
-  "yellow": { "hex": "#ffff00", "label": "Yellow" }
-}
+    const themeMessages: ChatCompletionMessageParam[] = [
+      { role: "system", content: themeSystemPrompt },
+      { role: "user", content: prompt }
+    ];
 
-Handlebar
-{
-  "black":  { "hex": "#000000", "label": "Black" },
-  "gold":   { "hex": "#ffd700", "label": "Gold" },
-  "silver": { "hex": "#c0c0c0", "label": "Silver" }
-}
+    const themeResponse = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: themeMessages,
+      temperature: 0.2,
+      max_tokens: 600
+    });
+    const themeRaw = themeResponse.choices[0].message?.content || '';
+    let theme;
+    try {
+      theme = JSON.parse(themeRaw);
+    } catch (e) {
+      throw new Error("Failed to parse theme JSON: " + e);
+    }
 
-Saddle
-{
-  "brown":  { "hex": "#a52a2a", "label": "Brown" },
-  "black":  { "hex": "#000000", "label": "Black" },
-  "white":  { "hex": "#ffffff", "label": "White" },
-  "pink":   { "hex": "#ffc0cb", "label": "Pink" },
-  "orange": { "hex": "#ff7f00", "label": "Orange" },
-  "green":  { "hex": "#008000", "label": "Green" },
-  "purple": { "hex": "#800080", "label": "Purple" },
-  "blue":   { "hex": "#0000ff", "label": "Blue" },
-  "yellow": { "hex": "#ffff00", "label": "Yellow" },
-  "red":    { "hex": "#ff0000", "label": "Red" }
-}
+    if (
+      !theme.theme ||
+      !Array.isArray(theme.theme.colors) ||
+      theme.theme.colors.length < 1
+    ) {
+      throw new Error("Invalid theme structure: 'theme.colors' must be an array with at least one item.");
+    }
 
-RESPONSE FORMAT:
-Always respond with a JSON object matching **exactly** this structure (no extra keys):
+    if (typeof theme.message !== 'string' || theme.message.trim() === "") {
+      theme.message = "Style interpreted successfully.";
+    }
+
+    const mappingSystemPrompt = `
+You are a bike style mapper. You are given a weighted color theme in JSON format as shown below:
+${JSON.stringify(theme, null, 2)}
+
+Your goal is to map the weighted colors from the theme (i.e. "${JSON.stringify(theme, null, 2)}") to the specific bike parts using only the available color options for each part. Use the weights (1 is highest, 0.1 is lowest) to assign the dominant color to the largest parts and lesser weighted colors to smaller parts.
+
+IMPORTANT:
+1. ONLY use colors from the exact palettes listed for each part.
+2. Colors are case-sensitive – use the exact names provided.
+3. For Frame parts, if a blue tone is needed, use either 'darkBlue' or 'babyBlue'.
+4. If a theme color is not available in a part's palette, choose the most similar available color.
+5. Always refer back to the theme JSON: "${JSON.stringify(theme, null, 2)}" for the colors and their weights.
+
+Map the colors to these parts and subparts:
+
+1. **Frame**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Frame & Fork: [ orange, yellow, darkBlue, babyBlue, purple, green, black, silver, creamClassic, aquaBlue ]
+   - Available colors for Chain: [ black, silver, white, red, orange, yellow, green, blue, purple, pink ]
+   
+   Subparts:
+   - "frame_mesh" – MUST use Frame & Fork colors.
+   - "fork_mesh" – MUST use Frame & Fork colors.
+   - "chain_mesh" – MUST use Chain colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+2. **Rear Wheel**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts (all MUST use these colors):
+   - "Rim"
+   - "Tube"
+   - "Cog"
+   - "Logo"
+   - If the theme color is not in the available list, choose a similar option.
+
+3. **Front Wheel**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts (all MUST use these colors):
+   - "Tube"
+   - "Rim"
+   - "Cog"
+   - "Spokes"
+   - If the theme color is not in the available list, choose a similar option.
+
+4. **Saddle**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Saddle Body (saddleSide_mesh, saddleTop_mesh, saddleFrame_mesh): [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
+   - Available colors for Saddle Post (seatPost_mesh): [ black, silver, gold ]
+   
+   Subparts:
+   - "saddleSide_mesh" – MUST use Saddle Body colors.
+   - "saddleTop_mesh" – MUST use Saddle Body colors.
+   - "saddleFrame_mesh" – MUST use Saddle Body colors.
+   - "seatPost_mesh" – MUST use Saddle Post colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+5. **Handlebar**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors for Handlebar (handlebar_mesh, stem_mesh, levers_mesh, headsetSpacers_mesh): [ black, gold, silver ]
+   - Available colors for Grip (grip_mesh): [ black, red, orange, yellow, green, blue, purple, pink, white ]
+   
+   Subparts:
+   - "handlebar_mesh" – MUST use Handlebar colors.
+   - "stem_mesh" – MUST use Handlebar colors.
+   - "levers_mesh" – MUST use Handlebar colors.
+   - "headsetSpacers_mesh" – MUST use Handlebar colors.
+   - "grip_mesh" – MUST use Grip colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+6. **Pedals**
+   - Theme reference: "${JSON.stringify(theme, null, 2)}"
+   - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
+   
+   Subparts:
+   - "pedalTread_mesh" – MUST use these colors.
+   - "pedalShaft_mesh" – MUST use these colors.
+   - If the theme color is not in the available list, choose a similar option.
+
+Output exactly in JSON format with this structure:
 {
   "configs": [
-    { "name": "Frame", "color": { "hex": "#HEX", "label": "COLOR_NAME" } },
-    { "name": "Front Wheel", "subParts": [
-        { "name": "Rim",  "color": { "hex": "#HEX", "label": "COLOR_NAME" } },
-        { "name": "Tube", "color": { "hex": "#HEX", "label": "COLOR_NAME" } }
+    { "name": "Frame", "color": { "label": "COLOR_NAME" }, "subParts": [
+        { "name": "frame_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "fork_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "chain_mesh", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Rear Wheel", "subParts": [
-        { "name": "Rim",  "color": { "hex": "#HEX", "label": "COLOR_NAME" } },
-        { "name": "Tube", "color": { "hex": "#HEX", "label": "COLOR_NAME" } }
+        { "name": "Rim", "color": { "label": "COLOR_NAME" } },
+        { "name": "Tube", "color": { "label": "COLOR_NAME" } },
+        { "name": "Cog", "color": { "label": "COLOR_NAME" } },
+        { "name": "Logo", "color": { "label": "COLOR_NAME" } }
       ]
     },
-    { "name": "Handlebar", "color": { "hex": "#HEX", "label": "COLOR_NAME" } },
-    { "name": "Saddle", "color": { "hex": "#HEX", "label": "COLOR_NAME" } }
+    { "name": "Front Wheel", "subParts": [
+        { "name": "Tube", "color": { "label": "COLOR_NAME" } },
+        { "name": "Rim", "color": { "label": "COLOR_NAME" } },
+        { "name": "Cog", "color": { "label": "COLOR_NAME" } },
+        { "name": "Spokes", "color": { "label": "COLOR_NAME" } }
+      ]
+    },
+    { "name": "Saddle", "subParts": [
+        { "name": "saddleSide_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "saddleTop_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "saddleFrame_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "seatPost_mesh", "color": { "label": "COLOR_NAME" } }
+      ]
+    },
+    { "name": "Handlebar", "subParts": [
+        { "name": "handlebar_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "stem_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "levers_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "headsetSpacers_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "grip_mesh", "color": { "label": "COLOR_NAME" } }
+      ]
+    },
+    { "name": "Pedals", "subParts": [
+        { "name": "pedalTread_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "pedalShaft_mesh", "color": { "label": "COLOR_NAME" } }
+      ]
+    }
   ]
 }
+Do not include any extra text.
+`.trim();
 
-INSTRUCTIONS:
-1. If the user references a known country or team, **only** use that entity's recognized colors from the palette. E.g. "USA" → red, white, darkBlue. 
-2. For general prompts like "sunset," pick relevant colors from the available palette.
-3. By default, match front and rear wheels (rim & tube) unless the user says otherwise.
-4. Keep it cohesive and use only the provided palette.
-5. Output only the JSON structure, no extra text.
-        `.trim()
-      },
-      {
-        role: "user",
-        content: prompt
-      }
-    ] as ChatCompletionMessageParam[];
+    const mappingMessages: ChatCompletionMessageParam[] = [
+      { role: "system", content: mappingSystemPrompt },
+      { role: "user", content: JSON.stringify(theme) }
+    ];
 
-    // Send request to ChatCompletion
-    const response = await openai.chat.completions.create({
+    const mappingResponse = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages,
-      // Lower temperature → more literal, less random
-      temperature: 0.2,
-      max_tokens: 500
+      messages: mappingMessages,
+      temperature: 0.05,
+      max_tokens: 700
     });
-
-    const rawContent = response.choices[0].message?.content || '';
-    console.log('Raw API response:', rawContent);
-
-    // Attempt to parse the JSON
-    const rawResult = JSON.parse(rawContent);
-    console.log('Parsed result:', rawResult);
-
-    // Validate the structure
-    if (!rawResult.configs || !Array.isArray(rawResult.configs)) {
-      throw new Error('Invalid response format: missing configs array');
+    const mappingRaw = mappingResponse.choices[0].message?.content || '';
+    let finalResult;
+    try {
+      finalResult = JSON.parse(mappingRaw);
+    } catch (e) {
+      throw new Error("Failed to parse mapping JSON: " + e);
+    }
+    if (!finalResult.configs || !Array.isArray(finalResult.configs)) {
+      throw new Error("Invalid final mapping JSON structure");
     }
 
-    // Return the final JSON
-    return NextResponse.json({ configs: rawResult.configs });
+    return NextResponse.json({ configs: finalResult.configs, message: theme.message });
   } catch (error) {
-    console.error('Error in style route:', error);
-    return NextResponse.json({ 
-      error: 'Failed to get style suggestion',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to generate bike style", details: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    );
   }
 }
