@@ -18,6 +18,7 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
+  console.log(configs[0].type,"congigigi")
   const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,10 +40,10 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
   
 
-  const handleTypeChange = (value: string, model: string) => {
+  const handleTypeChange = (value: string, model: string,type:string) => {
     const updatedConfigs = configs.map(config => {
       if (config.name === model) {
-        return { ...config, path: value };
+        return { ...config, path: value, type:type };
       }
       return config;
     });
@@ -177,7 +178,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           <Dropdown
             value={configs.find(config => config.name === param.model)?.path || param.value}
             options={param.options || []}
-            onChange={(value) => handleTypeChange(value, param.model)}
+            onChange={(value,label) => handleTypeChange(value, param.model,label)}
             label={param.name}
           />
         )}
@@ -202,7 +203,8 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           <Grid
             definition={param}
             value={configs.find(config => config.name === param.model)?.path || param.value}
-            onChange={(value) => handleTypeChange(value, param.model)}
+            onChange={(value,definition,label) => handleTypeChange(value, param.model, label )}
+            frameType={configs[0].type as string}
           />
         )}
         {param.type === 'color' && (

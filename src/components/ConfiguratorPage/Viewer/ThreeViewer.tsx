@@ -5,8 +5,9 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { Box, OrbitControls, Stage, useGLTF } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial, Group } from 'three';
 import * as THREE from 'three';
-import { ModelConfig } from './defaults';
-import { GLTFLoader, SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { frames, ModelConfig } from './defaults';
+import { SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { TextureLoader } from 'three';
 import { PARAMETER_DEFINITIONS } from '../ParameterPanel/parameterDefintions';
 
 interface ModelProps {
@@ -21,7 +22,7 @@ interface ModelProps {
 
 const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading, configs, subParts }, ref) => {
   const { scene } = useGLTF(modelPath);
-
+  console.log(scene,"scenen")
   // Apply color to the model if provided
   if (color) {
     scene.traverse((node) => {
@@ -108,40 +109,67 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
 
 Model.displayName = 'Model';
 
-const Component = React.forwardRef<Group, { modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string }; }[]; }>(({ modelPath, position, rotation, color, subParts }, ref) => {
+const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string },texturePath?:string}[];frameType:string|undefined }>(({ modelName, modelPath, position, rotation, color, subParts, frameType }, ref) => {
   const { scene } = useGLTF(modelPath);
   const newScene = SkeletonUtils.clone(scene);
+  console.log(newScene)
+  const hiddenObjects = frameType && modelName && frames[frameType]?.[modelName] || [];
 
   // Apply color to the new scene if provided
   if (color) {
     newScene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        // Ensure each child has a separate material instance
         child.material = child.material.clone(); 
         child.castShadow = true;
-
-        // Default base color (applies to entire object first)
         child.material.color.set(color);
       }
     });
-  } else {
-    // Handle subParts coloring
+  } 
     if (subParts) {
-      subParts.forEach(({ name, color }) => {
-        const part = newScene.getObjectByName(name); // 🔍 Find specific part by name
+      subParts.forEach(({ name, color , texturePath}) => {
+        const part = newScene.getObjectByName(name); 
+        let texture=null;
+        
+        if(texturePath){
+          const newtexture = useLoader(TextureLoader, texturePath);
+          texture=newtexture.clone()
+        }
         if (part) {
           part.traverse((child) => {
             if (child instanceof THREE.Mesh && child.material) {
-              // Clone material only for subpart meshes (so base color remains for other parts)
               child.material = child.material.clone();  
+              if (texture) {
+                if(part.name == "logoBack"){
+                  texture.rotation=Math.PI;
+                }
+                if(part.name == "logoFront"){
+                texture.flipY = false;
+                }
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.colorSpace = THREE.SRGBColorSpace;
+                // Apply texture to material
+                child.material.map = texture;            
+            }
               child.material.color.set(color.hex);
               child.material.needsUpdate = true; 
             }
           });
         }
       });
-    }
   }
+  hiddenObjects.forEach((name) => {
+    const part = newScene.getObjectByName(name); // 🔍 Find specific part by name
+    if (part) {
+      part.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+          child.visible = false; // Hide the mesh
+        }
+      });
+    }
+
+  });
+  
 
   newScene.position.set(position.x, position.y, position.z);
 
@@ -196,8 +224,8 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
             {!isLoading &&
               configs.map(
                 (model, index) =>
-                  model.position && model.rotation && index !== 0 && (
-                    <Component key={index} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} />
+                  model.position && model.rotation && index !=0 && (
+                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type}/>
                   )
               )}
           </Stage>
