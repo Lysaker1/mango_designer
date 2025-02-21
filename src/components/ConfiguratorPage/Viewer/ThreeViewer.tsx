@@ -22,7 +22,7 @@ interface ModelProps {
 
 const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading, configs, subParts }, ref) => {
   const { scene } = useGLTF(modelPath);
-
+  console.log(scene,"scenen")
   // Apply color to the model if provided
   if (color) {
     scene.traverse((node) => {
@@ -133,7 +133,6 @@ const Component = React.forwardRef<Group, { modelName:string, modelPath: string;
         if(texturePath){
           const newtexture = useLoader(TextureLoader, texturePath);
           texture=newtexture.clone()
-          console.log(texture,"texture")
         }
         if (part) {
           part.traverse((child) => {
@@ -168,7 +167,6 @@ const Component = React.forwardRef<Group, { modelName:string, modelPath: string;
         }
       });
     }
-    console.log(part,"parttt updated")
 
   });
   

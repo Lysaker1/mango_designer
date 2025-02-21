@@ -75,7 +75,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke.glb",disabled:false},
-      { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_3SpokeMag.glb",disabled:true },
+      // { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_3SpokeMag.glb",disabled:true },
       { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb",disabled:false},
     ],
     category: 'Wheels',
@@ -130,8 +130,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb",disabled:false ,frames:['OSS'] },
       // { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_3SpokeMag.glb",disabled:true,frames:[] },
       { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb",disabled:false,frames:['OSS'] },
-      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb",disabled:false,frames:['DOG'] },
-      { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb",disabled:false ,frames:['OG']},
+      // { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb",disabled:false,frames:['DOG'] },
+      // { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb",disabled:false ,frames:['OG']},
 
     ],
     category: 'Wheels',

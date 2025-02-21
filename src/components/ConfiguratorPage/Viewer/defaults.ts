@@ -17,9 +17,7 @@ export interface ModelConfig {
 export const frames: Record<string, Record<string, string[]>> = {
   OSS: {},
   OG: {},
-  DOG: {
-    "Handlebar": ["wire_mesh"], // Defines which objects to hide
-  },
+  DOG: {},
 };
 
 const textureURL="/models/MangoLogo.jpg"
@@ -48,9 +46,9 @@ export const colors = {
 const modelConfigs: ModelConfig[] = [
   {
     name: "Frame",
-    path: "/models/Mango_DOG_Frame.glb", 
+    path: "/models/Mango_OG_Frame.glb", 
     meshRequired: "frame_mesh",
-    type:"DOG",
+    type:"OG",
     // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -60,6 +58,9 @@ const modelConfigs: ModelConfig[] = [
       { name: "frame_mesh", color: colors.silver },
       { name: "fork_mesh", color: colors.silver },
       { name: "chain_mesh", color: colors.green },
+      { name: "wire_mesh", color: colors.darkGrey },
+      { name: "frontBrake_mesh", color: colors.darkGrey },
+      { name: "rearBrake_mesh", color: colors.darkGrey },
     ]
   },
   {
@@ -96,7 +97,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Saddle",
-    path: "/models/Mango_Saddle.glb",
+    path: "/models/Mango_Saddle4.glb",
     meshRequired: "seat_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -107,7 +108,7 @@ const modelConfigs: ModelConfig[] = [
       { name: "saddleTop_mesh", color: colors.white },
       { name: "saddleFrame_mesh", color: colors.silver },
       { name: "seatPost_mesh", color: colors.gold },
-      // { name: "logo_mesh", color: colors.white ,texturePath:textureURL},
+      // { name: "logo_mesh", color: colors.white ,texturePath:"https://cdn11.bigcommerce.com/s-qmagntafvz/images/stencil/110x36/mango-logo-seo_1626684142__36638.original1_1700851933.original.png"},
     ]
   },
 
