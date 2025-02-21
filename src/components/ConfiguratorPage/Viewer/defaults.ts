@@ -24,7 +24,8 @@ export const frames: Record<string, Record<string, string[]>> = {
 
 const textureURL="https://cdn11.bigcommerce.com/s-qmagntafvz/images/stencil/110x36/mango-logo-seo_1626684142__36638.original1_1700851933.original.png"
 
-export const colors = { 
+export const colors = {
+  mangoOrange: { hex: '#f35417', label: 'Mango Orange' },
   orange: { hex: '#ff7f00', label: 'Orange' },
   yellow: { hex: '#ffff00', label: 'Yellow' },
   darkBlue: { hex: '#000080', label: 'Dark Blue' },
@@ -47,7 +48,7 @@ export const colors = {
 const modelConfigs: ModelConfig[] = [
   {
     name: "Frame",
-    path: "/models/Mango_OSS_Frame.glb",
+    path: "/models/Mango_DOG_Frame.glb", 
     meshRequired: "frame_mesh",
     type:"OSS",
     // color: colors.black.hex,
@@ -56,21 +57,21 @@ const modelConfigs: ModelConfig[] = [
     containsPlain: true,
     correctAxis: true,
     subParts: [
-      { name: "frame_mesh", color: colors.orange },
-      { name: "fork_mesh", color: colors.orange },
+      { name: "frame_mesh", color: colors.silver },
+      { name: "fork_mesh", color: colors.silver },
+      { name: "chain_mesh", color: colors.green },
     ]
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_3SpokeMag.glb",
+    path: "/models/Mango_Wheels_Rear_MultiSpokes.glb", // Changed to multi spoke
     meshRequired: "rearTyre_plane",
-    // color: "#0000ff",
-    position: new THREE.Vector3(0, 0, 0), 
-    rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:true,
+    position: new THREE.Vector3(0, 0, 0),
+    rotation: new THREE.Quaternion(), 
+    containsPlain: false,
+    correctAxis: true,
     subParts:[
-      { name: "Tube", color: colors.black},
+      { name: "Tube", color: colors.green },
       { name: "Rim", color: colors.green },
       { name: "Cog", color: colors.black },
       { name: "Logo", color: colors.white ,texturePath:textureURL},
@@ -78,16 +79,15 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Front Wheel",
-    path: "/models/Mango_Wheels_Front_MultiSpokes.glb",
+    path: "/models/Mango_Wheels_Front_3SpokeMag.glb", // Changed to 3 spoke
     meshRequired: "fronTyre_plane",
-    // color: "#ff0000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:true,
+    containsPlain: false,
+    correctAxis: true,
     subParts:[
       { name: "Tube", color: colors.pink },
-      { name: "Rim", color: colors.orange  },
+      { name: "Rim", color: colors.black },
       { name: "Cog", color: colors.black },
       { name: "Spokes", color: colors.black },
       { name: "Logo", color: colors.white ,texturePath:textureURL},
@@ -99,13 +99,13 @@ const modelConfigs: ModelConfig[] = [
     meshRequired: "seat_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:false,
+    containsPlain: false,
+    correctAxis: false,
     subParts:[
-      { name: "saddleSide_mesh", color: colors.brown },
-      { name: "saddleTop_mesh", color: colors.black },
+      { name: "saddleSide_mesh", color: colors.white },
+      { name: "saddleTop_mesh", color: colors.white },
       { name: "saddleFrame_mesh", color: colors.silver },
-      { name: "seatPost_mesh", color: colors.silver },
+      { name: "seatPost_mesh", color: colors.gold },
     ]
   },
   {
@@ -119,7 +119,7 @@ const modelConfigs: ModelConfig[] = [
     subParts:[
       { name: "stem_mesh", color: colors.gold },
       { name: "handlebar_mesh", color: colors.black },
-      { name: "grip_mesh", color: colors.white },
+      { name: "grip_mesh", color: colors.pink },
       { name: "levers_mesh", color: colors.darkGrey },
       { name: "headsetSpacers_mesh", color: colors.black },
       { name: "wire_mesh", color: colors.black },
@@ -131,14 +131,13 @@ const modelConfigs: ModelConfig[] = [
     meshRequired: "crank_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:true,
+    containsPlain: false,
+    correctAxis: true,
     subParts:[
-      { name: "pedalTread_mesh", color: colors.purple },
+      { name: "pedalTread_mesh", color: colors.green },
       { name: "pedalShaft_mesh", color: colors.black },
     ]
   },
 ];
 
 export default modelConfigs;
-
