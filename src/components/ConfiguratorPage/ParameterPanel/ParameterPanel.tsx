@@ -18,6 +18,7 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
+  console.log(configs[0].type,"congigigi")
   const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -203,6 +204,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
             definition={param}
             value={configs.find(config => config.name === param.model)?.path || param.value}
             onChange={(value,definition,label) => handleTypeChange(value, param.model, label )}
+            frameType={configs[0].type as string}
           />
         )}
         {param.type === 'color' && (

@@ -5,7 +5,8 @@ import { GridIcons } from './GridIcons';
 interface GridProps {
   definition: ParameterDefinition;
   value: string | number;
-  onChange: (value: any, definition: ParameterDefinition) => void;
+  onChange: (value: any, definition: ParameterDefinition ,label:string) => void;
+  frameType:string
 }
 
 interface IconType {
@@ -18,8 +19,9 @@ export const Grid = ({
   definition,
   value,
   onChange,
+  frameType
 }: GridProps): ReactElement => {
-
+  console.log(value,"valskfsd",definition)
   const renderIcon = (option: { label: string; value: string }): ReactElement => {
     const icon = GridIcons[option.label as keyof typeof GridIcons];
     
@@ -55,7 +57,7 @@ export const Grid = ({
   return (
     <div className="rounded-3xl w-full mb-4">
       <div className="grid gap-2.5 grid-cols-3">
-        {definition.options?.map((option) => (
+        {definition.options?.map((option) =>(
           <button
             key={option.value}
             className={`relative aspect-square p-2

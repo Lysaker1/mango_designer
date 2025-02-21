@@ -129,25 +129,29 @@ const Component = React.forwardRef<Group, { modelName:string, modelPath: string;
       subParts.forEach(({ name, color , texturePath}) => {
         const part = newScene.getObjectByName(name); 
         let texture=null;
+        
         if(texturePath){
-          texture = useLoader(TextureLoader, texturePath);
+          const newtexture = useLoader(TextureLoader, texturePath);
+          texture=newtexture.clone()
+          console.log(texture,"texture")
         }
         if (part) {
           part.traverse((child) => {
             if (child instanceof THREE.Mesh && child.material) {
               child.material = child.material.clone();  
               if (texture) {
+                if(part.name == "logoBack"){
+                  texture.rotation=Math.PI;
+                }
+                if(part.name == "logoFront"){
                 texture.flipY = false;
+                }
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.colorSpace = THREE.SRGBColorSpace;
-            
                 // Apply texture to material
                 child.material.map = texture;            
-                // child.material.transparent = false; 
-                child.material.needsUpdate = true;
             }
-            
               child.material.color.set(color.hex);
               child.material.needsUpdate = true; 
             }

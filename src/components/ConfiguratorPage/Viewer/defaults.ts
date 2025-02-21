@@ -22,7 +22,7 @@ export const frames: Record<string, Record<string, string[]>> = {
   },
 };
 
-const textureURL="https://cdn11.bigcommerce.com/s-qmagntafvz/images/stencil/110x36/mango-logo-seo_1626684142__36638.original1_1700851933.original.png"
+const textureURL="/models/MangoLogo.jpg"
 
 export const colors = {
   mangoOrange: { hex: '#f35417', label: 'Mango Orange' },
@@ -50,7 +50,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_DOG_Frame.glb", 
     meshRequired: "frame_mesh",
-    type:"OSS",
+    type:"DOG",
     // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -64,33 +64,34 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_MultiSpokes.glb", // Changed to multi spoke
+    path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", // Changed to multi spoke
     meshRequired: "rearTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(), 
     containsPlain: false,
     correctAxis: true,
     subParts:[
-      { name: "Tube", color: colors.green },
-      { name: "Rim", color: colors.green },
-      { name: "Cog", color: colors.black },
-      { name: "Logo", color: colors.white ,texturePath:textureURL},
-    ]
+      { name: "tube", color: colors.green },
+      { name: "rim", color: colors.green },
+      { name: "cog", color: colors.black },
+      { name: "logoFront", color: colors.white ,texturePath:textureURL},
+      { name: "logoBack", color: colors.white ,texturePath:textureURL},    ]
   },
   {
     name: "Front Wheel",
-    path: "/models/Mango_Wheels_Front_3SpokeMag.glb", // Changed to 3 spoke
+    path: "/models/Mango_Wheels_Front_6SpokeMag.glb", // Changed to 3 spoke
     meshRequired: "fronTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,
     correctAxis: true,
     subParts:[
-      { name: "Tube", color: colors.pink },
-      { name: "Rim", color: colors.black },
-      { name: "Cog", color: colors.black },
+      { name: "tube", color: colors.pink },
+      { name: "rim", color: colors.black },
+      { name: "cog", color: colors.black },
       { name: "Spokes", color: colors.black },
-      { name: "Logo", color: colors.white ,texturePath:textureURL},
+      { name: "logoFront", color: colors.white ,texturePath:textureURL},
+      { name: "logoBack", color: colors.white ,texturePath:textureURL},
     ]
   },
   {
@@ -106,8 +107,10 @@ const modelConfigs: ModelConfig[] = [
       { name: "saddleTop_mesh", color: colors.white },
       { name: "saddleFrame_mesh", color: colors.silver },
       { name: "seatPost_mesh", color: colors.gold },
+      // { name: "logo_mesh", color: colors.white ,texturePath:textureURL},
     ]
   },
+
   {
     name: "Handlebar",
     path: "/models/Mango_Handle_Drop.glb", // Changed to dropdown
