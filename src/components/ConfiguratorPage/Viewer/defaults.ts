@@ -41,6 +41,7 @@ export const colors = {
   blue: { hex: '#0000ff', label: 'Blue' },
   pink: { hex: '#fc8eac', label: 'Pink' },
   gold: { hex: '#ffd700', label: 'Gold' },
+  darkGrey: { hex: '#232423', label: 'Dark Grey' },
 };
 
 const modelConfigs: ModelConfig[] = [
@@ -109,18 +110,17 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Handlebar",
-    path: "/models/Mango_Handle_Riser.glb",
+    path: "/models/Mango_Handle_Drop.glb", // Changed to dropdown
     meshRequired: "handle_plane",
-    // color: "#000000",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    containsPlain:false,
-    correctAxis:false,
+    containsPlain: false,
+    correctAxis: false,
     subParts:[
-      { name: "stem_mesh", color: colors.silver },
+      { name: "stem_mesh", color: colors.gold },
       { name: "handlebar_mesh", color: colors.black },
-      { name: "grip_mesh", color: colors.purple },
-      { name: "levers_mesh", color: colors.black },
+      { name: "grip_mesh", color: colors.white },
+      { name: "levers_mesh", color: colors.darkGrey },
       { name: "headsetSpacers_mesh", color: colors.black },
       { name: "wire_mesh", color: colors.black },
     ]

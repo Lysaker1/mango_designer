@@ -137,14 +137,16 @@ const Component = React.forwardRef<Group, { modelName:string, modelPath: string;
               child.material = child.material.clone();  
               if (texture) {
                 texture.flipY = false;
-                texture.wrapS = THREE.RepeatWrapping;  // Repeat along the X axis
-                texture.wrapT = THREE.RepeatWrapping;  // Repeat along the Y axis
-                // Apply the texture to the material
-                child.material.color.set(color.hex);
-                child.material.map = texture;
-                child.material.transparent = true;
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.colorSpace = THREE.SRGBColorSpace;
+            
+                // Apply texture to material
+                child.material.map = texture;            
+                // child.material.transparent = false; 
                 child.material.needsUpdate = true;
-              }
+            }
+            
               child.material.color.set(color.hex);
               child.material.needsUpdate = true; 
             }

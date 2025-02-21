@@ -19,7 +19,7 @@ export interface ParameterDefinition {
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   {
     id: 'frameColor',
-    name: 'Color',
+    name: 'Frame Color',
     type: 'color',
     value: '#000000',
     category: 'frame',
@@ -36,7 +36,27 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
     },
-    subPart: ['fork_mesh', 'frame_mesh'] 
+    subPart: ['frame_mesh'] 
+  },
+  {
+    id: 'forkColor',
+    name: 'Fork Color',
+    type: 'color',
+    value: colors.green.hex,
+    category: 'frame',
+    model: 'Frame',
+    colors: {
+      black: colors.black,
+      blue: colors.blue,
+      green: colors.green,
+      orange: colors.orange,
+      pink: colors.pink,
+      purple: colors.purple,
+      red: colors.red,
+      white: colors.white,
+      yellow: colors.yellow,
+    },
+    subPart:['fork_mesh']
   },
   {
     id: 'tubingType',
