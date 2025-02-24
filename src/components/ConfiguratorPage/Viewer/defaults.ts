@@ -4,7 +4,7 @@ export interface ModelConfig {
   name: string;
   path: string;
   meshRequired: string;
-  type?:string;
+  type:string;
   color?: string;
   position: THREE.Vector3; 
   rotation: THREE.Quaternion; 
@@ -13,11 +13,114 @@ export interface ModelConfig {
   subParts: {name:string,color:{hex:string,label:string},texturePath?:string}[]
 }
 
+export const rearWheelDefaults: Record<string, { path: string; type: string }> = {
+  OSS: { path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", type: "45mm Deep Dish Rim" },
+  OG: { path: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb", type: "Flipflop Wheel" },
+  DOG: { path: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb", type: 'Cassette Wheel' },
+  Moosher: { path: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb", type: 'Cassette Wheel' },
+};
+
+
 //array contains those meshes which we want to hide for a specfic frame
-export const frames: Record<string, Record<string, string[]>> = {
-  OSS: {},
-  OG: {},
-  DOG: {},
+export const frames: Record<string, Record<string,Record<string,string[]>>> = {
+  OSS: {
+    "Rear Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Front Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Handlebar":{
+      'Riser':[],
+      'Drop':[],
+      'Track':[],
+      'Flat':[],
+      'Cruiser':[],
+      'Jeb':[],
+    },
+    "Saddle":{
+      'Saddle':[]
+    },
+    "Pedals":{
+      'Standard':[],
+      'Platform':[],
+    }
+  },
+  OG: {
+    "Rear Wheel":{
+      "Flipflop Wheel":[],
+    },
+    "Front Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Handlebar":{
+      'Riser':[],
+      'Drop':[],
+      'Track':[],
+      'Flat':[],
+      'Cruiser':[],
+      'Jeb':[],
+    },
+    "Saddle":{
+      'Saddle':[]
+    },
+    "Pedals":{
+      'Standard':[],
+      'Platform':[],
+    }
+  },
+  DOG: {
+    "Rear Wheel":{
+      "Cassette Wheel":[],
+    },
+    "Front Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Handlebar":{
+      'Riser':[],
+      'Drop':[],
+      'Track':[],
+      'Flat':[],
+      'Cruiser':[],
+      'Jeb':[],
+    },
+    "Saddle":{
+      'Saddle':[]
+    },
+    "Pedals":{
+      'Standard':[],
+      'Platform':[],
+    }
+  },
+  Moosher:{
+      "Rear Wheel":{
+        "45mm Deep Dish Rim":[],
+        "6 Spoke Mag Wheel":[]
+      },
+      "Front Wheel":{
+        "45mm Deep Dish Rim":[],
+        "6 Spoke Mag Wheel":[]
+      },
+      "Handlebar":{
+        'Riser':[],
+        'Drop':[],
+        'Track':[],
+        'Flat':[],
+        'Cruiser':[],
+        'Jeb':[],
+      },
+      "Saddle":{
+        'Saddle':[]
+      },
+      "Pedals":{
+        'Standard':[],
+        'Platform':[],
+      }
+    }
 };
 
 const textureURL="/models/MangoLogo.jpg"
@@ -46,9 +149,9 @@ export const colors = {
 const modelConfigs: ModelConfig[] = [
   {
     name: "Frame",
-    path: "/models/Mango_OG_Frame.glb", 
+    path: "/models/Mango_OSS_Frame.glb", 
     meshRequired: "frame_mesh",
-    type:"OG",
+    type:"OSS",
     // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -67,6 +170,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Rear Wheel",
     path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", // Changed to multi spoke
     meshRequired: "rearTyre_plane",
+    type:"45mm Deep Dish Rim",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(), 
     containsPlain: false,
@@ -81,6 +185,7 @@ const modelConfigs: ModelConfig[] = [
   {
     name: "Front Wheel",
     path: "/models/Mango_Wheels_Front_6SpokeMag.glb", // Changed to 3 spoke
+    type:"6 Spoke Mag Wheel",
     meshRequired: "fronTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -99,6 +204,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Saddle",
     path: "/models/Mango_Saddle4.glb",
     meshRequired: "seat_plane",
+    type:"Saddle",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,
@@ -114,8 +220,9 @@ const modelConfigs: ModelConfig[] = [
 
   {
     name: "Handlebar",
-    path: "/models/Mango_Handle_Drop.glb", // Changed to dropdown
+    path: "/models/Mango_Handle_Riser.glb", // Changed to dropdown
     meshRequired: "handle_plane",
+    type:"Riser",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,
@@ -133,6 +240,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Pedals",
     path: "/models/Mango_Pedals_Platform.glb",
     meshRequired: "crank_plane",
+    type:"Standard",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,

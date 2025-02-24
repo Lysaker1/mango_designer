@@ -9,11 +9,12 @@ export interface ParameterDefinition {
   value: string;
   min?: number;
   max?: number;
-  options?: { label: string; value: string ,disabled?:boolean ,frames?:string[]}[];
+  options?: { label: string; value: string}[];
   category: 'Frame' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'Fork';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?: string[]; 
   material?: { type: string; properties: any }; 
+  disabled?:boolean;
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
@@ -74,9 +75,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     type: 'grid',
     value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke.glb",disabled:false},
-      // { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_3SpokeMag.glb",disabled:true },
-      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb",disabled:false},
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb"},
     ],
     category: 'Wheels',
     model: 'Front Wheel',
@@ -125,14 +125,12 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     id: 'rearWheelType',
     name: 'Rear Type',
     type: 'grid',
-    value: '/models/Mango_Wheels_Rear_3SpokeMag.glb',
+    value: '/models/Mango_Wheels_Rear_SS_MultiSpoke.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb",disabled:false ,frames:['OSS'] },
-      // { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_3SpokeMag.glb",disabled:true,frames:[] },
-      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb",disabled:false,frames:['OSS'] },
-      // { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb",disabled:false,frames:['DOG'] },
-      // { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb",disabled:false ,frames:['OG']},
-
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb"},
+      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb"},
+      { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb"},
     ],
     category: 'Wheels',
     model: 'Rear Wheel'
@@ -241,6 +239,16 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     },
     model: 'Handlebar',
     subPart: ['grip_mesh']
+  },
+  {
+    id: 'saddleType',
+    name: 'Type',
+    type: 'grid',
+    value: "/models/Mango_Saddle4.glb",
+    options: [],
+    category: 'Saddle',
+    model: 'Saddle',
+    disabled:true
   },
   {
     id: 'saddleColor',

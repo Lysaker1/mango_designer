@@ -4,7 +4,7 @@ import React, { useState, ReactElement, SVGProps } from 'react';
 import { ColorPicker } from './parameterTypes/ColorPicker';
 import { PARAMETER_DEFINITIONS, type ParameterDefinition } from './parameterDefintions';
 import { Grid } from './parameterTypes/Grid/Grid';
-import { ModelConfig } from '../Viewer/defaults';
+import {frames, ModelConfig, rearWheelDefaults} from '../Viewer/defaults';
 import { Dropdown } from './parameterTypes/Dropdown';
 import { Color } from "./parameterTypes/ColorPicker";
 import { LeftMenuIcons } from './LeftMenuIcons';
@@ -18,10 +18,10 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
-  console.log(configs[0].type,"congigigi")
   const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  // const [parameters, setParameters] = useState<ParameterDefinition[]>(PARAMETER_DEFINITIONS);
 
   const handleColorChange = (color: Color, model: string, subParts?: string[]) => {
     const updatedConfigs = configs.map(config => {  
@@ -40,14 +40,27 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
   
 
-  const handleTypeChange = (value: string, model: string,type:string) => {
-    const updatedConfigs = configs.map(config => {
-      if (config.name === model) {
-        return { ...config, path: value, type:type };
-      }
-      return config;
-    });
-    onConfigChange(updatedConfigs);
+  const handleTypeChange = (value: string,model: string,type:string,param:ParameterDefinition) => {
+    if(model === "Frame"){
+      const updatedConfigs = configs.map((config) => {
+        if (config.name === model) {
+          return { ...config, path: value, type };
+        }
+        if (config.name === "Rear Wheel" && rearWheelDefaults[type] && !frames[type][config.name].hasOwnProperty(config.type)) {
+          return { ...config, path: rearWheelDefaults[type].path ,type: rearWheelDefaults[type].type };
+        }
+        return config;
+      });  
+     onConfigChange(updatedConfigs);
+    }else{
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { ...config, path: value ,type:type};
+        }
+        return config;
+      });
+      onConfigChange(updatedConfigs);
+    }
   };
 
   const findCurrentColor = (model: string, subPart?: string): string | undefined => {
@@ -169,7 +182,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
     const params = PARAMETER_DEFINITIONS.filter(param => param.category === category);
 
-    return params.map(param => (
+    return params.map(param => !param.disabled && (
       <div key={param.id} className="space-y-2">
         <label className="text-gray-300 text-sm font-medium">
           {param.name}
@@ -178,7 +191,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           <Dropdown
             value={configs.find(config => config.name === param.model)?.path || param.value}
             options={param.options || []}
-            onChange={(value,label) => handleTypeChange(value, param.model,label)}
+            onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
             label={param.name}
           />
         )}
@@ -203,7 +216,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           <Grid
             definition={param}
             value={configs.find(config => config.name === param.model)?.path || param.value}
-            onChange={(value,definition,label) => handleTypeChange(value, param.model, label )}
+            onChange={(value,model,label) => handleTypeChange(value, model, label ,param )}
             frameType={configs[0].type as string}
           />
         )}

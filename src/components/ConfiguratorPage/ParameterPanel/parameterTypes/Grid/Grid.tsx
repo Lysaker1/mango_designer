@@ -1,11 +1,12 @@
 import React, { ReactElement, SVGProps } from 'react';
 import { ParameterDefinition } from '../../parameterDefintions';
 import { GridIcons } from './GridIcons';
+import { frames } from '@/components/ConfiguratorPage/Viewer/defaults';
 
 interface GridProps {
   definition: ParameterDefinition;
   value: string | number;
-  onChange: (value: any, definition: ParameterDefinition ,label:string) => void;
+  onChange: (value: any, model: string ,label:string) => void;
   frameType:string
 }
 
@@ -21,7 +22,6 @@ export const Grid = ({
   onChange,
   frameType
 }: GridProps): ReactElement => {
-  console.log(value,"valskfsd",definition)
   const renderIcon = (option: { label: string; value: string }): ReactElement => {
     const icon = GridIcons[option.label as keyof typeof GridIcons];
     
@@ -57,7 +57,7 @@ export const Grid = ({
   return (
     <div className="rounded-3xl w-full mb-4">
       <div className="grid gap-2.5 grid-cols-3">
-        {definition.options?.map((option) =>(
+        {definition.options?.map((option) => (definition.model==='Frame' || frames[frameType][definition.model].hasOwnProperty(option.label)) && (
           <button
             key={option.value}
             className={`relative aspect-square p-2
@@ -67,7 +67,7 @@ export const Grid = ({
                        ${value === option.value 
                          ? 'bg-mangoOrange text-white' 
                          : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'}`}
-            onClick={() => onChange(option.value, definition ,option.label)}
+            onClick={() => onChange(option.value, definition.model ,option.label)}
             title={option.label}
           >
             <div className="w-full h-full flex items-center justify-center">

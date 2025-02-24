@@ -22,7 +22,6 @@ interface ModelProps {
 
 const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdatedConfigs, setIsLoading, configs, subParts }, ref) => {
   const { scene } = useGLTF(modelPath);
-  console.log(scene,"scenen")
   // Apply color to the model if provided
   if (color) {
     scene.traverse((node) => {
@@ -109,12 +108,10 @@ const Model = React.forwardRef<Group, ModelProps>(({ modelPath, color, setUpdate
 
 Model.displayName = 'Model';
 
-const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string },texturePath?:string}[];frameType:string|undefined }>(({ modelName, modelPath, position, rotation, color, subParts, frameType }, ref) => {
+const Component = React.forwardRef<Group, { modelName:string, modelPath: string; position: THREE.Vector3; rotation: THREE.Quaternion; color?: string, subParts?: { name: string; color: { hex: string; label: string },texturePath?:string}[];frameType:string ,modelType:string }>(({ modelName, modelPath, position, rotation, color, subParts, frameType ,modelType}, ref) => {
   const { scene } = useGLTF(modelPath);
   const newScene = SkeletonUtils.clone(scene);
-  console.log(newScene)
-  const hiddenObjects = frameType && modelName && frames[frameType]?.[modelName] || [];
-
+  const hiddenObjects = frameType && modelName && frames[frameType][modelName][modelType] || [];
   // Apply color to the new scene if provided
   if (color) {
     newScene.traverse((child) => {
@@ -225,7 +222,7 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
               configs.map(
                 (model, index) =>
                   model.position && model.rotation && index !=0 && (
-                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type}/>
+                    <Component key={index} modelName={model.name} modelPath={model.path} position={model.position} rotation={model.rotation} color={model?.color} subParts={model?.subParts} frameType={configs[0].type} modelType={model.type}/>
                   )
               )}
           </Stage>
