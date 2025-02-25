@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 interface DropdownProps {
   value: string;
   options: { label: string; value: string }[];
-  onChange: (value: string) => void;
+  onChange: (value: string,label:string) => void;
   label: string;
 }
 
@@ -53,7 +53,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 className="w-full p-3 text-left text-white/90 
                            hover:bg-neutral-700/50 transition-colors"
                 onClick={() => {
-                  onChange(option.value);
+                  onChange(option.value,option.label);
                   setIsOpen(false);
                 }}
               >

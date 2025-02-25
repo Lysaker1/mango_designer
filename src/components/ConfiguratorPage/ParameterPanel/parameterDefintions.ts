@@ -14,12 +14,13 @@ export interface ParameterDefinition {
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?: string[]; 
   material?: { type: string; properties: any }; 
+  disabled?:boolean;
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   {
     id: 'frameColor',
-    name: 'Color',
+    name: 'Frame Color',
     type: 'color',
     value: colors.silver.hex,
     category: 'Frame',
@@ -45,7 +46,6 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: colors.silver.hex,
     category: 'Fork',
     model: 'Frame',
-    subPart: ['fork_mesh'],
     colors: {
       orange: colors.orange,
       yellow: colors.yellow,
@@ -57,7 +57,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
-    }
+    },
+    subPart: ['fork_mesh'],
   },
   {
     id: 'tubingType',
@@ -74,8 +75,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     type: 'grid',
     value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpokes.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_3SpokeMag.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb"},
     ],
     category: 'Wheels',
     model: 'Front Wheel',
@@ -98,7 +99,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:['Rim']
+    subPart:['rim']
   },
   {
     id: 'frontTireColor',
@@ -118,16 +119,18 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:['Tube']
+    subPart:['tube']
   },
   {
     id: 'rearWheelType',
     name: 'Rear Type',
     type: 'grid',
-    value: '/models/Mango_Wheels_Rear_3SpokeMag.glb',
+    value: '/models/Mango_Wheels_Rear_SS_MultiSpoke.glb',
     options: [
-      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_MultiSpokes.glb" },
-      { label: '3 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_3SpokeMag.glb" },
+      { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb"},
+      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb"},
+      { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb"},
     ],
     category: 'Wheels',
     model: 'Rear Wheel'
@@ -150,7 +153,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:['Rim'],
+    subPart:['rim'],
   },
   {
     id: 'rearTireColor',
@@ -170,7 +173,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       white: colors.white,
       yellow: colors.yellow,
     },
-    subPart:['Tube']
+    subPart:['tube']
   },
   {
     id: 'handlebarType',
@@ -236,6 +239,16 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     },
     model: 'Handlebar',
     subPart: ['grip_mesh']
+  },
+  {
+    id: 'saddleType',
+    name: 'Type',
+    type: 'grid',
+    value: "/models/Mango_Saddle4.glb",
+    options: [],
+    category: 'Saddle',
+    model: 'Saddle',
+    disabled:true
   },
   {
     id: 'saddleColor',
