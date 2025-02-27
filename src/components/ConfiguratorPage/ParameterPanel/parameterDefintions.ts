@@ -62,15 +62,6 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     subPart: ['fork_mesh'],
   },
   {
-    id: 'tubingType',
-    name: 'Type',
-    type: 'grid',
-    value: '/models/Mango_OSS_Frame.glb',
-    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb' }],
-    category: 'Frame',
-    model: 'Frame'
-  },
-  {
     id: 'frontWheelType',
     name: 'Front Type',
     type: 'grid',
