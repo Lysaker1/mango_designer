@@ -129,8 +129,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     options: [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb"},
       { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb"},
-      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb"},
-      { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb"},
+      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_Cassette_MultiSpoke.glb"},
+      { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_MultiSpoke.glb"},
     ],
     category: 'Wheels',
     model: 'Rear Wheel'

@@ -15,9 +15,9 @@ export interface ModelConfig {
 
 export const rearWheelDefaults: Record<string, { path: string; type: string }> = {
   OSS: { path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", type: "45mm Deep Dish Rim" },
-  OG: { path: "/models/Mango_Wheels_Rear_Flipflop_Multispoke.glb", type: "Flipflop Wheel" },
-  DOG: { path: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb", type: 'Cassette Wheel' },
-  Moosher: { path: "/models/Mango_Wheels_Rear_Cassette_Multispoke.glb", type: 'Cassette Wheel' },
+  OG: { path: "/models/Mango_Wheels_Rear_Flipflop_MultiSpoke.glb", type: "Flipflop Wheel" },
+  DOG: { path: "/models/Mango_Wheels_Rear_Cassette_MultiSpoke.glb", type: 'Cassette Wheel' },
+  Moosher: { path: "/models/Mango_Wheels_Rear_Cassette_MultiSpoke.glb", type: 'Cassette Wheel' },
 };
 
 
@@ -168,7 +168,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", // Changed to multi spoke
+    path: "/models/Mango_Wheels_Rear_SS_Multispoke.glb", // Changed to multi spoke
     meshRequired: "rearTyre_plane",
     type:"45mm Deep Dish Rim",
     position: new THREE.Vector3(0, 0, 0),
