@@ -1,0 +1,183 @@
+import { useEffect, useState } from "react";
+import { ParameterDefinition } from "../ParameterPanel/parameterDefintions";
+import { colors, ModelConfig } from "../Viewer/defaults";
+import { Grid } from "../ParameterPanel/parameterTypes/Grid/Grid";
+import BackgroundColorModal from "./BackgroundColorModal/BackgroundColorModal";
+import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
+import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
+
+const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
+  const [frameName, setFrameName] = useState<string>("");
+  const [framePrice, setFramePrice] = useState<number>(0); 
+  const [showBikeSelector, setShowBikeSelector] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState(colors.mangoOrange.hex); // Default mango orange
+  const [showPriceDetails, setShowPriceDetails] = useState(false);
+
+  // Get background color from local storage or set default
+  useEffect(() => {
+    const storedColor = localStorage.getItem('configurator-background');
+    if (storedColor) {
+      setBackgroundColor(storedColor);
+      onBackgroundColorChange(storedColor);
+    } else {
+      localStorage.setItem('configurator-background', colors.mangoOrange.hex);
+    }
+  }, []);
+
+  const handleColorChange = (color: Color) => {
+    setBackgroundColor(color.hex);
+    onBackgroundColorChange(color.hex);
+    localStorage.setItem('configurator-background', color.hex);
+  }
+
+  const frameParameter: ParameterDefinition = {
+    id: 'frameType',
+    name: 'Type',
+    type: 'grid',
+    value: '/models/Mango_OSS_Frame.glb',
+    options: [
+      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 429.99 }, 
+      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 529.99 }, 
+      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 699.95 }, 
+      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 429.99 }
+    ],
+    category: 'Frame',
+    model: 'Frame',
+  };
+
+  useEffect(() => {
+    setFrameName(configs[0].type);
+    setFramePrice(frameParameter.options?.find(option => option.label === configs[0].type)?.price || 0); 
+  }, [configs])
+
+  const handleFrameChange = (value: string, label: string, price: number) => {
+    onConfigChange(configs.map(config => config.name === 'Frame' ? { ...config, path: value, type: label, price: price } : config));
+  }
+
+  // Use framePrice directly and add the prices for all configuration elements except the frame
+  // Add a custom fee of 45
+  const totalPrice = framePrice + configs.slice(1).reduce((acc, config) => acc + (config.price || 0), 0) + 45;
+
+  return (
+    <>
+      <header className="h-16 px-4 flex items-center justify-between bg-black backdrop-blur-md">
+        <div className="flex items-center relative">
+          <h1 className="text-xl font-bold text-white">
+            Mango Bikes
+          </h1>
+          {/* <button 
+            id="bike-selector-button"
+            className="ml-2 text-white"
+            onClick={() => setShowBikeSelector(!showBikeSelector)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+            </svg>
+          </button> */}
+        </div>
+          
+        <div className="flex items-center">
+          <div 
+            className="text-white text-sm mr-4 font-bold text-xl relative group flex items-center justify-center"
+          >
+            <span className='mr-1'>£</span>
+            {totalPrice.toFixed(2)}
+            <span 
+              className="ml-2 cursor-pointer"             
+              onMouseEnter={() => setShowPriceDetails(true)}
+              onMouseLeave={() => setShowPriceDetails(false)}
+            >
+              <svg fill="white" height={18} width={18} xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512">
+                <path fill-rule="nonzero" d="M256 0c70.69 0 134.7 28.66 181.02 74.98C483.34 121.31 512 185.31 512 256c0 70.69-28.66 134.7-74.98 181.02C390.7 483.34 326.69 512 256 512c-70.69 0-134.7-28.66-181.02-74.98C28.66 390.7 0 326.69 0 256c0-70.69 28.66-134.69 74.98-181.02C121.3 28.66 185.31 0 256 0zm17.75 342.25h29.15v29.32h-93.79v-29.32h28.76v-92.34h-28.76v-29.32h64.64v121.66zm-27.94-150.37c-7.08-.05-13.12-2.53-18.2-7.56-5.08-5.01-7.56-11.11-7.56-18.25 0-7.01 2.48-13.06 7.56-18.08 5.08-5.02 11.12-7.55 18.2-7.55 6.95 0 12.99 2.53 18.08 7.55 5.13 5.02 7.67 11.07 7.67 18.08 0 4.72-1.2 9.07-3.56 12.94-2.36 3.93-5.45 7.07-9.31 9.37-3.87 2.3-8.17 3.45-12.88 3.5zm171.9-97.59C376.33 52.92 319.15 27.32 256 27.32c-63.15 0-120.33 25.6-161.71 66.97C52.92 135.68 27.32 192.85 27.32 256c0 63.15 25.6 120.33 66.97 161.71 41.38 41.37 98.56 66.97 161.71 66.97 63.15 0 120.33-25.6 161.71-66.97 41.37-41.38 66.97-98.56 66.97-161.71 0-63.15-25.6-120.32-66.97-161.71z"/>
+              </svg>
+            </span>
+          </div>
+            
+          <button 
+            id="color-picker-button"
+            className="w-6 h-6 rounded-full cursor-pointer"
+            onClick={() => setShowColorPicker(!showColorPicker)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="100%"
+              height="100%"
+            >
+              <g fill="none">
+                <path
+                  fill={colors.mangoOrange.hex}
+                  d="M2.75 12A9.25 9.25 0 0 0 12 21.25V2.75A9.25 9.25 0 0 0 2.75 12"
+                ></path>
+                <path
+                  stroke={colors.mangoOrange.hex}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M12 21.25a9.25 9.25 0 0 0 0-18.5m0 18.5a9.25 9.25 0 0 1 0-18.5m0 18.5V2.75"
+                ></path>
+              </g>
+            </svg>
+          </button>
+            
+          <button className="ml-4 px-6 py-2 text-sm font-medium text-white border border-mangoOrange bg-mangoOrange rounded-lg hover:bg-black transition-colors">
+            Buy Now
+          </button>
+        </div>
+      </header>
+
+      {/* Frame Selector Modal */}
+      {showBikeSelector && (
+        <div>
+          <FrameSelectorModal 
+            isOpen={showBikeSelector} 
+            onClose={() => setShowBikeSelector(false)} 
+            value={configs[0].path} 
+            onChange={handleFrameChange} 
+            frameParameter={frameParameter}
+            frameType={configs[0].type as string}
+          />
+        </div>
+      )}
+
+      {/* Background Color Modal */}
+      {showColorPicker && 
+        <div>
+          <BackgroundColorModal 
+            isOpen={showColorPicker} 
+            onClose={() => setShowColorPicker(false)} 
+            value={backgroundColor} 
+            onChange={handleColorChange} 
+          />
+        </div>
+      }
+
+      {/* Price Details Modal */}
+      {showPriceDetails && (
+        <div className="absolute top-20 right-[137px] transform w-64 p-4 space-y-2 bg-black bg-opacity-95 backdrop-blur-md rounded-2xl shadow-lg z-20 text-white">
+          <div className="text-lg font-bold border-b pb-2 mb-2 flex justify-between">
+            <span>{frameName}:</span>
+            <span>£{framePrice.toFixed(2)}</span>
+          </div>
+          <div className="text-sm">
+            <div className="flex justify-between py-1">
+              <span>+ Custom fee</span>
+              <span>£45.00</span>
+            </div>
+            {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
+              config.price && (
+                <div key={idx} className="flex justify-between py-1">
+                  <span>+ {config.type}</span>
+                  <span>£{config.price.toFixed(2)}</span>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+export default Header;

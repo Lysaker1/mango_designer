@@ -9,18 +9,19 @@ export interface ParameterDefinition {
   value: string;
   min?: number;
   max?: number;
-  options?: { label: string; value: string}[];
+  options?: { label: string; value: string; price?: number}[];
   category: 'Frame' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'Fork';
   model: 'Frame' | 'Front Wheel' | 'Rear Wheel' | 'Handlebar' | 'Saddle' | 'Pedals';
   subPart?: string[]; 
   material?: { type: string; properties: any }; 
   disabled?:boolean;
+  showPrice?:boolean;
 }
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   {
     id: 'frameColor',
-    name: 'Frame Color',
+    name: 'Color',
     type: 'color',
     value: colors.silver.hex,
     category: 'Frame',
@@ -76,10 +77,11 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: '/models/Mango_Wheels_Front_MultiSpokes.glb',
     options: [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke.glb"},
-      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb", price: 58},
     ],
     category: 'Wheels',
     model: 'Front Wheel',
+    showPrice: true,
   },
   {
     id: 'frontWheelColor',
@@ -133,7 +135,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_Flipflop_MultiSpoke.glb"},
     ],
     category: 'Wheels',
-    model: 'Rear Wheel'
+    model: 'Rear Wheel',
+    showPrice: true,
   },
   {
     id: 'rearWheelColor',
@@ -182,7 +185,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: '1',
     options: [
       { label: 'Riser', value: "/models/Mango_Handle_Riser.glb" },
-      { label: 'Drop', value: "/models/Mango_Handle_Drop.glb" },
+      { label: 'Drop', value: "/models/Mango_Handle_Drop.glb", price: 60 },
       { label: 'Track', value: "/models/Mango_Handle_Track.glb" },
       { label: 'Flat', value: "/models/Mango_Handle_Flat.glb" },
       { label: 'Cruiser', value: "/models/Mango_Handle_Cruiser.glb" },
@@ -190,7 +193,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     ],
     category: 'Handlebars',
     model: 'Handlebar',
-    subPart: ['stem_mesh']
+    subPart: ['stem_mesh'],
+    showPrice: true,
   },
   {
     id: 'handlebarColor',
@@ -245,10 +249,17 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     name: 'Type',
     type: 'grid',
     value: "/models/Mango_Saddle4.glb",
-    options: [],
+    options: [
+      { label: 'Saddle 1', value: "/models/Mango_Saddle4.glb" }, 
+      { label: 'Saddle 2', value: "/models/Mango_Saddle2.glb", price: 200 }, 
+      { label: 'Saddle 3', value: "/models/Mango_Saddle3.glb", price: 300 }, 
+      { label: 'Saddle 4', value: "/models/Mango_Saddle4.glb", price: 400 }, 
+    ],
     category: 'Saddle',
     model: 'Saddle',
-    disabled:true
+    subPart: ['saddleSide_mesh'],
+    showPrice: true,
+    disabled: true,
   },
   {
     id: 'saddleColor',
@@ -293,6 +304,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     options: [{ label: 'Standard', value: '/models/Mango_Pedals_Standard.glb' }, {label: 'Platform', value: '/models/Mango_Pedals_Platform.glb'}],
     category: 'Pedals',
     model: 'Pedals',
+    showPrice: true,
   },
   {
     id: 'pedalColor',

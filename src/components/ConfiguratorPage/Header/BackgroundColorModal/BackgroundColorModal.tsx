@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Color, ColorPicker } from '../ParameterPanel/parameterTypes/ColorPicker';
-import { colors } from '../Viewer/defaults';
+import { Color, ColorPicker } from '../../ParameterPanel/parameterTypes/ColorPicker';
+import { colors } from '../../Viewer/defaults';
 
 interface BackgroundColorModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ const BackgroundColorModal: React.FC<BackgroundColorModalProps> = ({ isOpen, onC
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (isOpen && !document.getElementById('background-color-modal')?.contains(event.target as Node)) {
+      if (isOpen && !document.getElementById('background-color-modal')?.contains(event.target as Node) && !document.getElementById('color-picker-button')?.contains(event.target as Node)) {
         onClose();
       }
     };

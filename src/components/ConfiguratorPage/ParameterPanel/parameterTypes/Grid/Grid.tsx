@@ -6,7 +6,7 @@ import { frames } from '@/components/ConfiguratorPage/Viewer/defaults';
 interface GridProps {
   definition: ParameterDefinition;
   value: string | number;
-  onChange: (value: any, model: string ,label:string) => void;
+  onChange: (value: any, model: string ,label:string, price?: number) => void;
   frameType:string
 }
 
@@ -67,7 +67,7 @@ export const Grid = ({
                        ${value === option.value 
                          ? 'bg-mangoOrange text-white' 
                          : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'}`}
-            onClick={() => onChange(option.value, definition.model ,option.label)}
+            onClick={() => onChange(option.value, definition.model ,option.label, option.price)}
             title={option.label}
           >
             <div className="w-full h-full flex items-center justify-center">
