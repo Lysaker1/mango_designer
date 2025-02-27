@@ -168,7 +168,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_SS_Multispoke.glb", // Changed to multi spoke
+    path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", // Changed to multi spoke
     meshRequired: "rearTyre_plane",
     type:"45mm Deep Dish Rim",
     position: new THREE.Vector3(0, 0, 0),
