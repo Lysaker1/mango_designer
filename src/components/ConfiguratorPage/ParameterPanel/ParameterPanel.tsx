@@ -40,14 +40,14 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
   
 
-  const handleTypeChange = (value: string,model: string,type:string,param:ParameterDefinition) => {
+  const handleTypeChange = (value: string,model: string,type:string,param:ParameterDefinition, price?: number) => {
     if(model === "Frame"){
       const updatedConfigs = configs.map((config) => {
         if (config.name === model) {
-          return { ...config, path: value, type };
+          return { ...config, path: value, type, price };
         }
         if (config.name === "Rear Wheel" && rearWheelDefaults[type] && !frames[type][config.name].hasOwnProperty(config.type)) {
-          return { ...config, path: rearWheelDefaults[type].path ,type: rearWheelDefaults[type].type };
+          return { ...config, path: rearWheelDefaults[type].path ,type: rearWheelDefaults[type].type, price };
         }
         return config;
       });  
@@ -55,7 +55,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     }else{
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
-          return { ...config, path: value ,type:type};
+          return { ...config, path: value ,type:type, price };
         }
         return config;
       });
@@ -184,9 +184,19 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
     return params.map(param => !param.disabled && (
       <div key={param.id} className="space-y-2">
+        <div className='flex justify-between'>
         <label className="text-gray-300 text-sm font-medium">
           {param.name}
         </label>
+
+        {configs.find(config => config.name === param.model)?.price && 
+         param.showPrice && (
+          <label className="text-gray-300 text-sm font-medium">
+            + £{configs.find(config => config.name === param.model)?.price}
+          </label>
+        )}
+        </div>
+
         {param.type === 'dropdown' && (
           <Dropdown
             value={configs.find(config => config.name === param.model)?.path || param.value}
@@ -216,7 +226,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           <Grid
             definition={param}
             value={configs.find(config => config.name === param.model)?.path || param.value}
-            onChange={(value,model,label) => handleTypeChange(value, model, label ,param )}
+            onChange={(value,model,label, price) => handleTypeChange(value, model, label ,param, price )}
             frameType={configs[0].type as string}
           />
         )}
@@ -277,7 +287,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   return (
     <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
       <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
-        {['Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain', 'AI Style'].map((tab) => (
+        {['AI Style', 'Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
           <button 
             key={tab}
             className={`relative w-full h-16 flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 

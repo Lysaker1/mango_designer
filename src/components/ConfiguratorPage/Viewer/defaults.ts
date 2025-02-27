@@ -11,6 +11,7 @@ export interface ModelConfig {
   correctAxis:boolean;
   containsPlain:boolean;
   subParts: {name:string,color:{hex:string,label:string},texturePath?:string}[]
+  price?: number;
 }
 
 export const rearWheelDefaults: Record<string, { path: string; type: string }> = {
@@ -151,7 +152,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Frame",
     path: "/models/Mango_OSS_Frame.glb", 
     meshRequired: "frame_mesh",
-    type:"OSS",
+    type: "OSS",
     // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -184,8 +185,8 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Front Wheel",
-    path: "/models/Mango_Wheels_Front_6SpokeMag.glb", // Changed to 3 spoke
-    type:"6 Spoke Mag Wheel",
+    path: "/models/Mango_Wheels_Front_MultiSpoke.glb", // Changed to 3 spoke
+    type: "6 Spoke Mag Wheel",
     meshRequired: "fronTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -204,7 +205,7 @@ const modelConfigs: ModelConfig[] = [
     name: "Saddle",
     path: "/models/Mango_Saddle4.glb",
     meshRequired: "seat_plane",
-    type:"Saddle",
+    type: "Saddle",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,
@@ -238,7 +239,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Pedals",
-    path: "/models/Mango_Pedals_Platform.glb",
+    path: "/models/Mango_Pedals_Standard.glb",
     meshRequired: "crank_plane",
     type:"Standard",
     position: new THREE.Vector3(0, 0, 0),
