@@ -40,22 +40,123 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
   
 
-  const handleTypeChange = (value: string,model: string,type:string,param:ParameterDefinition, price?: number) => {
+  const handleTypeChange = (value: string, model: string, type: string, param: ParameterDefinition, price?: number) => {
+    // Get current frame type
+    const currentFrameType = configs.find(config => config.name === "Frame")?.type;
+    
     if(model === "Frame"){
+      // User is changing the frame
       const updatedConfigs = configs.map((config) => {
         if (config.name === model) {
           return { ...config, path: value, type, price };
         }
-        if (config.name === "Rear Wheel" && rearWheelDefaults[type] && !frames[type][config.name].hasOwnProperty(config.type)) {
-          return { ...config, path: rearWheelDefaults[type].path ,type: rearWheelDefaults[type].type, price };
+        
+        // Auto-select correct rear wheel based on frame type
+        if (config.name === "Rear Wheel") {
+          if (type === "DOG") {
+            return { 
+              ...config, 
+              path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb", 
+              type: "Cassette Wheel",
+              price 
+            };
+          } else if (type === "OG") {
+            return { 
+              ...config, 
+              path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb", 
+              type: "Cassette Wheel",
+              price 
+            };
+          } else { // OSS or Moosher
+            return { 
+              ...config, 
+              path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb", 
+              type: "45mm Deep Dish Rim",
+              price 
+            };
+          }
         }
+        
+        // Auto-select correct front wheel based on frame type
+        if (config.name === "Front Wheel") {
+          if (type === "DOG") {
+            return { 
+              ...config, 
+              path: "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb", 
+              type: "45mm Deep Dish Rim",
+              price 
+            };
+          } else { // OG, OSS, or Moosher
+            return { 
+              ...config, 
+              path: "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb", 
+              type: "45mm Deep Dish Rim",
+              price 
+            };
+          }
+        }
+        
         return config;
       });  
-     onConfigChange(updatedConfigs);
-    }else{
+      onConfigChange(updatedConfigs);
+    } else if (model === "Front Wheel") {
+      // User is manually changing front wheel
+      const frameType = configs.find(config => config.name === "Frame")?.type;
+      
+      // Enforce compatibility with frame type
+      let correctedValue = value;
+      
+      // If DOG frame but trying to use rim brake wheel, correct it
+      if (frameType === "DOG" && !value.includes("DiscBrake") && value.includes("MultiSpoke")) {
+        correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+      }
+      
+      // If non-DOG frame but trying to use disc brake wheel, correct it
+      if (frameType !== "DOG" && value.includes("DiscBrake")) {
+        correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb";
+      }
+      
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
-          return { ...config, path: value ,type:type, price };
+          return { ...config, path: correctedValue, type, price };
+        }
+        return config;
+      });
+      onConfigChange(updatedConfigs);
+    } else if (model === "Rear Wheel") {
+      // User is manually changing rear wheel
+      const frameType = configs.find(config => config.name === "Frame")?.type;
+      
+      // Enforce compatibility with frame type
+      let correctedValue = value;
+      let correctedType = type;
+      
+      // Apply frame-specific corrections
+      if (frameType === "DOG" && !value.includes("DiscBrake") && value.includes("MultiSpoke")) {
+        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb";
+        correctedType = "Cassette Wheel";
+      } else if (frameType === "OG" && !value.includes("Cassette")) {
+        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb";
+        correctedType = "Cassette Wheel";
+      } else if ((frameType === "OSS" || frameType === "Moosher") && 
+                 !value.includes("SingleCog") && 
+                 !value.includes("6SpokeMag")) {
+        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb";
+        correctedType = "45mm Deep Dish Rim";
+      }
+      
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { ...config, path: correctedValue, type: correctedType, price };
+        }
+        return config;
+      });
+      onConfigChange(updatedConfigs);
+    } else {
+      // Regular component change (not frame or wheels)
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { ...config, path: value, type, price };
         }
         return config;
       });
