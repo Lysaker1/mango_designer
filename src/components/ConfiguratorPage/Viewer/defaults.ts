@@ -14,11 +14,11 @@ export interface ModelConfig {
   price?: number;
 }
 
-export const rearWheelDefaults: Record<string, { path: string; type: string }> = {
-  OSS: { path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", type: "45mm Deep Dish Rim" },
-  OG: { path: "/models/Mango_Wheels_Rear_Flipflop_MultiSpoke.glb", type: "Flipflop Wheel" },
-  DOG: { path: "/models/Mango_Wheels_Rear_Cassette_MultiSpoke.glb", type: 'Cassette Wheel' },
-  Moosher: { path: "/models/Mango_Wheels_Rear_Cassette_MultiSpoke.glb", type: 'Cassette Wheel' },
+export const rearWheelDefaults = {
+  OSS: { path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb", type: '45mm Deep Dish Rim' },
+  OG: { path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb", type: 'Flipflop Wheel' },
+  DOG: { path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb", type: 'Cassette Wheel' },
+  Moosher: { path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb", type: '45mm Deep Dish Rim' },
 };
 
 
@@ -169,9 +169,9 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_SS_MultiSpoke.glb", // Changed to multi spoke
+    path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb",
     meshRequired: "rearTyre_plane",
-    type:"45mm Deep Dish Rim",
+    type: "45mm Deep Dish Rim",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(), 
     containsPlain: false,
@@ -185,7 +185,7 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Front Wheel",
-    path: "/models/Mango_Wheels_Front_MultiSpoke.glb", // Changed to 3 spoke
+    path: "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb",
     type: "6 Spoke Mag Wheel",
     meshRequired: "fronTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
