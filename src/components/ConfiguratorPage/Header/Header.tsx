@@ -9,7 +9,7 @@ import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
   const [frameName, setFrameName] = useState<string>("");
   const [framePrice, setFramePrice] = useState<number>(0); 
-  const [showBikeSelector, setShowBikeSelector] = useState(false);
+  const [showBikeSelector, setShowBikeSelector] = useState(true);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(colors.mangoOrange.hex); // Default mango orange
   const [showPriceDetails, setShowPriceDetails] = useState(false);

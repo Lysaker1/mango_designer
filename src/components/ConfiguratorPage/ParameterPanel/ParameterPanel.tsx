@@ -18,7 +18,7 @@ interface ParameterPanelProps {
 }
 
 const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange }) => {
-  const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>();
+  const [activeTab, setActiveTab] = useState<'Frame' | 'Fork' | 'Handlebars' | 'Stem' | 'Grips' | 'Wheels' | 'Tyres' | 'Saddle' | 'Seat Post' | 'Pedals' | 'Chain' | 'AI Style' | undefined>('AI Style');
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   // const [parameters, setParameters] = useState<ParameterDefinition[]>(PARAMETER_DEFINITIONS);
