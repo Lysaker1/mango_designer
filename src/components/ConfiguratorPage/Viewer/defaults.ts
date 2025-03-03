@@ -12,6 +12,7 @@ export interface ModelConfig {
   containsPlain:boolean;
   subParts: {name:string,color:{hex:string,label:string},texturePath?:string}[]
   price?: number;
+  nonVisibleOptions?: { [key: string]: {value:string,price?:number} };
 }
 
 export const rearWheelDefaults = {
@@ -164,7 +165,10 @@ const modelConfigs: ModelConfig[] = [
       { name: "wire_mesh", color: colors.black },
       { name: "frontBrake_mesh", color: colors.black },
       { name: "rearBrake_mesh", color: colors.black },
-    ]
+    ],
+    nonVisibleOptions: {
+      "frameSize": {value: "Medium"}
+    }
   },
   {
     name: "Rear Wheel",
@@ -180,7 +184,11 @@ const modelConfigs: ModelConfig[] = [
       { name: "rim", color: colors.green },
       { name: "cog", color: colors.black },
       { name: "logoFront", color: colors.white ,texturePath:textureURL},
-      { name: "logoBack", color: colors.white ,texturePath:textureURL},    ]
+      { name: "logoBack", color: colors.white ,texturePath:textureURL},    
+    ],
+    nonVisibleOptions: {
+      "rearTyreType": {value: "Standard"}
+    }
   },
   {
     name: "Front Wheel",
@@ -198,7 +206,10 @@ const modelConfigs: ModelConfig[] = [
       { name: "Spokes", color: colors.black },
       { name: "logoFront", color: colors.white ,texturePath:textureURL},
       { name: "logoBack", color: colors.white ,texturePath:textureURL},
-    ]
+    ],
+    nonVisibleOptions: {
+      "frontTyreType": {value: "Standard"}
+    }
   },
   {
     name: "Saddle",

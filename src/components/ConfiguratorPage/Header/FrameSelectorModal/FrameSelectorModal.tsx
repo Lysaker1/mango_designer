@@ -71,7 +71,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
               </div>
               
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
-                <span className="text-[#ff5e14] text-2xl font-bold">£449</span>
+                <span className="text-[#ff5e14] text-2xl font-bold">£{getBikePrice('OSS')}</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
                   onClick={() => handleBikeSelection('/models/Mango_OSS_Frame.glb', 'OSS')}
@@ -99,7 +99,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
               </div>
               
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
-                <span className="text-[#ff5e14] text-2xl font-bold">£549</span>
+                <span className="text-[#ff5e14] text-2xl font-bold">£{getBikePrice('Moosher')}</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
                   onClick={() => handleBikeSelection('/models/Mango_Moosher_Frame.glb', 'Moosher')}
@@ -127,7 +127,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
               </div>
               
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
-                <span className="text-[#ff5e14] text-2xl font-bold">£649</span>
+                <span className="text-[#ff5e14] text-2xl font-bold">£{getBikePrice('OG')}</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
                   onClick={() => handleBikeSelection('/models/Mango_OG_Frame.glb', 'OG')}
@@ -155,7 +155,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
               </div>
               
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
-                <span className="text-[#ff5e14] text-2xl font-bold">£749</span>
+                <span className="text-[#ff5e14] text-2xl font-bold">£{getBikePrice('DOG')}</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
                   onClick={() => handleBikeSelection('/models/Mango_DOG_Frame.glb', 'DOG')}
