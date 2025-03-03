@@ -6,7 +6,7 @@ import BackgroundColorModal from "./BackgroundColorModal/BackgroundColorModal";
 import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
 import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 import { getHandlebarPath } from '@/utils/handlebarHelper';
-import { CartItem } from "./CartModal/CartModal";
+import CartModal, { CartItem } from "./CartModal/CartModal";
 import { getFrontWheelPath, getRearWheelPath, getWheelType } from '@/utils/wheelHelper';
 
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
