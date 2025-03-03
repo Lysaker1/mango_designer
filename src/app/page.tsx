@@ -30,7 +30,7 @@ const ConfiguratorPage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor }}>
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
       <Header configs={configs} onConfigChange={handleConfigChange} onBackgroundColorChange={(color: string) => setBackgroundColor(color)}/>
 
@@ -44,7 +44,7 @@ const ConfiguratorPage = () => {
           />
         </div>
         {/* Viewer */}
-        <div className="flex-1 relative bg-[`${backgroundColor}`]">
+        <div className="flex-1 relative" style={{ backgroundColor }}>
           <div className="h-full relative">
             <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-64 h-28 bg-no-repeat bg-contain" style={{ backgroundImage: "url('assets/mango-bikes.png')" }}></div>
             <Suspense fallback={
