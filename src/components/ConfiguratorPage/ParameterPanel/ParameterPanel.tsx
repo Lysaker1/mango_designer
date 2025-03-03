@@ -11,7 +11,13 @@ import { LeftMenuIcons } from './LeftMenuIcons';
 import { getStyleSuggestion } from '../../../services/styleAgent';
 import { colors } from '../Viewer/defaults';
 import { StyleResponse, StyleConfig } from '../../../app/api/style/route';
-import { getHandlebarPath } from '../../../utils/handlebarHelper';
+import { 
+  getDefaultConfigForFrame, 
+  getCompatibleFrontWheel, 
+  getCompatibleRearWheel,
+  getHandlebarConfig,
+  getHandlebarStyleFromPath
+} from '../../../utils/componentManager';
 // Make sure Slider is imported if it exists
 // import { Slider } from './parameterTypes/Slider';
 
@@ -47,193 +53,118 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     // Get current frame type
     const currentFrameType = configs.find(config => config.name === "Frame")?.type;
     
-    if(model === "Frame"){
-      // First update the frame
+    if(model === "Frame") {
+      // User is changing the frame type
+      // Get default configuration for the new frame type
+      const defaultConfig = getDefaultConfigForFrame(type);
+      
+      // Update all components based on the new frame
       const updatedConfigs = configs.map((config) => {
         if (config.name === model) {
           return { ...config, path: value, type, price };
         }
         
-        // Auto-select correct rear wheel based on frame type
-        if (config.name === "Rear Wheel") {
-          if (type === "DOG") {
-            return { 
-              ...config, 
-              path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb", 
-              type: "Cassette Wheel",
-              price 
-            };
-          } else if (type === "OG") {
-            return { 
-              ...config, 
-              path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb", 
-              type: "Flipflop Wheel",
-              price 
-            };
-          } else { // OSS or Moosher
-            return { 
-              ...config, 
-              path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb", 
-              type: "45mm Deep Dish Rim",
-              price 
-            };
-          }
-        }
-        
-        // Auto-select correct front wheel based on frame type
+        // Update wheels based on frame compatibility
         if (config.name === "Front Wheel") {
-          if (type === "DOG") {
-            return { 
-              ...config, 
-              path: "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb", 
-              type: "Cassette Wheel",
-              price 
-            };
-          } else { // OG, OSS, or Moosher
-            return { 
-              ...config, 
-              path: "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb", 
-              type: "45mm Deep Dish Rim",
-              price 
-            };
-          }
+          const frontWheel = defaultConfig.wheels.front;
+          return { 
+            ...config, 
+            path: frontWheel.path, 
+            type: frontWheel.type,
+            price: frontWheel.price 
+          };
         }
         
-        // Auto-update handlebar based on frame type
+        if (config.name === "Rear Wheel") {
+          const rearWheel = defaultConfig.wheels.rear;
+          return { 
+            ...config, 
+            path: rearWheel.path, 
+            type: rearWheel.type,
+            price: rearWheel.price 
+          };
+        }
+        
+        // Update handlebar based on frame compatibility
         if (config.name === "Handlebar") {
-          // Get the current handlebar path
-          const currentHandlebarPath = config.path;
-          
-          // Use the utility function to get the correct handlebar path for the new frame type
-          const updatedHandlebarPath = getHandlebarPath(type, currentHandlebarPath);
+          // Preserve the current handlebar style if possible
+          const currentStyle = config.type;
+          const handlebar = getHandlebarConfig(type, currentStyle);
           
           return {
             ...config,
-            path: updatedHandlebarPath,
-            // Keep the same handlebar type/style
-            type: config.type
+            path: handlebar.path,
+            type: handlebar.type,
+            price: handlebar.price
           };
         }
         
         return config;
       });
-
-      // AFTER processing frame changes, now update the handlebar
-      // This ensures handlebar update happens with the new frame type
-      const handlebarConfig = updatedConfigs.find(config => config.name === "Handlebar");
-      if (handlebarConfig) {
-        const newHandlebarPath = getHandlebarPath(type, handlebarConfig.path);
-        
-        // Find and update the handlebar config
-        const finalConfigs = updatedConfigs.map(config => {
-          if (config.name === "Handlebar") {
-            return { 
-              ...config, 
-              path: newHandlebarPath,
-              // Keep the same handlebar style
-              type: handlebarConfig.type
-            };
-          }
-          return config;
-        });
-        
-        onConfigChange(finalConfigs);
-      } else {
-        onConfigChange(updatedConfigs);
-      }
+      
+      onConfigChange(updatedConfigs);
+    } else if (model === "Front Wheel") {
+      // User is manually changing front wheel
+      const frameType = configs.find(config => config.name === "Frame")?.type || "OSS";
+      
+      // Get compatible front wheel based on frame type and requested wheel
+      const compatibleWheel = getCompatibleFrontWheel(frameType, value);
+      
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { 
+            ...config, 
+            path: compatibleWheel.path, 
+            type: compatibleWheel.type, 
+            price: compatibleWheel.price || price 
+          };
+        }
+        return config;
+      });
+      
+      onConfigChange(updatedConfigs);
+    } else if (model === "Rear Wheel") {
+      // User is manually changing rear wheel
+      const frameType = configs.find(config => config.name === "Frame")?.type || "OSS";
+      
+      // Get compatible rear wheel based on frame type and requested wheel
+      const compatibleWheel = getCompatibleRearWheel(frameType, value);
+      
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { 
+            ...config, 
+            path: compatibleWheel.path, 
+            type: compatibleWheel.type, 
+            price: compatibleWheel.price || price 
+          };
+        }
+        return config;
+      });
+      
+      onConfigChange(updatedConfigs);
     } else if (model === "Handlebar") {
       // User is changing the handlebar type
       const frameType = configs.find(config => config.name === "Frame")?.type || "OSS";
       
-      // Extract the style from the value (which is now a full path)
-      let handlebarStyle = "";
-      if (value.includes("Handle1_Riser")) {
-        handlebarStyle = "Riser";
-      } else if (value.includes("Handle2_Drop")) {
-        handlebarStyle = "Drop";
-      } else if (value.includes("Handle4_Track")) {
-        handlebarStyle = "Track";
-      } else if (value.includes("Handle5_Flat")) {
-        handlebarStyle = "Flat";
-      } else if (value.includes("Handle6_Cruiser")) {
-        handlebarStyle = "Cruiser";
-      } else if (value.includes("Handle7_Jeb")) {
-        handlebarStyle = "Jeb";
-      }
+      // Extract the style from the value (the path)
+      const handlebarStyle = getHandlebarStyleFromPath(value);
       
-      // Get the correct handlebar path based on the current frame type
-      const handlebarPath = getHandlebarPath(frameType, value);
+      // Get the correct handlebar configuration
+      const handlebar = getHandlebarConfig(frameType, handlebarStyle);
       
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
-          return { ...config, path: handlebarPath, type: handlebarStyle, price };
+          return { 
+            ...config, 
+            path: handlebar.path, 
+            type: handlebar.type, 
+            price: handlebar.price || price 
+          };
         }
         return config;
       });
-      onConfigChange(updatedConfigs);
-    } else if (model === "Front Wheel") {
-      // User is manually changing front wheel
-      const frameType = configs.find(config => config.name === "Frame")?.type;
       
-      // Enforce compatibility with frame type
-      let correctedValue = value;
-      let correctedType = type;
-      
-      // DOG frames MUST use disc brake wheels - force this even for 6 spoke wheels
-      if (frameType === "DOG") {
-        // If trying to use 6 spoke wheel with DOG frame, use the disc brake multi-spoke instead
-        if (value.includes("6SpokeMag")) {
-          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
-          correctedType = "Cassette Wheel";
-        } 
-        // If trying to use rim brake multi-spoke, use disc brake version
-        else if (value.includes("MultiSpoke") && !value.includes("DiscBrake")) {
-          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
-          correctedType = "Cassette Wheel";
-        }
-      }
-      
-      // Non-DOG frames cannot use disc brake wheels
-      if (frameType !== "DOG" && value.includes("DiscBrake")) {
-        correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb";
-        correctedType = "45mm Deep Dish Rim";
-      }
-      
-      const updatedConfigs = configs.map(config => {
-        if (config.name === model) {
-          return { ...config, path: correctedValue, type: correctedType, price };
-        }
-        return config;
-      });
-      onConfigChange(updatedConfigs);
-    } else if (model === "Rear Wheel") {
-      // User is manually changing rear wheel
-      const frameType = configs.find(config => config.name === "Frame")?.type;
-      
-      // Enforce compatibility with frame type
-      let correctedValue = value;
-      let correctedType = type;
-      
-      // Apply frame-specific corrections
-      if (frameType === "DOG" && !value.includes("DiscBrake") && value.includes("MultiSpoke")) {
-        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb";
-        correctedType = "Cassette Wheel";
-      } else if (frameType === "OG" && !value.includes("Cassette")) {
-        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb";
-        correctedType = "Cassette Wheel";
-      } else if ((frameType === "OSS" || frameType === "Moosher") && 
-                 !value.includes("SingleCog") && 
-                 !value.includes("6SpokeMag")) {
-        correctedValue = "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb";
-        correctedType = "45mm Deep Dish Rim";
-      }
-      
-      const updatedConfigs = configs.map(config => {
-        if (config.name === model) {
-          return { ...config, path: correctedValue, type: correctedType, price };
-        }
-        return config;
-      });
       onConfigChange(updatedConfigs);
     } else {
       // Regular component change (not frame, handlebar, or wheels)
@@ -243,6 +174,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         }
         return config;
       });
+      
       onConfigChange(updatedConfigs);
     }
   };

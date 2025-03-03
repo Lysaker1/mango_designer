@@ -1,16 +1,29 @@
 import React, { useEffect } from 'react';
 import { ParameterDefinition } from '../../ParameterPanel/parameterDefintions';
+import { getDefaultConfigForFrame } from '../../../../utils/componentManager';
+import { ModelConfig } from '../../Viewer/defaults';
 
 interface FrameSelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   value: string;
   onChange: (value: string, label: string, price: number) => void;
+  onFullConfigChange: (configs: ModelConfig[]) => void;
+  configs: ModelConfig[];
   frameParameter: ParameterDefinition;
   frameType: string;
 }
 
-const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose, value, onChange, frameParameter, frameType }) => {
+const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
+  isOpen,
+  onClose,
+  value,
+  onChange,
+  onFullConfigChange,
+  configs,
+  frameParameter,
+  frameType
+}) => {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isOpen && !document.getElementById('frame-selector-modal')?.contains(event.target as Node) && !document.getElementById('bike-selector-button')?.contains(event.target as Node)) {
@@ -26,10 +39,63 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
 
   if (!isOpen) return null;
 
-  // Function to handle bike selection
+  // Function to handle bike selection with full component update
   const handleBikeSelection = (bikeValue: string, bikeLabel: string): void => {
     const bikePrice = getBikePrice(bikeLabel);
+    
+    // First, call the original onChange to update the frame
     onChange(bikeValue, bikeLabel, bikePrice);
+    
+    // Then, get the default configuration for the new frame
+    const defaultConfig = getDefaultConfigForFrame(bikeLabel);
+    
+    // Update all configs based on the default configuration
+    const updatedConfigs = configs.map(config => {
+      // Update the frame
+      if (config.name === "Frame") {
+        return { ...config, path: bikeValue, type: bikeLabel, price: bikePrice };
+      }
+      
+      // Update front wheel
+      if (config.name === "Front Wheel") {
+        const frontWheel = defaultConfig.wheels.front;
+        return {
+          ...config,
+          path: frontWheel.path,
+          type: frontWheel.type,
+          price: frontWheel.price
+        };
+      }
+      
+      // Update rear wheel
+      if (config.name === "Rear Wheel") {
+        const rearWheel = defaultConfig.wheels.rear;
+        return {
+          ...config,
+          path: rearWheel.path,
+          type: rearWheel.type,
+          price: rearWheel.price
+        };
+      }
+      
+      // Update handlebar
+      if (config.name === "Handlebar") {
+        const handlebar = defaultConfig.handlebar;
+        return {
+          ...config,
+          path: handlebar.path,
+          type: handlebar.type,
+          price: handlebar.price
+        };
+      }
+      
+      return config;
+    });
+    
+    // Update all configurations
+    onFullConfigChange(updatedConfigs);
+    
+    // Close the modal
     onClose();
   };
 

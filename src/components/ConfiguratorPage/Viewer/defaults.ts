@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { wheelConfigs } from '../../../utils/componentManager';
 
 export interface ModelConfig {
   name: string;
@@ -22,7 +23,6 @@ export const rearWheelDefaults = {
 };
 
 
-//array contains those meshes which we want to hide for a specfic frame
 export const frames: Record<string, Record<string,Record<string,string[]>>> = {
   OSS: {
     "Rear Wheel":{
@@ -97,30 +97,30 @@ export const frames: Record<string, Record<string,Record<string,string[]>>> = {
     }
   },
   Moosher:{
-      "Rear Wheel":{
-        "45mm Deep Dish Rim":[],
-        "6 Spoke Mag Wheel":[]
-      },
-      "Front Wheel":{
-        "45mm Deep Dish Rim":[],
-        "6 Spoke Mag Wheel":[]
-      },
-      "Handlebar":{
-        'Riser':[],
-        'Drop':[],
-        'Track':[],
-        'Flat':[],
-        'Cruiser':[],
-        'Jeb':[],
-      },
-      "Saddle":{
-        'Saddle':[]
-      },
-      "Pedals":{
-        'Standard':[],
-        'Platform':[],
-      }
+    "Rear Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Front Wheel":{
+      "45mm Deep Dish Rim":[],
+      "6 Spoke Mag Wheel":[]
+    },
+    "Handlebar":{
+      'Riser':[],
+      'Drop':[],
+      'Track':[],
+      'Flat':[],
+      'Cruiser':[],
+      'Jeb':[],
+    },
+    "Saddle":{
+      'Saddle':[]
+    },
+    "Pedals":{
+      'Standard':[],
+      'Platform':[],
     }
+  }
 };
 
 const textureURL="/models/MangoLogo.jpg"
@@ -144,6 +144,7 @@ export const colors = {
   pink: { hex: '#fc8eac', label: 'Pink' },
   gold: { hex: '#ffd700', label: 'Gold' },
   darkGrey: { hex: '#232423', label: 'Dark Grey' },
+  darkbrown: { hex: '#4a413a', label: 'Dark Brown' },
 };
 
 const modelConfigs: ModelConfig[] = [
@@ -152,7 +153,6 @@ const modelConfigs: ModelConfig[] = [
     path: "/models/Mango_OSS_Frame.glb", 
     meshRequired: "frame_mesh",
     type: "OSS",
-    // color: colors.black.hex,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: true,
@@ -168,9 +168,9 @@ const modelConfigs: ModelConfig[] = [
   },
   {
     name: "Rear Wheel",
-    path: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb",
+    path: wheelConfigs.multiSpoke.rear.singleCogRimBrake.path,
     meshRequired: "rearTyre_plane",
-    type: "45mm Deep Dish Rim",
+    type: wheelConfigs.multiSpoke.rear.singleCogRimBrake.type,
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(), 
     containsPlain: false,
@@ -179,13 +179,14 @@ const modelConfigs: ModelConfig[] = [
       { name: "tube", color: colors.green },
       { name: "rim", color: colors.green },
       { name: "cog", color: colors.black },
-      { name: "logoFront", color: colors.white ,texturePath:textureURL},
-      { name: "logoBack", color: colors.white ,texturePath:textureURL},    ]
+      { name: "logoFront", color: colors.white, texturePath: textureURL },
+      { name: "logoBack", color: colors.white, texturePath: textureURL },
+    ]
   },
   {
     name: "Front Wheel",
-    path: "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb",
-    type: "6 Spoke Mag Wheel",
+    path: wheelConfigs.multiSpoke.front.rimBrake.path,
+    type: wheelConfigs.multiSpoke.front.rimBrake.type,
     meshRequired: "fronTyre_plane",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
@@ -196,8 +197,8 @@ const modelConfigs: ModelConfig[] = [
       { name: "rim", color: colors.green },
       { name: "cog", color: colors.black },
       { name: "Spokes", color: colors.black },
-      { name: "logoFront", color: colors.white ,texturePath:textureURL},
-      { name: "logoBack", color: colors.white ,texturePath:textureURL},
+      { name: "logoFront", color: colors.white, texturePath: textureURL },
+      { name: "logoBack", color: colors.white, texturePath: textureURL },
     ]
   },
   {
@@ -214,7 +215,6 @@ const modelConfigs: ModelConfig[] = [
       { name: "saddleTop_mesh", color: colors.white },
       { name: "saddleFrame_mesh", color: colors.silver },
       { name: "seatPost_mesh", color: colors.gold },
-      // { name: "logo_mesh", color: colors.white ,texturePath:"https://cdn11.bigcommerce.com/s-qmagntafvz/images/stencil/110x36/mango-logo-seo_1626684142__36638.original1_1700851933.original.png"},
     ]
   },
 

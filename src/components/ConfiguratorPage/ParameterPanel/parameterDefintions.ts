@@ -118,6 +118,8 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       red: colors.red,
       white: colors.white,
       yellow: colors.yellow,
+      darkbrown: colors.darkbrown,
+
     },
     subPart:['rim']
   },
@@ -173,6 +175,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       red: colors.red,
       white: colors.white,
       yellow: colors.yellow,
+      darkbrown: colors.darkbrown,
     },
     subPart:['rim'],
   },
