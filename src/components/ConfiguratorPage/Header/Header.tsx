@@ -6,6 +6,7 @@ import BackgroundColorModal from "./BackgroundColorModal/BackgroundColorModal";
 import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
 import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 import { getHandlebarPath } from '@/utils/handlebarHelper';
+import { CartItem } from "./CartModal/CartModal";
 import { getFrontWheelPath, getRearWheelPath, getWheelType } from '@/utils/wheelHelper';
 
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
@@ -15,6 +16,8 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(colors.mangoOrange.hex); // Default mango orange
   const [showPriceDetails, setShowPriceDetails] = useState(false);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [showCart, setShowCart] = useState(false);
 
   // Get background color from local storage or set default
   useEffect(() => {
@@ -108,6 +111,21 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
   // Add a custom fee of 45
   const totalPrice = framePrice + configs.slice(1).reduce((acc, config) => acc + (config.price || 0), 0) + 45;
 
+  const addToCart = () => {
+    const newItem: CartItem = {
+      id: Date.now().toString(), // Unique ID
+      configs: JSON.parse(JSON.stringify(configs)), // Copy of current configs
+      totalPrice: totalPrice,
+      quantity: 1,
+      frameName: `Custom ${frameName}`
+    };
+    setCart([...cart, newItem]);
+    setShowCart(true); // Show cart after adding item
+  };
+
+  // Count total number of items in the cart
+  const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
+
   return (
     <>
       <header className="h-16 px-4 flex items-center justify-between bg-black backdrop-blur-md">
@@ -137,8 +155,8 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
               onMouseEnter={() => setShowPriceDetails(true)}
               onMouseLeave={() => setShowPriceDetails(false)}
             >
-              <svg fill="white" height={18} width={18} xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512">
-                <path fill-rule="nonzero" d="M256 0c70.69 0 134.7 28.66 181.02 74.98C483.34 121.31 512 185.31 512 256c0 70.69-28.66 134.7-74.98 181.02C390.7 483.34 326.69 512 256 512c-70.69 0-134.7-28.66-181.02-74.98C28.66 390.7 0 326.69 0 256c0-70.69 28.66-134.69 74.98-181.02C121.3 28.66 185.31 0 256 0zm17.75 342.25h29.15v29.32h-93.79v-29.32h28.76v-92.34h-28.76v-29.32h64.64v121.66zm-27.94-150.37c-7.08-.05-13.12-2.53-18.2-7.56-5.08-5.01-7.56-11.11-7.56-18.25 0-7.01 2.48-13.06 7.56-18.08 5.08-5.02 11.12-7.55 18.2-7.55 6.95 0 12.99 2.53 18.08 7.55 5.13 5.02 7.67 11.07 7.67 18.08 0 4.72-1.2 9.07-3.56 12.94-2.36 3.93-5.45 7.07-9.31 9.37-3.87 2.3-8.17 3.45-12.88 3.5zm171.9-97.59C376.33 52.92 319.15 27.32 256 27.32c-63.15 0-120.33 25.6-161.71 66.97C52.92 135.68 27.32 192.85 27.32 256c0 63.15 25.6 120.33 66.97 161.71 41.38 41.37 98.56 66.97 161.71 66.97 63.15 0 120.33-25.6 161.71-66.97 41.37-41.38 66.97-98.56 66.97-161.71 0-63.15-25.6-120.32-66.97-161.71z"/>
+              <svg fill="white" height={18} width={18} xmlns="http://www.w3.org/2000/svg" shapeRendering="geometricPrecision" textRendering="geometricPrecision" imageRendering="optimizeQuality" fillRule="evenodd" clipRule="evenodd" viewBox="0 0 512 512">
+                <path fillRule="nonzero" d="M256 0c70.69 0 134.7 28.66 181.02 74.98C483.34 121.31 512 185.31 512 256c0 70.69-28.66 134.7-74.98 181.02C390.7 483.34 326.69 512 256 512c-70.69 0-134.7-28.66-181.02-74.98C28.66 390.7 0 326.69 0 256c0-70.69 28.66-134.69 74.98-181.02C121.3 28.66 185.31 0 256 0zm17.75 342.25h29.15v29.32h-93.79v-29.32h28.76v-92.34h-28.76v-29.32h64.64v121.66zm-27.94-150.37c-7.08-.05-13.12-2.53-18.2-7.56-5.08-5.01-7.56-11.11-7.56-18.25 0-7.01 2.48-13.06 7.56-18.08 5.08-5.02 11.12-7.55 18.2-7.55 6.95 0 12.99 2.53 18.08 7.55 5.13 5.02 7.67 11.07 7.67 18.08 0 4.72-1.2 9.07-3.56 12.94-2.36 3.93-5.45 7.07-9.31 9.37-3.87 2.3-8.17 3.45-12.88 3.5zm171.9-97.59C376.33 52.92 319.15 27.32 256 27.32c-63.15 0-120.33 25.6-161.71 66.97C52.92 135.68 27.32 192.85 27.32 256c0 63.15 25.6 120.33 66.97 161.71 41.38 41.37 98.56 66.97 161.71 66.97 63.15 0 120.33-25.6 161.71-66.97 41.37-41.38 66.97-98.56 66.97-161.71 0-63.15-25.6-120.32-66.97-161.71z"/>
               </svg>
             </span>
           </div>
@@ -169,9 +187,26 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
               </g>
             </svg>
           </button>
+          
+          <button 
+            className="ml-4 relative text-white cursor-pointer"
+            onClick={() => setShowCart(!showCart)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-mangoOrange text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
             
-          <button className="ml-4 px-6 py-2 text-sm font-medium text-white border border-mangoOrange bg-mangoOrange rounded-lg hover:bg-black transition-colors">
-            Buy Now
+          <button 
+            className="ml-4 px-6 py-2 text-sm font-medium text-white border border-mangoOrange bg-mangoOrange rounded-lg hover:bg-black transition-colors"
+            onClick={addToCart}
+          >
+            Add to cart
           </button>
         </div>
       </header>
@@ -224,6 +259,16 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
             )}
           </div>
         </div>
+      )}
+
+      {/* Handlekurv Modal */}
+      {showCart && (
+        <CartModal
+          onClose={() => setShowCart(false)}
+          cart={cart}
+          setCart={setCart}
+          onConfigChange={onConfigChange}
+        />
       )}
     </>
   )
