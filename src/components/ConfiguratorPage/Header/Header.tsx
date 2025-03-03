@@ -9,7 +9,7 @@ import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
   const [frameName, setFrameName] = useState<string>("");
   const [framePrice, setFramePrice] = useState<number>(0); 
-  const [showBikeSelector, setShowBikeSelector] = useState(false);
+  const [showBikeSelector, setShowBikeSelector] = useState(true);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(colors.mangoOrange.hex); // Default mango orange
   const [showPriceDetails, setShowPriceDetails] = useState(false);
@@ -37,10 +37,10 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     type: 'grid',
     value: '/models/Mango_OSS_Frame.glb',
     options: [
-      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 429.99 }, 
-      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 529.99 }, 
-      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 699.95 }, 
-      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 429.99 }
+      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 449 }, 
+      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 549 },
+      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 649 }, 
+      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 749 }, 
     ],
     category: 'Frame',
     model: 'Frame',
@@ -64,9 +64,9 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
       <header className="h-16 px-4 flex items-center justify-between bg-black backdrop-blur-md">
         <div className="flex items-center relative">
           <h1 className="text-xl font-bold text-white">
-            Mango Bikes
+            Custom {frameName}
           </h1>
-          {/* <button 
+          <button 
             id="bike-selector-button"
             className="ml-2 text-white"
             onClick={() => setShowBikeSelector(!showBikeSelector)}
@@ -74,7 +74,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
             </svg>
-          </button> */}
+          </button>
         </div>
           
         <div className="flex items-center">

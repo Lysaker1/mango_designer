@@ -20,6 +20,21 @@ export interface ParameterDefinition {
 
 export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
   {
+    id: 'frameType',
+    name: 'Type',
+    type: 'grid',
+    value: '/models/Mango_OSS_Frame.glb',
+    options: [
+      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 449 }, 
+      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 549 },
+      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 649 }, 
+      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 749 }, 
+    ],
+    category: 'Frame',
+    model: 'Frame',
+    disabled: true,
+  },
+  {
     id: 'frameColor',
     name: 'Color',
     type: 'color',
@@ -60,15 +75,6 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       aquaBlue: colors.aquaBlue,
     },
     subPart: ['fork_mesh'],
-  },
-  {
-    id: 'tubingType',
-    name: 'Type',
-    type: 'grid',
-    value: '/models/Mango_OSS_Frame.glb',
-    options: [{ label: 'OSS', value: '/models/Mango_OSS_Frame.glb' }, { label: 'OG', value: '/models/Mango_OG_Frame.glb' } , { label: 'DOG', value: '/models/Mango_DOG_Frame.glb' }, { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb' }],
-    category: 'Frame',
-    model: 'Frame'
   },
   {
     id: 'frontWheelType',
