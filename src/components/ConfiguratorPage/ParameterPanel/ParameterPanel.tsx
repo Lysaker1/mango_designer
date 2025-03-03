@@ -258,58 +258,81 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     }
   };
 
+  /**
+   * Handles the generation of bike styles based on user prompts using AI.
+   * This function processes the user's text prompt, sends it to the style suggestion API,
+   * and applies the returned style configurations to the bike model.
+   */
   const handleStyleGeneration = async () => {
+    // Don't proceed if the prompt is empty
     if (!prompt.trim()) return;
+    
+    // Set loading state to show feedback to the user
     setIsLoading(true);
     
     try {
+      // Call the style suggestion API with the user's prompt
       const response = await getStyleSuggestion(prompt);
       console.log("Raw API response:", response);
       
+      // Process each configuration in the current model
       const updatedConfigs = configs.map(config => {
+        // Find the matching style configuration from the API response
         const styleConfig = response.find((sc: any) => sc.name === config.name);
+        
+        // If no matching style config is found, return the original config unchanged
         if (!styleConfig) return config;
 
-        // Debug logging
+        // Debug logging to track the processing of each component
         console.log(`Processing config for: ${config.name}`);
         console.log('StyleConfig:', styleConfig);
 
+        // Find all parameter definitions that apply to this component
+        // This includes both direct model matches and any that affect subparts
         const paramDefs = PARAMETER_DEFINITIONS.filter(
           param => param.model === config.name || 
                   (config.subParts?.some(part => param.subPart?.includes(part.name)))
         );
 
-        // Debug logging
+        // Debug logging for parameter definitions
         console.log('Matching paramDefs:', paramDefs);
 
+        // Process each subpart of the component to apply style changes
         const updatedSubParts = config.subParts?.map(part => {
+          // Find the matching subpart in the style configuration
           const stylePart = styleConfig.subParts?.find((sp: any) => 
             sp.name.toLowerCase() === part.name.toLowerCase()
           );
           
-          // Debug logging
+          // Debug logging for subpart processing
           console.log(`Processing part: ${part.name}`);
           console.log('StylePart found:', stylePart);
 
+          // If no style part is found or it has no color label, keep the original part
           if (!stylePart?.color?.label) return part;
 
+          // Find parameter definitions that affect this specific subpart
           const matchingParamDefs = paramDefs.filter(
             param => param.subPart?.includes(part.name)
           );
 
-          // Debug logging
+          // Debug logging for matching parameter definitions
           console.log('Matching paramDefs for part:', matchingParamDefs);
 
+          // For each matching parameter definition, try to find a color match
           for (const paramDef of matchingParamDefs) {
             if (paramDef?.colors) {
+              // Look for a color in the parameter definition that matches the style's color
               const matchedColor = Object.entries(paramDef.colors).find(
                 ([key, color]) => {
                   const styleLabel = stylePart.color.label.toLowerCase();
+                  // Match either by color key or by color label
                   return key.toLowerCase() === styleLabel || 
                          color.label.toLowerCase() === styleLabel;
                 }
               );
 
+              // If a matching color is found, update the part with this color
               if (matchedColor) {
                 console.log(`Updating ${config.name} - ${part.name} to:`, matchedColor[1]);
                 return {
@@ -319,20 +342,25 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               }
             }
           }
+          // If no matching color is found, return the original part
           return part;
         });
 
+        // Return the updated configuration with new subpart colors
         return {
           ...config,
           subParts: updatedSubParts
         };
       });
 
+      // Log the final updated configurations and update the model
       console.log("Updated configs:", updatedConfigs);
       onConfigChange(updatedConfigs);
     } catch (error) {
+      // Handle any errors that occur during the style generation process
       console.error('Error in style generation:', error);
     } finally {
+      // Reset loading state regardless of success or failure
       setIsLoading(false);
     }
   };

@@ -52,6 +52,12 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
+      red: colors.red,
+      blue: colors.blue,
+      white: colors.white,
+      pink: colors.pink,        
+      gold: colors.gold,
+
     },
     subPart: ['frame_mesh']
   },
@@ -73,6 +79,11 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
       silver: colors.silver,
       creamClassic: colors.creamClassic,
       aquaBlue: colors.aquaBlue,
+      red: colors.red,
+      blue: colors.blue,
+      white: colors.white,
+      pink: colors.pink,
+
     },
     subPart: ['fork_mesh'],
   },
