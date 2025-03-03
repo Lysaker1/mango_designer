@@ -138,11 +138,11 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
 
   return (
     <>
-      <header className="h-16 px-4 flex items-center justify-between bg-black backdrop-blur-md">
-        <div className="flex items-center relative">
+      <header className="h-16 px-2 sm:px-4 flex items-center justify-between bg-black backdrop-blur-md">
+        <div className="flex items-center relative mr-2">
           <button 
             id="bike-selector-button"
-            className="text-white text-xl font-bold flex items-center justify-center gap-2"
+            className="text-white text-lg sm:text-xl font-bold flex items-center justify-center gap-1"
             onClick={() => setShowBikeSelector(!showBikeSelector)}
           >
             Change bike
@@ -154,10 +154,10 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
           
         <div className="flex items-center">
           <div 
-            className="text-white text-sm mr-4 font-bold text-xl relative group flex items-center justify-center"
+            className="text-white text-lg mr-3 font-bold sm:text-xl relative group flex items-center justify-center"
           >
             <span className='mr-1'>£</span>
-            {totalPrice.toFixed(2)}
+              {totalPrice.toFixed(2)}
             <span 
               className="ml-2 cursor-pointer"             
               onMouseEnter={() => setShowPriceDetails(true)}
@@ -197,7 +197,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
           </button>
           
           <button 
-            className="ml-4 relative text-white cursor-pointer"
+            className="ml-3 relative text-white cursor-pointer"
             onClick={() => setShowCart(!showCart)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -211,7 +211,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
           </button>
             
           <button 
-            className="ml-4 px-6 py-2 text-sm font-medium text-white border border-mangoOrange bg-mangoOrange rounded-lg hover:bg-black transition-colors"
+            className="ml-4 p-1 sm:p-2 line-height-0.5 text-sm font-medium text-white border border-mangoOrange bg-mangoOrange rounded-lg hover:bg-black transition-colors"
             onClick={addToCart}
           >
             Add to cart
@@ -247,7 +247,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
 
       {/* Price Details Modal */}
       {showPriceDetails && (
-        <div className="absolute top-20 right-[137px] transform w-64 p-4 space-y-2 bg-black bg-opacity-95 backdrop-blur-md rounded-2xl shadow-lg z-20 text-white">
+        <div className="absolute top-20 right-[50px] sm:right-[117px] transform w-64 p-4 space-y-2 bg-black bg-opacity-95 backdrop-blur-md rounded-2xl shadow-lg z-20 text-white">
           <div className="text-lg font-bold border-b pb-2 mb-2 flex justify-between">
             <span>{frameName}:</span>
             <span>£{framePrice.toFixed(2)}</span>
@@ -258,7 +258,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
               <span>£{CUSTOM_FEE.toFixed(2)}</span>
             </div>
             {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
-              config.price && (
+              config.price > 0 && (
                 <div key={idx} className="flex justify-between py-1">
                   <span>+ {config.type}</span>
                   <span>£{config.price.toFixed(2)}</span>
@@ -267,7 +267,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
             )}
             {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
               config.nonVisibleOptions && Object.entries(config.nonVisibleOptions).map(([key, value], changeIdx) => 
-                value.price && (
+                value.price > 0 && (
                   <div key={`${idx}-${changeIdx}`} className="flex justify-between py-1">
                     <span>+ {value.value}</span>
                     <span>£{value.price.toFixed(2)}</span>

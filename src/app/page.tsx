@@ -30,7 +30,7 @@ const ConfiguratorPage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col" style={{ backgroundColor }}>
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor }}>
       {/* Header */}
       <Header configs={configs} onConfigChange={handleConfigChange} onBackgroundColorChange={(color: string) => setBackgroundColor(color)}/>
 
