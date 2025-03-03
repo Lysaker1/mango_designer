@@ -48,17 +48,14 @@ export const LeftMenuIcons = {
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth={1} overflow={"visible"}>
       <path 
         d="M12 2L15 9L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 9L12 2Z" 
-        stroke="#A7A7A7" 
         strokeMiterlimit="10"
       />
       <path 
         d="M7 7.5L4 6.5L3 3.5L6 4.5L7 7.5Z" 
-        stroke="#A7A7A7" 
         strokeMiterlimit="10"
       />
       <path 
         d="M17 7.5L20 6.5L21 3.5L18 4.5L17 7.5Z" 
-        stroke="#A7A7A7" 
         strokeMiterlimit="10"
       />
     </svg>

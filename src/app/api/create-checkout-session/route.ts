@@ -41,12 +41,13 @@ export async function POST(request: Request) {
             product_data: {
               name: item.frameName,
               description: 
-                `Frame: ${item.frameColor || 'N/A'} | Fork: ${item.forkColor || 'N/A'} | ` +
+                `Frame: ${item.frameSize || 'N/A'} (${item.frameColor || 'N/A'}) | Fork: ${item.forkColor || 'N/A'} | ` +
                 `Handlebar: ${item.handlebarType || 'N/A'} (${item.handlebarColor || 'N/A'}) | ` +
                 `Stem: ${item.stemColor || 'N/A'} | Grip: ${item.gripColor || 'N/A'} | ` +
                 `Wheels: Front ${item.frontWheelType || 'N/A'} (${item.frontWheelColor || 'N/A'}), ` +
                 `Rear ${item.rearWheelType || 'N/A'} (${item.rearWheelColor || 'N/A'}) | ` +
-                `Tyres: Front ${item.frontTyreColor || 'N/A'}, Rear ${item.rearTyreColor || 'N/A'} | ` +
+                `Front Tyre: ${item.frontTyreType || 'N/A'} (${item.frontTyreColor || 'N/A'}) | ` +
+                `Rear Tyre: ${item.rearTyreType || 'N/A'} (${item.rearTyreColor || 'N/A'}) | ` +
                 `Saddle: ${item.saddleColor || 'N/A'} | Seat Post: ${item.seatPostColor || 'N/A'} | ` +
                 `Pedals: ${item.pedalType || 'N/A'} (${item.pedalColor || 'N/A'}) | ` +
                 `Chain: ${item.chainColor || 'N/A'}`

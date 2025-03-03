@@ -185,7 +185,7 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
     const paths = new Set<string>();
     
     // Add paths from parameter definitions
-    PARAMETER_DEFINITIONS.forEach(definition => {
+    PARAMETER_DEFINITIONS.filter(def => def.type !== 'dropdown').forEach(definition => {
       definition.options?.forEach(option => {
         paths.add(option.value);
       });
