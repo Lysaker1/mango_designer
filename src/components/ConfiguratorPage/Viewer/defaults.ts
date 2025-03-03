@@ -161,9 +161,9 @@ const modelConfigs: ModelConfig[] = [
       { name: "frame_mesh", color: colors.silver },
       { name: "fork_mesh", color: colors.silver },
       { name: "chain_mesh", color: colors.green },
-      { name: "wire_mesh", color: colors.darkGrey },
-      { name: "frontBrake_mesh", color: colors.darkGrey },
-      { name: "rearBrake_mesh", color: colors.darkGrey },
+      { name: "wire_mesh", color: colors.black },
+      { name: "frontBrake_mesh", color: colors.black },
+      { name: "rearBrake_mesh", color: colors.black },
     ]
   },
   {
@@ -193,7 +193,7 @@ const modelConfigs: ModelConfig[] = [
     correctAxis: true,
     subParts:[
       { name: "tube", color: colors.pink },
-      { name: "rim", color: colors.black },
+      { name: "rim", color: colors.green },
       { name: "cog", color: colors.black },
       { name: "Spokes", color: colors.black },
       { name: "logoFront", color: colors.white ,texturePath:textureURL},
@@ -231,7 +231,7 @@ const modelConfigs: ModelConfig[] = [
       { name: "stem_mesh", color: colors.gold },
       { name: "handlebar_mesh", color: colors.black },
       { name: "grip_mesh", color: colors.pink },
-      { name: "levers_mesh", color: colors.darkGrey },
+      { name: "levers_mesh", color: colors.black },
       { name: "headsetSpacers_mesh", color: colors.black },
       { name: "wire_mesh", color: colors.black },
     ]
