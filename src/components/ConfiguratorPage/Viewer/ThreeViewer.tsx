@@ -183,11 +183,30 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
   // Find all model paths based on the parameter definitions
   const allModelPaths = useMemo(() => {
     const paths = new Set<string>();
+    
+    // Add paths from parameter definitions
     PARAMETER_DEFINITIONS.forEach(definition => {
       definition.options?.forEach(option => {
         paths.add(option.value);
       });
     });
+    
+    // Also add Shifter versions of NoShifter handlebars and vice versa
+    PARAMETER_DEFINITIONS.forEach(definition => {
+      if (definition.id === 'handlebarType') {
+        definition.options?.forEach(option => {
+          const path = option.value;
+          if (path.includes('NoShifter')) {
+            const shifterPath = path.replace('NoShifter', 'Shifter');
+            paths.add(shifterPath);
+          } else if (path.includes('Shifter')) {
+            const noShifterPath = path.replace('Shifter', 'NoShifter');
+            paths.add(noShifterPath);
+          }
+        });
+      }
+    });
+    
     return Array.from(paths);
   }, []);
 
@@ -202,6 +221,13 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    // This ensures we respond to config changes including handlebar path changes
+    console.log("Config changed in ThreeViewer:", configs);
+    
+    // No additional action needed - the Component will use the updated path
+  }, [configs]);
 
   if (!isClient) {
     return (

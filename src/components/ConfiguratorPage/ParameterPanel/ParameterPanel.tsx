@@ -11,6 +11,7 @@ import { LeftMenuIcons } from './LeftMenuIcons';
 import { getStyleSuggestion } from '../../../services/styleAgent';
 import { colors } from '../Viewer/defaults';
 import { StyleResponse, StyleConfig } from '../../../app/api/style/route';
+import { getHandlebarPath } from '../../../utils/handlebarHelper';
 
 interface ParameterPanelProps {
   configs: ModelConfig[];
@@ -45,7 +46,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     const currentFrameType = configs.find(config => config.name === "Frame")?.type;
     
     if(model === "Frame"){
-      // User is changing the frame
+      // First update the frame
       const updatedConfigs = configs.map((config) => {
         if (config.name === model) {
           return { ...config, path: value, type, price };
@@ -96,8 +97,77 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
           }
         }
         
+        // Auto-update handlebar based on frame type
+        if (config.name === "Handlebar") {
+          // Get the current handlebar path
+          const currentHandlebarPath = config.path;
+          
+          // Use the utility function to get the correct handlebar path for the new frame type
+          const updatedHandlebarPath = getHandlebarPath(type, currentHandlebarPath);
+          
+          return {
+            ...config,
+            path: updatedHandlebarPath,
+            // Keep the same handlebar type/style
+            type: config.type
+          };
+        }
+        
         return config;
-      });  
+      });
+
+      // AFTER processing frame changes, now update the handlebar
+      // This ensures handlebar update happens with the new frame type
+      const handlebarConfig = updatedConfigs.find(config => config.name === "Handlebar");
+      if (handlebarConfig) {
+        const newHandlebarPath = getHandlebarPath(type, handlebarConfig.path);
+        
+        // Find and update the handlebar config
+        const finalConfigs = updatedConfigs.map(config => {
+          if (config.name === "Handlebar") {
+            return { 
+              ...config, 
+              path: newHandlebarPath,
+              // Keep the same handlebar style
+              type: handlebarConfig.type
+            };
+          }
+          return config;
+        });
+        
+        onConfigChange(finalConfigs);
+      } else {
+        onConfigChange(updatedConfigs);
+      }
+    } else if (model === "Handlebar") {
+      // User is changing the handlebar type
+      const frameType = configs.find(config => config.name === "Frame")?.type || "OSS";
+      
+      // Extract the style from the value (which is now a full path)
+      let handlebarStyle = "";
+      if (value.includes("Handle1_Riser")) {
+        handlebarStyle = "Riser";
+      } else if (value.includes("Handle2_Drop")) {
+        handlebarStyle = "Drop";
+      } else if (value.includes("Handle4_Track")) {
+        handlebarStyle = "Track";
+      } else if (value.includes("Handle5_Flat")) {
+        handlebarStyle = "Flat";
+      } else if (value.includes("Handle6_Cruiser")) {
+        handlebarStyle = "Cruiser";
+      } else if (value.includes("Handle7_Jeb")) {
+        handlebarStyle = "Jeb";
+      }
+      
+      // Get the correct handlebar path based on the current frame type
+      const handlebarPath = getHandlebarPath(frameType, value);
+      
+      const updatedConfigs = configs.map(config => {
+        if (config.name === model) {
+          return { ...config, path: handlebarPath, type: handlebarStyle, price };
+        }
+        return config;
+      });
       onConfigChange(updatedConfigs);
     } else if (model === "Front Wheel") {
       // User is manually changing front wheel
@@ -153,7 +223,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       });
       onConfigChange(updatedConfigs);
     } else {
-      // Regular component change (not frame or wheels)
+      // Regular component change (not frame, handlebar, or wheels)
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
           return { ...config, path: value, type, price };

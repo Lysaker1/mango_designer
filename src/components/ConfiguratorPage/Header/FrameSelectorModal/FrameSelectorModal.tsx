@@ -27,7 +27,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
   if (!isOpen) return null;
 
   // Function to handle bike selection
-  const handleBikeSelection = (bikeValue: string, bikeLabel: string) => {
+  const handleBikeSelection = (bikeValue: string, bikeLabel: string): void => {
     const bikePrice = getBikePrice(bikeLabel);
     onChange(bikeValue, bikeLabel, bikePrice);
     onClose();
@@ -55,21 +55,22 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
         {/* Bikes Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* SINGLESPEED */}
-          <div className="bg-white rounded-lg overflow-hidden h-full">
-            <div className="h-72 bg-white flex items-center justify-center">
+          <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full">
+            <div className="h-64 md:h-72 bg-white flex items-center justify-center">
               <img src="/assets/gridImages/OSS.png" alt="Singlespeed Bike" className="w-full h-full object-contain" />
             </div>
-            <div className="bg-black text-white p-5 flex flex-col justify-between h-[350px]">
-              <div>
+            <div className="bg-black text-white p-5 flex flex-col h-full">
+              <div className="flex-grow">
                 <h2 className="text-2xl font-bold mb-3">SINGLESPEED</h2>
-                <ul className="space-y-2 mb-4">
-                  <li>• Lightweight and minimalistic design</li>
-                  <li>• Single gear for a simple, low-maintenance ride</li>
-                  <li>• Flip-flop hub for fixed or freewheel option</li>
-                  <li>• Ideal for city commuting and urban riding</li>
+                <ul className="space-y-2">
+                  <li className="text-sm md:text-base">• No nonsense lightweight design</li>
+                  <li className="text-sm md:text-base">• Single Gear to keep your ride low maintenance</li>
+                  <li className="text-sm md:text-base">• Flip-flop hub allows for fixed or freewheel</li>
+                  <li className="text-sm md:text-base">• Perfect for city cycling on your commute or for fun</li>
                 </ul>
               </div>
-              <div className="flex justify-between items-center mt-4">
+              
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
                 <span className="text-[#ff5e14] text-2xl font-bold">£449</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
@@ -82,21 +83,22 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
           </div>
 
           {/* STEP-THRU */}
-          <div className="bg-white rounded-lg overflow-hidden h-full">
-            <div className="h-72 bg-white flex items-center justify-center">
+          <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full">
+            <div className="h-64 md:h-72 bg-white flex items-center justify-center">
               <img src="/assets/gridImages/Moosher.png" alt="Step-Thru Bike" className="w-full h-full object-contain" />
             </div>
-            <div className="bg-black text-white p-5 flex flex-col justify-between h-[350px]">
-              <div>
+            <div className="bg-black text-white p-5 flex flex-col h-full">
+              <div className="flex-grow">
                 <h2 className="text-2xl font-bold mb-3">STEP-THRU</h2>
-                <ul className="space-y-2 mb-4">
-                  <li>• Classic singlespeed with a relaxed, upright ride</li>
-                  <li>• Wider tires for extra comfort and grip</li>
-                  <li>• Sturdy frame built for cruising and casual rides</li>
-                  <li>• Perfect for relaxed city and leisure cycling</li>
+                <ul className="space-y-2">
+                  <li className="text-sm md:text-base">• Classic design for a relaxed ride</li>
+                  <li className="text-sm md:text-base">• Wider tyres improve your comfort and grant you extra grip</li>
+                  <li className="text-sm md:text-base">• Strong frame designed for cruising</li>
+                  <li className="text-sm md:text-base">• Ideal for riders looking for a bike they can relax on</li>
                 </ul>
               </div>
-              <div className="flex justify-between items-center mt-4">
+              
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
                 <span className="text-[#ff5e14] text-2xl font-bold">£549</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
@@ -109,21 +111,22 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
           </div>
 
           {/* GEARED */}
-          <div className="bg-white rounded-lg overflow-hidden h-full">
-            <div className="h-72 bg-white flex items-center justify-center">
+          <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full">
+            <div className="h-64 md:h-72 bg-white flex items-center justify-center">
               <img src="/assets/gridImages/OG.png" alt="Geared Bike" className="w-full h-full object-contain" />
             </div>
-            <div className="bg-black text-white p-5 flex flex-col justify-between h-[350px]">
-              <div>
+            <div className="bg-black text-white p-5 flex flex-col h-full">
+              <div className="flex-grow">
                 <h2 className="text-2xl font-bold mb-3">GEARED</h2>
-                <ul className="space-y-2 mb-4">
-                  <li>• 9-speed gearing for versatility on varied terrain</li>
-                  <li>• Smooth and efficient shifting for everyday riding</li>
-                  <li>• Lightweight frame for speed and agility</li>
-                  <li>• Great for commuters and fitness cyclists</li>
+                <ul className="space-y-2">
+                  <li className="text-sm md:text-base">• 9-speed gearing gives you the versatility to tackle varied terrain</li>
+                  <li className="text-sm md:text-base">• Seamless shifting to make everyday riding easier</li>
+                  <li className="text-sm md:text-base">• Quick and nimble lightweight frame that lets you push yourself longer</li>
+                  <li className="text-sm md:text-base">• Great for commuters that want an easy ride or fitness freaks that want to cycle for hours on end</li>
                 </ul>
               </div>
-              <div className="flex justify-between items-center mt-4">
+              
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
                 <span className="text-[#ff5e14] text-2xl font-bold">£649</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"
@@ -136,21 +139,22 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({ isOpen, onClose
           </div>
 
           {/* GEARS & DISC BRAKES */}
-          <div className="bg-white rounded-lg overflow-hidden h-full">
-            <div className="h-72 bg-white flex items-center justify-center">
+          <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full">
+            <div className="h-64 md:h-72 bg-white flex items-center justify-center">
               <img src="/assets/gridImages/DOG.png" alt="Gears & Disc Brakes Bike" className="w-full h-full object-contain" />
             </div>
-            <div className="bg-black text-white p-5 flex flex-col justify-between h-[350px]">
-              <div>
+            <div className="bg-black text-white p-5 flex flex-col h-full">
+              <div className="flex-grow">
                 <h2 className="text-2xl font-bold mb-3">GEARS & DISC BRAKES</h2>
-                <ul className="space-y-2 mb-4">
-                  <li>• 9-speed gearing for all-around performance</li>
-                  <li>• Disc brakes for improved stopping power in all weather</li>
-                  <li>• Strong, reliable frame for daily use</li>
-                  <li>• Perfect for riders needing extra control and braking power</li>
+                <ul className="space-y-2">
+                  <li className="text-sm md:text-base">• 9-speeds for top performance everywhere you go</li>
+                  <li className="text-sm md:text-base">• Disc brakes make stopping easier in all conditions</li>
+                  <li className="text-sm md:text-base">• Frame designed to be your go to bike, with the strength and comfort for daily use</li>
+                  <li className="text-sm md:text-base">• Perfect for riders needing extra control and braking power</li>
                 </ul>
               </div>
-              <div className="flex justify-between items-center mt-4">
+              
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
                 <span className="text-[#ff5e14] text-2xl font-bold">£749</span>
                 <button 
                   className="bg-white text-black px-4 py-2 rounded-lg font-medium"

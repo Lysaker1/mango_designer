@@ -64,9 +64,17 @@ export const Grid = ({
                        flex items-center justify-center 
                        rounded-lg
                        transition-colors duration-200
-                       ${value === option.value 
-                         ? 'bg-mangoOrange text-white' 
-                         : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'}`}
+                       ${
+                         // Special case for handlebars to handle Shifter/NoShifter variants
+                         definition.model === 'Handlebar' 
+                           ? (String(value).includes(String(option.value).split('_NoShifter')[0]) || 
+                              String(value).includes(String(option.value).split('_Shifter')[0]))
+                             ? 'bg-mangoOrange text-white' 
+                             : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'
+                           : value === option.value 
+                             ? 'bg-mangoOrange text-white' 
+                             : 'text-gray-400 hover:text-white hover:bg-neutral-700/50 bg-neutral-800/50'
+                       }`}
             onClick={() => onChange(option.value, definition.model ,option.label, option.price)}
             title={option.label}
           >

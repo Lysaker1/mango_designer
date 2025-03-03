@@ -5,6 +5,7 @@ import { Grid } from "../ParameterPanel/parameterTypes/Grid/Grid";
 import BackgroundColorModal from "./BackgroundColorModal/BackgroundColorModal";
 import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
 import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
+import { getHandlebarPath } from '@/utils/handlebarHelper';
 
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
   const [frameName, setFrameName] = useState<string>("");
@@ -51,9 +52,37 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     setFramePrice(frameParameter.options?.find(option => option.label === configs[0].type)?.price || 0); 
   }, [configs])
 
-  const handleFrameChange = (value: string, label: string, price: number) => {
-    onConfigChange(configs.map(config => config.name === 'Frame' ? { ...config, path: value, type: label, price: price } : config));
-  }
+  const handleFrameChange = (value: string, type: string, price: number) => {
+    // Create a copy of current configs
+    const updatedConfigs = [...configs];
+    
+    // Update frame
+    const frameIndex = updatedConfigs.findIndex(config => config.name === "Frame");
+    if (frameIndex !== -1) {
+      updatedConfigs[frameIndex] = {
+        ...updatedConfigs[frameIndex],
+        path: value,
+        type: type,
+        price: price
+      };
+    }
+    
+    // Also update wheels based on frame type
+    // But we're missing handlebar updates here!
+    
+    // Add handlebar update logic
+    const handlebarIndex = updatedConfigs.findIndex(config => config.name === "Handlebar");
+    if (handlebarIndex !== -1) {
+      const currentHandlebarPath = updatedConfigs[handlebarIndex].path;
+      updatedConfigs[handlebarIndex] = {
+        ...updatedConfigs[handlebarIndex],
+        path: getHandlebarPath(type, currentHandlebarPath)
+      };
+    }
+    
+    onConfigChange(updatedConfigs);
+    setShowBikeSelector(false);
+  };
 
   // Use framePrice directly and add the prices for all configuration elements except the frame
   // Add a custom fee of 45
