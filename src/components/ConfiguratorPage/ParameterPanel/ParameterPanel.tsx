@@ -12,6 +12,8 @@ import { getStyleSuggestion } from '../../../services/styleAgent';
 import { colors } from '../Viewer/defaults';
 import { StyleResponse, StyleConfig } from '../../../app/api/style/route';
 import { getHandlebarPath } from '../../../utils/handlebarHelper';
+// Make sure Slider is imported if it exists
+// import { Slider } from './parameterTypes/Slider';
 
 interface ParameterPanelProps {
   configs: ModelConfig[];
@@ -24,13 +26,13 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   const [isLoading, setIsLoading] = useState(false);
   // const [parameters, setParameters] = useState<ParameterDefinition[]>(PARAMETER_DEFINITIONS);
 
-  const handleColorChange = (color: Color, model: string, subParts?: string[]) => {
+  const handleColorChange = (color: Color, param: ParameterDefinition) => {
     const updatedConfigs = configs.map(config => {  
-      if (config.name === model && config.subParts && subParts) {
+      if (config.name === param.model && config.subParts && param.subPart) {
         return {
           ...config,
           subParts: config.subParts.map((part) =>
-            subParts.includes(part.name) ? { ...part, color: color } : part
+            param.subPart?.includes(part.name) ? { ...part, color: color } : part
           ),
         };
       }
@@ -65,7 +67,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
             return { 
               ...config, 
               path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb", 
-              type: "Cassette Wheel",
+              type: "Flipflop Wheel",
               price 
             };
           } else { // OSS or Moosher
@@ -84,7 +86,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
             return { 
               ...config, 
               path: "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb", 
-              type: "45mm Deep Dish Rim",
+              type: "Cassette Wheel",
               price 
             };
           } else { // OG, OSS, or Moosher
@@ -175,20 +177,31 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       
       // Enforce compatibility with frame type
       let correctedValue = value;
+      let correctedType = type;
       
-      // If DOG frame but trying to use rim brake wheel, correct it
-      if (frameType === "DOG" && !value.includes("DiscBrake") && value.includes("MultiSpoke")) {
-        correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+      // DOG frames MUST use disc brake wheels - force this even for 6 spoke wheels
+      if (frameType === "DOG") {
+        // If trying to use 6 spoke wheel with DOG frame, use the disc brake multi-spoke instead
+        if (value.includes("6SpokeMag")) {
+          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+          correctedType = "Cassette Wheel";
+        } 
+        // If trying to use rim brake multi-spoke, use disc brake version
+        else if (value.includes("MultiSpoke") && !value.includes("DiscBrake")) {
+          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+          correctedType = "Cassette Wheel";
+        }
       }
       
-      // If non-DOG frame but trying to use disc brake wheel, correct it
+      // Non-DOG frames cannot use disc brake wheels
       if (frameType !== "DOG" && value.includes("DiscBrake")) {
         correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb";
+        correctedType = "45mm Deep Dish Rim";
       }
       
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
-          return { ...config, path: correctedValue, type, price };
+          return { ...config, path: correctedValue, type: correctedType, price };
         }
         return config;
       });
@@ -245,58 +258,81 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     }
   };
 
+  /**
+   * Handles the generation of bike styles based on user prompts using AI.
+   * This function processes the user's text prompt, sends it to the style suggestion API,
+   * and applies the returned style configurations to the bike model.
+   */
   const handleStyleGeneration = async () => {
+    // Don't proceed if the prompt is empty
     if (!prompt.trim()) return;
+    
+    // Set loading state to show feedback to the user
     setIsLoading(true);
     
     try {
+      // Call the style suggestion API with the user's prompt
       const response = await getStyleSuggestion(prompt);
       console.log("Raw API response:", response);
       
+      // Process each configuration in the current model
       const updatedConfigs = configs.map(config => {
+        // Find the matching style configuration from the API response
         const styleConfig = response.find((sc: any) => sc.name === config.name);
+        
+        // If no matching style config is found, return the original config unchanged
         if (!styleConfig) return config;
 
-        // Debug logging
+        // Debug logging to track the processing of each component
         console.log(`Processing config for: ${config.name}`);
         console.log('StyleConfig:', styleConfig);
 
+        // Find all parameter definitions that apply to this component
+        // This includes both direct model matches and any that affect subparts
         const paramDefs = PARAMETER_DEFINITIONS.filter(
           param => param.model === config.name || 
                   (config.subParts?.some(part => param.subPart?.includes(part.name)))
         );
 
-        // Debug logging
+        // Debug logging for parameter definitions
         console.log('Matching paramDefs:', paramDefs);
 
+        // Process each subpart of the component to apply style changes
         const updatedSubParts = config.subParts?.map(part => {
+          // Find the matching subpart in the style configuration
           const stylePart = styleConfig.subParts?.find((sp: any) => 
-            sp.name === part.name
+            sp.name.toLowerCase() === part.name.toLowerCase()
           );
           
-          // Debug logging
+          // Debug logging for subpart processing
           console.log(`Processing part: ${part.name}`);
           console.log('StylePart found:', stylePart);
 
+          // If no style part is found or it has no color label, keep the original part
           if (!stylePart?.color?.label) return part;
 
+          // Find parameter definitions that affect this specific subpart
           const matchingParamDefs = paramDefs.filter(
             param => param.subPart?.includes(part.name)
           );
 
-          // Debug logging
+          // Debug logging for matching parameter definitions
           console.log('Matching paramDefs for part:', matchingParamDefs);
 
+          // For each matching parameter definition, try to find a color match
           for (const paramDef of matchingParamDefs) {
             if (paramDef?.colors) {
+              // Look for a color in the parameter definition that matches the style's color
               const matchedColor = Object.entries(paramDef.colors).find(
                 ([key, color]) => {
                   const styleLabel = stylePart.color.label.toLowerCase();
+                  // Match either by color key or by color label
                   return key.toLowerCase() === styleLabel || 
                          color.label.toLowerCase() === styleLabel;
                 }
               );
 
+              // If a matching color is found, update the part with this color
               if (matchedColor) {
                 console.log(`Updating ${config.name} - ${part.name} to:`, matchedColor[1]);
                 return {
@@ -306,28 +342,50 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               }
             }
           }
+          // If no matching color is found, return the original part
           return part;
         });
 
+        // Return the updated configuration with new subpart colors
         return {
           ...config,
           subParts: updatedSubParts
         };
       });
 
+      // Log the final updated configurations and update the model
       console.log("Updated configs:", updatedConfigs);
       onConfigChange(updatedConfigs);
     } catch (error) {
+      // Handle any errors that occur during the style generation process
       console.error('Error in style generation:', error);
     } finally {
+      // Reset loading state regardless of success or failure
       setIsLoading(false);
     }
+  };
+
+  const shouldShowParameter = (param: ParameterDefinition): boolean => {
+    // Get current frame type
+    const frameType = configs.find(config => config.name === "Frame")?.type as string;
+    
+    // ONLY hide wheel TYPE selectors when there's just one option
+    if ((param.model === "Front Wheel" || param.model === "Rear Wheel") && param.type === 'grid') {
+      // Get the options available for this frame type from the frames object
+      const availableOptions = frames[frameType]?.[param.model] || {};
+      
+      // Only show TYPE selector if there are multiple options
+      return Object.keys(availableOptions).length > 1;
+    }
+    
+    // Always show ALL other parameters, including wheel/tire colors
+    return true;
   };
 
   const renderParameters = (category: string) => {
     if (category === 'AI Style') {
       return (
-        <div className="p-4">
+        <div className="rounded-3xl w-full mb-4">
           <textarea
             className="w-full p-3 bg-neutral-800/50 text-white rounded-lg mb-2.5
                       border border-transparent hover:border-neutral-700 
@@ -351,65 +409,76 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       );
     }
 
-    const params = PARAMETER_DEFINITIONS.filter(param => param.category === category);
+    const params = PARAMETER_DEFINITIONS.filter(param => param.category === category && !param.disabled);
 
-    return params.map(param => !param.disabled && (
-      <div key={param.id} className="space-y-2">
-        <div className='flex justify-between'>
-        <label className="text-gray-300 text-sm font-medium">
-          {param.name}
-        </label>
+    return params
+      .filter((param) => shouldShowParameter(param))
+      .map(param => {
+        // Skip rendering wheel type selectors that should be hidden
+        if (!shouldShowParameter(param)) {
+          return null;
+        }
 
-        {configs.find(config => config.name === param.model)?.price && 
-         param.showPrice && (
-          <label className="text-gray-300 text-sm font-medium">
-            + £{configs.find(config => config.name === param.model)?.price}
-          </label>
-        )}
-        </div>
+        // For all other parameters, render normally
+        return (
+          <div key={param.id} className="space-y-2">
+            <div className='flex justify-between'>
+            <label className="text-gray-300 text-sm font-medium">
+              {param.name}
+            </label>
 
-        {param.type === 'dropdown' && (
-          <Dropdown
-            value={configs.find(config => config.name === param.model)?.path || param.value}
-            options={param.options || []}
-            onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
-            label={param.name}
-          />
-        )}
-
-        {param.type === 'slider' && (
-          <div className="space-y-1">
-            <input
-              type="range"
-              min={param.min}
-              max={param.max}
-              value={param.value}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-gray-400">
-              <span>{param.min}</span>
-              <span>{param.value}</span>
-              <span>{param.max}</span>
+            {configs.find(config => config.name === param.model)?.price && 
+             param.showPrice && (
+              <label className="text-gray-300 text-sm font-medium">
+                + £{configs.find(config => config.name === param.model)?.price}
+              </label>
+            )}
             </div>
+
+            {param.type === 'dropdown' && (
+              <Dropdown
+                value={configs.find(config => config.name === param.model)?.path || param.value}
+                options={param.options || []}
+                onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
+                label={param.name}
+              />
+            )}
+
+            {param.type === 'slider' && (
+              <div className="space-y-1">
+                <input
+                  type="range"
+                  min={param.min}
+                  max={param.max}
+                  value={param.value}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>{param.min}</span>
+                  <span>{param.value}</span>
+                  <span>{param.max}</span>
+                </div>
+              </div>
+            )}
+            {param.type === 'grid' && (
+              <Grid
+                definition={param}
+                value={configs.find(config => config.name === param.model)?.path || param.value}
+                onChange={(value,model,label, price) => handleTypeChange(value, model, label ,param, price )}
+                frameType={configs[0].type as string}
+              />
+            )}
+            {param.type === 'color' && (
+              <ColorPicker
+                value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
+                onChange={(color) => handleColorChange(color, param)}
+                colors={param.colors}
+              />
+            )}
           </div>
-        )}
-        {param.type === 'grid' && (
-          <Grid
-            definition={param}
-            value={configs.find(config => config.name === param.model)?.path || param.value}
-            onChange={(value,model,label, price) => handleTypeChange(value, model, label ,param, price )}
-            frameType={configs[0].type as string}
-          />
-        )}
-        {param.type === 'color' && (
-          <ColorPicker
-            value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
-            onChange={(color) => handleColorChange(color, param.model, param.subPart)} // Pass array of subparts
-            colors={param.colors}
-          />
-        )}
-      </div>
-    ));
+        );
+      })
+      .filter(Boolean); // Filter out null values
   };
 
   const renderContent = () => {
