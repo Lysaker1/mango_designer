@@ -7,6 +7,7 @@ import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
 import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 import { getHandlebarPath } from '@/utils/handlebarHelper';
 import { CartItem } from "./CartModal/CartModal";
+import { getFrontWheelPath, getRearWheelPath, getWheelType } from '@/utils/wheelHelper';
 
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
   const [frameName, setFrameName] = useState<string>("");
@@ -70,16 +71,35 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
       };
     }
     
-    // Also update wheels based on frame type
-    // But we're missing handlebar updates here!
-    
-    // Add handlebar update logic
+    // Update handlebar based on frame type
     const handlebarIndex = updatedConfigs.findIndex(config => config.name === "Handlebar");
     if (handlebarIndex !== -1) {
       const currentHandlebarPath = updatedConfigs[handlebarIndex].path;
       updatedConfigs[handlebarIndex] = {
         ...updatedConfigs[handlebarIndex],
         path: getHandlebarPath(type, currentHandlebarPath)
+      };
+    }
+    
+    // Update front wheel based on frame type
+    const frontWheelIndex = updatedConfigs.findIndex(config => config.name === "Front Wheel");
+    if (frontWheelIndex !== -1) {
+      const currentWheelType = updatedConfigs[frontWheelIndex].type;
+      updatedConfigs[frontWheelIndex] = {
+        ...updatedConfigs[frontWheelIndex],
+        path: getFrontWheelPath(type, currentWheelType),
+        type: getWheelType(type, "Front Wheel")
+      };
+    }
+    
+    // Update rear wheel based on frame type
+    const rearWheelIndex = updatedConfigs.findIndex(config => config.name === "Rear Wheel");
+    if (rearWheelIndex !== -1) {
+      const currentWheelType = updatedConfigs[rearWheelIndex].type;
+      updatedConfigs[rearWheelIndex] = {
+        ...updatedConfigs[rearWheelIndex],
+        path: getRearWheelPath(type, currentWheelType),
+        type: getWheelType(type, "Rear Wheel")
       };
     }
     

@@ -83,6 +83,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     value: '/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb',
     options: [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb"},
+      { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb"},
       { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Front_6SpokeMag.glb", price: 58},
     ],
     category: 'Wheels',
