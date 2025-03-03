@@ -79,7 +79,6 @@ export const frames: Record<string, Record<string,Record<string,string[]>>> = {
     },
     "Front Wheel":{
       "45mm Deep Dish Rim":[],
-      "6 Spoke Mag Wheel":[]
     },
     "Handlebar":{
       'Riser':[],
@@ -221,9 +220,9 @@ const modelConfigs: ModelConfig[] = [
 
   {
     name: "Handlebar",
-    path: "/models/Mango_Handle_Riser.glb", // Changed to dropdown
+    path: "/models/Handle1_Riser_NoShifter.glb",
     meshRequired: "handle_plane",
-    type:"Riser",
+    type: "Riser",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
     containsPlain: false,
