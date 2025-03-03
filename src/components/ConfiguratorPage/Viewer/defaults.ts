@@ -78,7 +78,7 @@ export const frames: Record<string, Record<string,Record<string,string[]>>> = {
       "Cassette Wheel":[],
     },
     "Front Wheel":{
-      "45mm Deep Dish Rim":[],
+      "Cassette Wheel":[],
     },
     "Handlebar":{
       'Riser':[],

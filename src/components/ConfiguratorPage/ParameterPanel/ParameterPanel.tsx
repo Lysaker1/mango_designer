@@ -12,6 +12,8 @@ import { getStyleSuggestion } from '../../../services/styleAgent';
 import { colors } from '../Viewer/defaults';
 import { StyleResponse, StyleConfig } from '../../../app/api/style/route';
 import { getHandlebarPath } from '../../../utils/handlebarHelper';
+// Make sure Slider is imported if it exists
+// import { Slider } from './parameterTypes/Slider';
 
 interface ParameterPanelProps {
   configs: ModelConfig[];
@@ -24,13 +26,13 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   const [isLoading, setIsLoading] = useState(false);
   // const [parameters, setParameters] = useState<ParameterDefinition[]>(PARAMETER_DEFINITIONS);
 
-  const handleColorChange = (color: Color, model: string, subParts?: string[]) => {
+  const handleColorChange = (color: Color, param: ParameterDefinition) => {
     const updatedConfigs = configs.map(config => {  
-      if (config.name === model && config.subParts && subParts) {
+      if (config.name === param.model && config.subParts && param.subPart) {
         return {
           ...config,
           subParts: config.subParts.map((part) =>
-            subParts.includes(part.name) ? { ...part, color: color } : part
+            param.subPart?.includes(part.name) ? { ...part, color: color } : part
           ),
         };
       }
@@ -65,7 +67,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
             return { 
               ...config, 
               path: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb", 
-              type: "Cassette Wheel",
+              type: "Flipflop Wheel",
               price 
             };
           } else { // OSS or Moosher
@@ -84,7 +86,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
             return { 
               ...config, 
               path: "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb", 
-              type: "45mm Deep Dish Rim",
+              type: "Cassette Wheel",
               price 
             };
           } else { // OG, OSS, or Moosher
@@ -175,20 +177,31 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       
       // Enforce compatibility with frame type
       let correctedValue = value;
+      let correctedType = type;
       
-      // If DOG frame but trying to use rim brake wheel, correct it
-      if (frameType === "DOG" && !value.includes("DiscBrake") && value.includes("MultiSpoke")) {
-        correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+      // DOG frames MUST use disc brake wheels - force this even for 6 spoke wheels
+      if (frameType === "DOG") {
+        // If trying to use 6 spoke wheel with DOG frame, use the disc brake multi-spoke instead
+        if (value.includes("6SpokeMag")) {
+          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+          correctedType = "Cassette Wheel";
+        } 
+        // If trying to use rim brake multi-spoke, use disc brake version
+        else if (value.includes("MultiSpoke") && !value.includes("DiscBrake")) {
+          correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_DiscBrake.glb";
+          correctedType = "Cassette Wheel";
+        }
       }
       
-      // If non-DOG frame but trying to use disc brake wheel, correct it
+      // Non-DOG frames cannot use disc brake wheels
       if (frameType !== "DOG" && value.includes("DiscBrake")) {
         correctedValue = "/models/Mango_Wheels_Front_MultiSpoke_RimBrake.glb";
+        correctedType = "45mm Deep Dish Rim";
       }
       
       const updatedConfigs = configs.map(config => {
         if (config.name === model) {
-          return { ...config, path: correctedValue, type, price };
+          return { ...config, path: correctedValue, type: correctedType, price };
         }
         return config;
       });
@@ -324,10 +337,27 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     }
   };
 
+  const shouldShowParameter = (param: ParameterDefinition): boolean => {
+    // Get current frame type
+    const frameType = configs.find(config => config.name === "Frame")?.type as string;
+    
+    // ONLY hide wheel TYPE selectors when there's just one option
+    if ((param.model === "Front Wheel" || param.model === "Rear Wheel") && param.type === 'grid') {
+      // Get the options available for this frame type from the frames object
+      const availableOptions = frames[frameType]?.[param.model] || {};
+      
+      // Only show TYPE selector if there are multiple options
+      return Object.keys(availableOptions).length > 1;
+    }
+    
+    // Always show ALL other parameters, including wheel/tire colors
+    return true;
+  };
+
   const renderParameters = (category: string) => {
     if (category === 'AI Style') {
       return (
-        <div className="p-4">
+        <div className="rounded-3xl w-full mb-4">
           <textarea
             className="w-full p-3 bg-neutral-800/50 text-white rounded-lg mb-2.5
                       border border-transparent hover:border-neutral-700 
@@ -351,65 +381,76 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       );
     }
 
-    const params = PARAMETER_DEFINITIONS.filter(param => param.category === category);
+    const params = PARAMETER_DEFINITIONS.filter(param => param.category === category && !param.disabled);
 
-    return params.map(param => !param.disabled && (
-      <div key={param.id} className="space-y-2">
-        <div className='flex justify-between'>
-        <label className="text-gray-300 text-sm font-medium">
-          {param.name}
-        </label>
+    return params
+      .filter((param) => shouldShowParameter(param))
+      .map(param => {
+        // Skip rendering wheel type selectors that should be hidden
+        if (!shouldShowParameter(param)) {
+          return null;
+        }
 
-        {configs.find(config => config.name === param.model)?.price && 
-         param.showPrice && (
-          <label className="text-gray-300 text-sm font-medium">
-            + £{configs.find(config => config.name === param.model)?.price}
-          </label>
-        )}
-        </div>
+        // For all other parameters, render normally
+        return (
+          <div key={param.id} className="space-y-2">
+            <div className='flex justify-between'>
+            <label className="text-gray-300 text-sm font-medium">
+              {param.name}
+            </label>
 
-        {param.type === 'dropdown' && (
-          <Dropdown
-            value={configs.find(config => config.name === param.model)?.path || param.value}
-            options={param.options || []}
-            onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
-            label={param.name}
-          />
-        )}
-
-        {param.type === 'slider' && (
-          <div className="space-y-1">
-            <input
-              type="range"
-              min={param.min}
-              max={param.max}
-              value={param.value}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-gray-400">
-              <span>{param.min}</span>
-              <span>{param.value}</span>
-              <span>{param.max}</span>
+            {configs.find(config => config.name === param.model)?.price && 
+             param.showPrice && (
+              <label className="text-gray-300 text-sm font-medium">
+                + £{configs.find(config => config.name === param.model)?.price}
+              </label>
+            )}
             </div>
+
+            {param.type === 'dropdown' && (
+              <Dropdown
+                value={configs.find(config => config.name === param.model)?.path || param.value}
+                options={param.options || []}
+                onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
+                label={param.name}
+              />
+            )}
+
+            {param.type === 'slider' && (
+              <div className="space-y-1">
+                <input
+                  type="range"
+                  min={param.min}
+                  max={param.max}
+                  value={param.value}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>{param.min}</span>
+                  <span>{param.value}</span>
+                  <span>{param.max}</span>
+                </div>
+              </div>
+            )}
+            {param.type === 'grid' && (
+              <Grid
+                definition={param}
+                value={configs.find(config => config.name === param.model)?.path || param.value}
+                onChange={(value,model,label, price) => handleTypeChange(value, model, label ,param, price )}
+                frameType={configs[0].type as string}
+              />
+            )}
+            {param.type === 'color' && (
+              <ColorPicker
+                value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
+                onChange={(color) => handleColorChange(color, param)}
+                colors={param.colors}
+              />
+            )}
           </div>
-        )}
-        {param.type === 'grid' && (
-          <Grid
-            definition={param}
-            value={configs.find(config => config.name === param.model)?.path || param.value}
-            onChange={(value,model,label, price) => handleTypeChange(value, model, label ,param, price )}
-            frameType={configs[0].type as string}
-          />
-        )}
-        {param.type === 'color' && (
-          <ColorPicker
-            value={findCurrentColor(param.model, param?.subPart?.[0]) || param.value}
-            onChange={(color) => handleColorChange(color, param.model, param.subPart)} // Pass array of subparts
-            colors={param.colors}
-          />
-        )}
-      </div>
-    ));
+        );
+      })
+      .filter(Boolean); // Filter out null values
   };
 
   const renderContent = () => {
