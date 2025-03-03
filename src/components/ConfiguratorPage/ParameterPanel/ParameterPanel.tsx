@@ -284,7 +284,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
         const updatedSubParts = config.subParts?.map(part => {
           const stylePart = styleConfig.subParts?.find((sp: any) => 
-            sp.name === part.name
+            sp.name.toLowerCase() === part.name.toLowerCase()
           );
           
           // Debug logging

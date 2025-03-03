@@ -129,7 +129,7 @@ Do not include any extra text.
 You are a bike style mapper. You are given a weighted color theme in JSON format as shown below:
 ${JSON.stringify(theme, null, 2)}
 
-Your goal is to map the weighted colors from the theme (i.e. "${JSON.stringify(theme, null, 2)}") to the specific bike parts using only the available color options for each part. Use the weights (1 is highest, 0.1 is lowest) to assign the dominant color to the largest parts and lesser weighted colors to smaller parts.
+Your goal is to map the weighted colors from the theme to the specific bike parts using only the available color options for each part. Use the weights (1 is highest, 0.1 is lowest) to assign the dominant color to the largest parts and lesser weighted colors to smaller parts.
 
 IMPORTANT:
 1. ONLY use colors from the exact palettes listed for each part.
@@ -137,6 +137,7 @@ IMPORTANT:
 3. For Frame parts, if a blue tone is needed, use either 'darkBlue' or 'babyBlue'.
 4. If a theme color is not available in a part's palette, choose the most similar available color.
 5. Always refer back to the theme JSON: "${JSON.stringify(theme, null, 2)}" for the colors and their weights.
+6. CRITICAL: You MUST use the EXACT part names specified below with the EXACT capitalization and spelling!
 
 Map the colors to these parts and subparts:
 
@@ -145,67 +146,68 @@ Map the colors to these parts and subparts:
    - Available colors for Frame & Fork: [ orange, yellow, darkBlue, babyBlue, purple, green, black, silver, creamClassic, aquaBlue ]
    - Available colors for Chain: [ black, silver, white, red, orange, yellow, green, blue, purple, pink ]
    
-   Subparts:
+   Subparts (USE THESE EXACT NAMES):
    - "frame_mesh" – MUST use Frame & Fork colors.
    - "fork_mesh" – MUST use Frame & Fork colors.
    - "chain_mesh" – MUST use Chain colors.
-   - If the theme color is not in the available list, choose a similar option.
+   - "wire_mesh" – MUST use black or silver.
+   - "frontBrake_mesh" – MUST use black or silver.
+   - "rearBrake_mesh" – MUST use black or silver.
 
 2. **Rear Wheel**
    - Theme reference: "${JSON.stringify(theme, null, 2)}"
    - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
    
-   Subparts (all MUST use these colors):
-   - "Rim"
-   - "Tube"
-   - "Cog"
-   - "Logo"
-   - If the theme color is not in the available list, choose a similar option.
+   Subparts (USE THESE EXACT NAMES):
+   - "tube" – MUST use these colors.
+   - "rim" – MUST use these colors.
+   - "cog" – MUST use these colors.
+   - "logoFront" – MUST use these colors.
+   - "logoBack" – MUST use these colors.
 
 3. **Front Wheel**
    - Theme reference: "${JSON.stringify(theme, null, 2)}"
    - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
    
-   Subparts (all MUST use these colors):
-   - "Tube"
-   - "Rim"
-   - "Cog"
-   - "Spokes"
-   - If the theme color is not in the available list, choose a similar option.
+   Subparts (USE THESE EXACT NAMES):
+   - "tube" – MUST use these colors.
+   - "rim" – MUST use these colors.
+   - "cog" – MUST use these colors.
+   - "Spokes" – MUST use these colors.
+   - "logoFront" – MUST use these colors.
+   - "logoBack" – MUST use these colors.
 
 4. **Saddle**
    - Theme reference: "${JSON.stringify(theme, null, 2)}"
-   - Available colors for Saddle Body (saddleSide_mesh, saddleTop_mesh, saddleFrame_mesh): [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
-   - Available colors for Saddle Post (seatPost_mesh): [ black, silver, gold ]
+   - Available colors for Saddle Body: [ brown, black, white, pink, orange, green, purple, blue, yellow, red ]
+   - Available colors for Saddle Post: [ black, silver, gold ]
    
-   Subparts:
+   Subparts (USE THESE EXACT NAMES):
    - "saddleSide_mesh" – MUST use Saddle Body colors.
    - "saddleTop_mesh" – MUST use Saddle Body colors.
    - "saddleFrame_mesh" – MUST use Saddle Body colors.
    - "seatPost_mesh" – MUST use Saddle Post colors.
-   - If the theme color is not in the available list, choose a similar option.
 
 5. **Handlebar**
    - Theme reference: "${JSON.stringify(theme, null, 2)}"
-   - Available colors for Handlebar (handlebar_mesh, stem_mesh, levers_mesh, headsetSpacers_mesh): [ black, gold, silver ]
-   - Available colors for Grip (grip_mesh): [ black, red, orange, yellow, green, blue, purple, pink, white ]
+   - Available colors for Handlebar parts: [ black, gold, silver ]
+   - Available colors for Grip: [ black, red, orange, yellow, green, blue, purple, pink, white ]
    
-   Subparts:
+   Subparts (USE THESE EXACT NAMES):
    - "handlebar_mesh" – MUST use Handlebar colors.
    - "stem_mesh" – MUST use Handlebar colors.
    - "levers_mesh" – MUST use Handlebar colors.
    - "headsetSpacers_mesh" – MUST use Handlebar colors.
+   - "wire_mesh" – MUST use black.
    - "grip_mesh" – MUST use Grip colors.
-   - If the theme color is not in the available list, choose a similar option.
 
 6. **Pedals**
    - Theme reference: "${JSON.stringify(theme, null, 2)}"
    - Available colors: [ black, blue, green, orange, pink, purple, red, white, yellow ]
    
-   Subparts:
+   Subparts (USE THESE EXACT NAMES):
    - "pedalTread_mesh" – MUST use these colors.
    - "pedalShaft_mesh" – MUST use these colors.
-   - If the theme color is not in the available list, choose a similar option.
 
 Output exactly in JSON format with this structure:
 {
@@ -213,21 +215,27 @@ Output exactly in JSON format with this structure:
     { "name": "Frame", "color": { "label": "COLOR_NAME" }, "subParts": [
         { "name": "frame_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "fork_mesh", "color": { "label": "COLOR_NAME" } },
-        { "name": "chain_mesh", "color": { "label": "COLOR_NAME" } }
+        { "name": "chain_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "wire_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "frontBrake_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "rearBrake_mesh", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Rear Wheel", "subParts": [
-        { "name": "Rim", "color": { "label": "COLOR_NAME" } },
-        { "name": "Tube", "color": { "label": "COLOR_NAME" } },
-        { "name": "Cog", "color": { "label": "COLOR_NAME" } },
-        { "name": "Logo", "color": { "label": "COLOR_NAME" } }
+        { "name": "tube", "color": { "label": "COLOR_NAME" } },
+        { "name": "rim", "color": { "label": "COLOR_NAME" } },
+        { "name": "cog", "color": { "label": "COLOR_NAME" } },
+        { "name": "logoFront", "color": { "label": "COLOR_NAME" } },
+        { "name": "logoBack", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Front Wheel", "subParts": [
-        { "name": "Tube", "color": { "label": "COLOR_NAME" } },
-        { "name": "Rim", "color": { "label": "COLOR_NAME" } },
-        { "name": "Cog", "color": { "label": "COLOR_NAME" } },
-        { "name": "Spokes", "color": { "label": "COLOR_NAME" } }
+        { "name": "tube", "color": { "label": "COLOR_NAME" } },
+        { "name": "rim", "color": { "label": "COLOR_NAME" } },
+        { "name": "cog", "color": { "label": "COLOR_NAME" } },
+        { "name": "Spokes", "color": { "label": "COLOR_NAME" } },
+        { "name": "logoFront", "color": { "label": "COLOR_NAME" } },
+        { "name": "logoBack", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Saddle", "subParts": [
@@ -238,11 +246,12 @@ Output exactly in JSON format with this structure:
       ]
     },
     { "name": "Handlebar", "subParts": [
-        { "name": "handlebar_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "stem_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "handlebar_mesh", "color": { "label": "COLOR_NAME" } },
+        { "name": "grip_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "levers_mesh", "color": { "label": "COLOR_NAME" } },
         { "name": "headsetSpacers_mesh", "color": { "label": "COLOR_NAME" } },
-        { "name": "grip_mesh", "color": { "label": "COLOR_NAME" } }
+        { "name": "wire_mesh", "color": { "label": "COLOR_NAME" } }
       ]
     },
     { "name": "Pedals", "subParts": [
