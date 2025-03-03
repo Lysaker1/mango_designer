@@ -35,6 +35,20 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     disabled: true,
   },
   {
+    id: 'frameSize',
+    name: 'Size',
+    type: 'dropdown',
+    value: '3',
+    options: [
+      { label: 'XSmall (4ft10 - 5ft2)', value: 'XSmall' },
+      { label: 'Small (5ft2 - 5ft7)', value: 'Small' },
+      { label: 'Medium (5ft7 - 5ft11)', value: 'Medium' },
+      { label: 'Large (5ft11 - 6ft3)', value: 'Large' },
+    ],
+    category: 'Frame',
+    model: 'Frame',
+  }, 
+  {
     id: 'frameColor',
     name: 'Color',
     type: 'color',
@@ -124,7 +138,20 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     subPart:['rim']
   },
   {
-    id: 'frontTireColor',
+    id: 'frontTyreType',
+    name: 'Front Tyre Type',
+    type: 'dropdown',
+    value: 'Standard',
+    options: [
+      { label: 'Standard', value: 'Standard' },
+      { label: 'Gatorskin Puncture Resistant Tyre', value: 'Gatorskin Tyre', price: 45 }
+    ],
+    category: 'Tyres',
+    model: 'Front Wheel',
+    showPrice: true,
+  },
+  {
+    id: 'frontTyreColor',
     name: 'Front Color',
     type: 'color',
     value: colors.green.hex,
@@ -144,13 +171,26 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     subPart:['tube']
   },
   {
+    id: 'rearTyreType',
+    name: 'Rear Tyre Type',
+    type: 'dropdown',
+    value: 'Standard',
+    options: [
+      { label: 'Standard', value: 'Standard' },
+      { label: 'Gatorskin Puncture Resistant Tyre', value: 'Gatorskin Tyre', price: 45 }
+    ],
+    category: 'Tyres',
+    model: 'Rear Wheel',
+    showPrice: true,
+  },
+  {
     id: 'rearWheelType',
     name: 'Rear Type',
     type: 'grid',
     value: '/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb',
     options: [
       { label: '45mm Deep Dish Rim', value: "/models/Mango_Wheels_Rear_MultiSpoke_SingleCog_RimBrake.glb"},
-      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb"},
+      { label: '6 Spoke Mag Wheel', value: "/models/Mango_Wheels_Rear_6SpokeMag.glb", price: 58},
       { label: 'Cassette Wheel', value: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_DiscBrake.glb"},
       { label: 'Flipflop Wheel', value: "/models/Mango_Wheels_Rear_MultiSpoke_Cassette_RimBrake.glb"},
     ],
@@ -180,7 +220,7 @@ export const PARAMETER_DEFINITIONS: ParameterDefinition[] = [
     subPart:['rim'],
   },
   {
-    id: 'rearTireColor',
+    id: 'rearTyreColor',
     name: 'Rear Color',
     type: 'color',
     value: colors.green.hex,

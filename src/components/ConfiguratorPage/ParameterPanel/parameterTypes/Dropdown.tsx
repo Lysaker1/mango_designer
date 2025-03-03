@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 interface DropdownProps {
   value: string;
   options: { label: string; value: string }[];
-  onChange: (value: string,label:string) => void;
+  onChange: (value: string, label:string) => void;
   label: string;
 }
 
@@ -30,7 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, []);
 
   return (
-    <div className="p-4 rounded-lg" ref={dropdownRef}>
+    <div className="pb-4 rounded-lg" ref={dropdownRef}>
       <div className="relative">
         <button 
           className="w-full px-4 py-2.5 flex justify-between items-center rounded-lg

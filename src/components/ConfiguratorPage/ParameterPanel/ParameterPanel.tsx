@@ -179,6 +179,37 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
     }
   };
 
+  const handleNonVisibleChange = (value: string, model: string, label: string, param: ParameterDefinition) => {
+    const updatedConfigs = configs.map(config => {
+      console.log('model', model, 'value', value)
+      if (config.name === model) {
+        let newConfig = { 
+          ...config, 
+          nonVisibleOptions: {
+            ...config.nonVisibleOptions,
+            [param.id]: {value: value, price: param.options?.find(option => option.value === value)?.price}
+          }
+        };
+        
+        if ((model === "Front Wheel" || model === "Rear Wheel") && value === "Gatorskin Tyre" && newConfig.subParts) {
+          newConfig.subParts = newConfig.subParts.map(part => {
+            if (part.name === "tube") {
+              return {
+                ...part,
+                color: colors.black
+              };
+            }
+            return part;
+          });
+        }
+        
+        return newConfig;
+      }
+      return config;
+    });
+    onConfigChange(updatedConfigs);
+  };
+
   const findCurrentColor = (model: string, subPart?: string): string | undefined => {
     const config = configs.find(config => config.name === model);
     if (config && config.subParts) {
@@ -231,6 +262,29 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
 
         // Process each subpart of the component to apply style changes
         const updatedSubParts = config.subParts?.map(part => {
+          
+          // Check if this is a Gatorskin-tyre (front or rear) and set the color to black
+          if (config.name === "Front Wheel" && 
+            config.nonVisibleOptions?.frontTyreType?.value === "Gatorskin Tyre") {
+          if (part.name === "tube") {
+            return {
+              ...part,
+              color: colors.black
+            };
+          }
+        }
+        
+        if (config.name === "Rear Wheel" && 
+            config.nonVisibleOptions?.rearTyreType?.value === "Gatorskin Tyre") {
+          console.log(`Rear Gatorskin-dekk funnet - setter fargen til svart`);
+          if (part.name === "tube") {
+            return {
+              ...part,
+              color: colors.black
+            };
+          }
+        }
+        
           // Find the matching subpart in the style configuration
           const stylePart = styleConfig.subParts?.find((sp: any) => 
             sp.name.toLowerCase() === part.name.toLowerCase()
@@ -310,6 +364,23 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
       return Object.keys(availableOptions).length > 1;
     }
     
+    // Hide color options for Gatorskin-tyres
+    if (param.type === 'color') {
+      if (param.id === "frontTyreColor") {
+        const tyreType = configs.find(config => config.name === "Front Wheel")?.nonVisibleOptions?.["frontTyreType"]?.value;
+        if (tyreType === "Gatorskin Tyre") {
+          return false;
+        }
+      }
+      
+      if (param.id === "rearTyreColor") {
+        const tyreType = configs.find(config => config.name === "Rear Wheel")?.nonVisibleOptions?.["rearTyreType"]?.value;
+        if (tyreType === "Gatorskin Tyre") {
+          return false;
+        }
+      }
+    }
+    
     // Always show ALL other parameters, including wheel/tire colors
     return true;
   };
@@ -359,19 +430,44 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               {param.name}
             </label>
 
-            {configs.find(config => config.name === param.model)?.price && 
-             param.showPrice && (
-              <label className="text-gray-300 text-sm font-medium">
-                + £{configs.find(config => config.name === param.model)?.price}
-              </label>
+            {param.showPrice && (
+              <>
+                {param.type === 'dropdown' ? (
+                  (() => {
+                    const price = param.options?.find(option => 
+                      option.value === configs.find(config => 
+                        config.name === param.model
+                      )?.nonVisibleOptions?.[param.id]?.value
+                    )?.price;
+                    return price && price > 0 ? (
+                      <label className="text-gray-300 text-sm font-medium">
+                        + £{price}
+                      </label>
+                    ) : null;
+                  })()
+                ) : param.type === 'grid' ? (
+                  (() => {
+                    const price = param.options?.find(option => 
+                      option.value === configs.find(config => 
+                        config.name === param.model
+                      )?.path
+                    )?.price;
+                    return price && price > 0 ? (
+                      <label className="text-gray-300 text-sm font-medium">
+                        + £{price}
+                      </label>
+                    ) : null;
+                  })()
+                ) : null}
+              </>
             )}
             </div>
 
             {param.type === 'dropdown' && (
               <Dropdown
-                value={configs.find(config => config.name === param.model)?.path || param.value}
+                value={configs.find(config => config.name === param.model)?.nonVisibleOptions?.[param.id]?.value || ''}
                 options={param.options || []}
-                onChange={(value,label) => handleTypeChange(value, param.model,label,param)}
+                onChange={(value, label) => handleNonVisibleChange(value, param.model, label, param)}
                 label={param.name}
               />
             )}
@@ -422,7 +518,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               className="w-full p-3 bg-neutral-800/50 text-white rounded-lg mb-2.5
                         border border-transparent hover:border-neutral-700 
                         focus:border-mangoOrange focus:outline-none"
-              placeholder="Describe your bike style..."
+              placeholder="Describe your colorway. Examples: British Flag, Manchester United, Pint of Guiness, Rainbow"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               rows={4}
@@ -457,64 +553,86 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
   };
 
   return (
-    <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
-      <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
-        {['AI Style', 'Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
-          <button 
-            key={tab}
-            className={`relative w-full h-16 flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
-                       ${activeTab === tab ? 'bg-mangoOrange' : 'hover:bg-neutral-800/50'}`}
-            onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
-          >
-            <div className='w-12 h-12 flex justify-center items-center mb-1'>
-              {LeftMenuIcons[tab as keyof typeof LeftMenuIcons] ? (
-                <div className={`w-8 h-8 transition-colors duration-200 flex justify-center items-center
-                                ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
-                  {React.cloneElement(LeftMenuIcons[tab as keyof typeof LeftMenuIcons] as ReactElement<SVGProps<SVGSVGElement>>, {
-                    className: 'w-full h-full',
-                    style: {
-                      stroke: 'currentColor',
-                      strokeWidth: '1.5',
-                      transform: 'scale(0.8)',
-                      maxWidth: '100%',
-                      maxHeight: '100%'
-                    }
-                  })}
-                </div>
-              ) : (
-                <img 
-                  src={`/assets/icons/${tab.toLowerCase()}.png`} 
-                  alt={tab} 
-                  className={`w-8 h-8 object-contain transition-opacity duration-200
-                             ${activeTab === tab ? 'opacity-100' : 'opacity-70'}`}
-                />
-              )}
-            </div>
-            <span className={`text-xs text-center transition-colors duration-200
-                            ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
-              {tab}
-            </span>
-          </button>
-        ))}
-      </div>
-      
-      {activeTab && (
-        <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-2 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-gray-300 text-sm font-medium">
-              {activeTab}
-            </p>
+    <>
+      <style jsx>{`
+        @keyframes pulseGlow {
+          0% {
+            filter: drop-shadow(0 0 3px rgba(255, 0, 255, 0.7)) 
+                    drop-shadow(0 0 1px rgba(255, 0, 255, 0.9));
+          }
+          50% {
+            filter: drop-shadow(0 0 5px rgba(255, 0, 255, 1)) 
+                    drop-shadow(0 0 2px rgba(255, 0, 255, 0.8));
+          }
+          100% {
+            filter: drop-shadow(0 0 3px rgba(255, 0, 255, 0.7)) 
+                    drop-shadow(0 0 1px rgba(255, 0, 255, 0.9));
+          }
+        }
+
+        .glow-effect {
+          animation: pulseGlow 2s infinite;
+        }
+      `}</style>
+      <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
+        <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
+          {['AI Style', 'Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
             <button 
-              className="text-gray-300 text-sm font-medium absolute right-5"
-              onClick={() => setActiveTab(undefined)}
+              key={tab}
+              className={`relative w-full h-16 flex flex-col items-center justify-center pt-1 pb-1 rounded-lg 
+                         ${activeTab === tab ? 'bg-mangoOrange' : 'hover:bg-neutral-800/50'}`}
+              onClick={() => { activeTab === tab ? setActiveTab(undefined) : setActiveTab(tab as any); }}
             >
-              &#10006;&#xfe0e;
+              <div className={`w-12 h-12 flex justify-center items-center mb-1 ${tab === 'AI Style' ? 'glow-effect' : ''}`}>
+                {LeftMenuIcons[tab as keyof typeof LeftMenuIcons] ? (
+                  <div className={`w-8 h-8 transition-colors duration-200 flex justify-center items-center
+                                  ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
+                    {React.cloneElement(LeftMenuIcons[tab as keyof typeof LeftMenuIcons] as ReactElement<SVGProps<SVGSVGElement>>, {
+                      className: 'w-full h-full',
+                      style: {
+                        stroke: tab === 'AI Style' && activeTab !== tab ? '#ff00ff' : 'currentColor',
+                        strokeWidth: '1.5',
+                        transform: 'scale(0.8)',
+                        maxWidth: '100%',
+                        maxHeight: '100%'
+                      }
+                    })}
+                  </div>
+                ) : (
+                  <img 
+                    src={`/assets/icons/${tab.toLowerCase()}.png`} 
+                    alt={tab} 
+                    className={`w-8 h-8 object-contain transition-opacity duration-200
+                             ${activeTab === tab ? 'opacity-100' : 'opacity-70'}`}
+                  />
+                )}
+              </div>
+              <span className={`text-xs text-center transition-colors duration-200
+                              ${activeTab === tab ? 'text-white' : 'text-gray-400'}`}>
+                {tab}
+              </span>
             </button>
-          </div>
-          {renderContent()}
+          ))}
         </div>
-      )}
-    </div>
+        
+        {activeTab && (
+          <div className="absolute left-28 top-1/2 transform -translate-y-1/2 w-64 p-4 space-y-2 bg-black bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg z-10">
+            <div className="flex flex-col items-center justify-center">
+              <p className="text-gray-300 text-sm font-medium">
+                {activeTab}
+              </p>
+              <button 
+                className="text-gray-300 text-sm font-medium absolute right-5"
+                onClick={() => setActiveTab(undefined)}
+              >
+                &#10006;&#xfe0e;
+              </button>
+            </div>
+            {renderContent()}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -8,6 +8,8 @@ import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
 import CartModal, { CartItem } from "./CartModal/CartModal";
 import { getDefaultConfigForFrame } from '@/utils/componentManager';
 
+const CUSTOM_FEE = 50;
+
 const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: ModelConfig[], onConfigChange: (newConfigs: ModelConfig[]) => void, onBackgroundColorChange: (color: string) => void}) => {
   const [frameName, setFrameName] = useState<string>("");
   const [framePrice, setFramePrice] = useState<number>(0); 
@@ -17,6 +19,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
   const [showPriceDetails, setShowPriceDetails] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   // Get background color from local storage or set default
   useEffect(() => {
@@ -41,10 +44,10 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     type: 'grid',
     value: '/models/Mango_OSS_Frame.glb',
     options: [
-      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 449 }, 
-      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 549 },
-      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 649 }, 
-      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 749 }, 
+      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 429.99 }, 
+      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 429.99 },
+      { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 529 }, 
+      { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 649 }, 
     ],
     category: 'Frame',
     model: 'Frame',
@@ -105,9 +108,16 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     setShowBikeSelector(false);
   };
 
-  // Use framePrice directly and add the prices for all configuration elements except the frame
-  // Add a custom fee of 45
-  const totalPrice = framePrice + configs.slice(1).reduce((acc, config) => acc + (config.price || 0), 0) + 45;
+  useEffect(() => {
+    const nonVisibleOptionsPrice = configs.reduce((acc, config) => {
+      if (!config.nonVisibleOptions) return acc;
+      return acc + Object.values(config.nonVisibleOptions).reduce((sum, option) => sum + (option.price || 0), 0);
+    }, 0);
+    
+    const configPrices = configs.slice(1).reduce((acc, config) => acc + (config.price || 0), 0);
+    const total = framePrice + configPrices + nonVisibleOptionsPrice + CUSTOM_FEE;
+    setTotalPrice(total);
+  }, [configs]);
 
   const addToCart = () => {
     const newItem: CartItem = {
@@ -128,14 +138,12 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     <>
       <header className="h-16 px-4 flex items-center justify-between bg-black backdrop-blur-md">
         <div className="flex items-center relative">
-          <h1 className="text-xl font-bold text-white">
-            Custom {frameName}
-          </h1>
           <button 
             id="bike-selector-button"
-            className="ml-2 text-white"
+            className="text-white text-xl font-bold flex items-center justify-center gap-2"
             onClick={() => setShowBikeSelector(!showBikeSelector)}
           >
+            Change bike
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
             </svg>
@@ -250,7 +258,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
           <div className="text-sm">
             <div className="flex justify-between py-1">
               <span>+ Custom fee</span>
-              <span>£45.00</span>
+              <span>£{CUSTOM_FEE.toFixed(2)}</span>
             </div>
             {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
               config.price && (
@@ -258,6 +266,16 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
                   <span>+ {config.type}</span>
                   <span>£{config.price.toFixed(2)}</span>
                 </div>
+              )
+            )}
+            {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
+              config.nonVisibleOptions && Object.entries(config.nonVisibleOptions).map(([key, value], changeIdx) => 
+                value.price && (
+                  <div key={`${idx}-${changeIdx}`} className="flex justify-between py-1">
+                    <span>+ {value.value}</span>
+                    <span>£{value.price.toFixed(2)}</span>
+                  </div>
+                )
               )
             )}
           </div>
