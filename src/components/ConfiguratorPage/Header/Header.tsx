@@ -116,7 +116,7 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
       return acc + Object.values(config.nonVisibleOptions).reduce((sum, option) => sum + (option.price || 0), 0);
     }, 0);
     
-    const configPrices = configs.slice(1).reduce((acc, config) => acc + (config.price || 0), 0);
+    const configPrices = configs.slice(1).reduce((acc, config) => acc + (config.price ?? 0), 0);
     const total = framePrice + configPrices + nonVisibleOptionsPrice + CUSTOM_FEE;
     setTotalPrice(total);
   }, [configs]);
@@ -258,19 +258,19 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
               <span>£{CUSTOM_FEE.toFixed(2)}</span>
             </div>
             {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
-              config.price > 0 && (
+              (config.price ?? 0) > 0 && (
                 <div key={idx} className="flex justify-between py-1">
                   <span>+ {config.type}</span>
-                  <span>£{config.price.toFixed(2)}</span>
+                  <span>£{(config.price ?? 0).toFixed(2)}</span>
                 </div>
               )
             )}
             {configs.filter(config => config.name !== 'Frame').map((config, idx) => 
               config.nonVisibleOptions && Object.entries(config.nonVisibleOptions).map(([key, value], changeIdx) => 
-                value.price > 0 && (
+                (value.price ?? 0) > 0 && (
                   <div key={`${idx}-${changeIdx}`} className="flex justify-between py-1">
                     <span>+ {value.value}</span>
-                    <span>£{value.price.toFixed(2)}</span>
+                    <span>£{(value.price ?? 0).toFixed(2)}</span>
                   </div>
                 )
               )
