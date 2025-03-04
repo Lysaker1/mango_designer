@@ -586,7 +586,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
               className="w-full p-3 bg-neutral-800/50 text-white rounded-lg mb-2.5
                         border border-transparent hover:border-neutral-700 
                         focus:border-mangoOrange focus:outline-none"
-              placeholder="Describe your colorway. Examples: British Flag, Manchester United, Pint of Guiness, Rainbow"
+              placeholder="Describe your colorway. Examples: British Flag, Manchester United, Pint of Guinness, Rainbow"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               rows={4}
@@ -643,7 +643,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
         }
       `}</style>
       <div className={`h-full flex w-24 bg-black transition-width duration-300 pl-2 pr-2`}>
-        <div className="max-h-full flex flex-col items-center justify-start py-4 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
+        <div className="max-h-full flex flex-col items-center justify-start pt-4 pb-24 space-y-3 text-white align-middle flex-1 overflow-y-auto custom-scrollbar">
           {['AI Style', 'Frame', 'Fork', 'Handlebars', 'Stem', 'Grips', 'Wheels', 'Tyres', 'Saddle', 'Seat Post', 'Pedals', 'Chain'].map((tab) => (
             <button 
               key={tab}
