@@ -38,6 +38,17 @@ export async function POST(request: Request) {
     const themeSystemPrompt = `
 You are a bike style theme generator and mapper. Your task is to analyze a user's freeform styling prompt and generate a weighted color theme that will be mapped to specific bike parts.
 
+**SPECIAL CASE - RAINBOW:**
+- If the prompt contains "rainbow" or is something similar like "random", generate a theme with ALL these colors with equal weights:
+  - red (weight: 0.14)
+  - orange (weight: 0.14)
+  - yellow (weight: 0.14)
+  - green (weight: 0.14)
+  - blue (weight: 0.14)
+  - purple (weight: 0.14)
+  - pink (weight: 0.14)
+- For rainbow themes, ensure ALL colors are included with equal weights
+
 **Input Type Analysis:**
 - First, determine if the input is requesting a single color, multiple colors, or a theme (country, team, etc.)
 - For single color inputs (e.g., "black", "red", "blue"), use ONLY that color with weight 1.0
@@ -65,7 +76,7 @@ You are a bike style theme generator and mapper. Your task is to analyze a user'
 - **Saddle Body Palette:** [ brown, black, white, pink, orange, green, purple, blue, yellow, red, grey, tan, burgundy ]
 - **Saddle Post Palette:** [ black, silver, gold, white, bronze, red, blue ]
 - **Pedals Palette:** [ black, blue, green, orange, pink, purple, red, white, yellow, silver, gold, grey ]
-- **Chain Palette:** [ black, silver, gold, bronze, rainbow ]
+- **Chain Palette:** [ black, silver, gold, bronze ]
 
 **Bike Parts and Subparts:**
 - **Frame:** Uses a single color from the Frame Palette.
@@ -150,6 +161,29 @@ Do not include any extra text.
 You are a bike style mapper. You are given a weighted color theme in JSON format as shown below:
 ${JSON.stringify(theme, null, 2)}
 
+**SPECIAL CASE - RAINBOW:**
+- If the theme contains ALL of these colors: red, orange, yellow, green, blue, purple, pink
+- Then this is a RAINBOW theme and requires special handling:
+  - Each major component MUST be a different color
+  - Frame: red
+  - Fork: orange
+  - Front wheel rim: yellow
+  - Rear wheel rim: green
+  - Saddle: blue
+  - Grips: purple
+  - Pedals: pink
+  - NO TWO ADJACENT PARTS should be the same color
+  - The goal is to create a true rainbow effect across the entire bike
+
+**PARTS THAT MUST STAY BLACK:**
+- "pedalShaft_mesh" MUST ALWAYS be black
+- "cog" MUST ALWAYS be black
+- "frontBrake_mesh" MUST ALWAYS be black
+- "rearBrake_mesh" MUST ALWAYS be black
+- "wire_mesh" MUST ALWAYS be black
+- "levers_mesh" MUST ALWAYS be black or darkGrey
+- "Spokes" MUST ALWAYS be black
+
 **FUNDAMENTAL COLOR DISTRIBUTION RULES:**
 1. NEVER use the same color for more than 60% of visible parts. This is a STRICT REQUIREMENT.
 2. For ANY multi-color theme, you MUST distribute ALL colors across visible parts.
@@ -157,14 +191,6 @@ ${JSON.stringify(theme, null, 2)}
    - The frame should typically use the primary color (higher weight)
    - The wheels MUST use the secondary color(s) for high visibility
    - Accessories (pedals, saddle, grips) should have color variety
-
-   - "pedalShaft_mesh" MUST ALWAYS be black
-- "cog" MUST ALWAYS be black
-- "frontBrake_mesh" MUST ALWAYS be black
-- "rearBrake_mesh" MUST ALWAYS be black
-- "wire_mesh" MUST ALWAYS be black
-- "levers_mesh" MUST ALWAYS be black or darkGrey
-- "Spokes" MUST ALWAYS be black
 
 **Visually Balanced Bike - REQUIRED RULES:**
 - Wheels must ALWAYS contrast with the frame color
@@ -201,6 +227,7 @@ When mapping colors from sports teams or country flags:
 - Map all theme colors to appropriate parts, don't leave colors unused
 
 **Color Mapping Rules for Countries:**
+- For "British flag" or "UK flag" or "Union Jack": Frame should be red, wheels should be blue, rim white, grip blue, accents should be white
 - For "Sweden": Frame should be blue, wheels should be yellow
 - For "Norway": Frame should be red, wheels should be blue, accents should be white
 - For other countries: Map colors intelligently to showcase all flag colors prominently
@@ -215,14 +242,6 @@ When mapping colors from sports teams or country flags:
 - If theme contains "blue" → use "darkBlue" or "babyBlue" for the frame
 - If theme contains "yellow" → use "yellow" for the frame or wheels
 - If theme contains "red" → use "red" for the frame or wheels
-
-   - "pedalShaft_mesh" MUST ALWAYS be black
-- "cog" MUST ALWAYS be black
-- "frontBrake_mesh" MUST ALWAYS be black
-- "rearBrake_mesh" MUST ALWAYS be black
-- "wire_mesh" MUST ALWAYS be black
-- "levers_mesh" MUST ALWAYS be black or darkGrey
-- "Spokes" MUST ALWAYS be black
 
 IMPORTANT:
 1. ONLY use colors from the exact palettes listed for each part.

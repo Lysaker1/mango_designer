@@ -5,9 +5,8 @@ import { Grid } from "../ParameterPanel/parameterTypes/Grid/Grid";
 import BackgroundColorModal from "./BackgroundColorModal/BackgroundColorModal";
 import { Color } from "../ParameterPanel/parameterTypes/ColorPicker";
 import FrameSelectorModal from "./FrameSelectorModal/FrameSelectorModal";
-import { getHandlebarPath } from '@/utils/handlebarHelper';
 import CartModal, { CartItem } from "./CartModal/CartModal";
-import { getFrontWheelPath, getRearWheelPath, getWheelType } from '@/utils/wheelHelper';
+import { getDefaultConfigForFrame } from '@/utils/componentManager';
 
 const CUSTOM_FEE = 50;
 
@@ -60,51 +59,50 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
   }, [configs])
 
   const handleFrameChange = (value: string, type: string, price: number) => {
-    // Create a copy of current configs
-    const updatedConfigs = [...configs];
+    // Get the default configuration for the new frame type
+    const defaultConfig = getDefaultConfigForFrame(type);
     
-    // Update frame
-    const frameIndex = updatedConfigs.findIndex(config => config.name === "Frame");
-    if (frameIndex !== -1) {
-      updatedConfigs[frameIndex] = {
-        ...updatedConfigs[frameIndex],
-        path: value,
-        type: type,
-        price: price
-      };
-    }
-    
-    // Update handlebar based on frame type
-    const handlebarIndex = updatedConfigs.findIndex(config => config.name === "Handlebar");
-    if (handlebarIndex !== -1) {
-      const currentHandlebarPath = updatedConfigs[handlebarIndex].path;
-      updatedConfigs[handlebarIndex] = {
-        ...updatedConfigs[handlebarIndex],
-        path: getHandlebarPath(type, currentHandlebarPath)
-      };
-    }
-    
-    // Update front wheel based on frame type
-    const frontWheelIndex = updatedConfigs.findIndex(config => config.name === "Front Wheel");
-    if (frontWheelIndex !== -1) {
-      const currentWheelType = updatedConfigs[frontWheelIndex].type;
-      updatedConfigs[frontWheelIndex] = {
-        ...updatedConfigs[frontWheelIndex],
-        path: getFrontWheelPath(type, currentWheelType),
-        type: getWheelType(type, "Front Wheel")
-      };
-    }
-    
-    // Update rear wheel based on frame type
-    const rearWheelIndex = updatedConfigs.findIndex(config => config.name === "Rear Wheel");
-    if (rearWheelIndex !== -1) {
-      const currentWheelType = updatedConfigs[rearWheelIndex].type;
-      updatedConfigs[rearWheelIndex] = {
-        ...updatedConfigs[rearWheelIndex],
-        path: getRearWheelPath(type, currentWheelType),
-        type: getWheelType(type, "Rear Wheel")
-      };
-    }
+    // Update all components based on the new frame
+    const updatedConfigs = configs.map((config) => {
+      if (config.name === "Frame") {
+        return { ...config, path: value, type, price };
+      }
+      
+      // Update front wheel
+      if (config.name === "Front Wheel") {
+        const frontWheel = defaultConfig.wheels.front;
+        return { 
+          ...config, 
+          path: frontWheel.path, 
+          type: frontWheel.type,
+          price: frontWheel.price 
+        };
+      }
+      
+      // Update rear wheel
+      if (config.name === "Rear Wheel") {
+        const rearWheel = defaultConfig.wheels.rear;
+        return { 
+          ...config, 
+          path: rearWheel.path, 
+          type: rearWheel.type,
+          price: rearWheel.price 
+        };
+      }
+      
+      // Update handlebar
+      if (config.name === "Handlebar") {
+        const handlebar = defaultConfig.handlebar;
+        return {
+          ...config,
+          path: handlebar.path,
+          type: handlebar.type,
+          price: handlebar.price
+        };
+      }
+      
+      return config;
+    });
     
     onConfigChange(updatedConfigs);
     setShowBikeSelector(false);
@@ -226,7 +224,12 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
             isOpen={showBikeSelector} 
             onClose={() => setShowBikeSelector(false)} 
             value={configs[0].path} 
-            onChange={handleFrameChange} 
+            onChange={(value, type, price) => {
+              // This will still be called, but we'll primarily use onFullConfigChange
+              // for the actual configuration updates
+            }}
+            onFullConfigChange={onConfigChange}
+            configs={configs}
             frameParameter={frameParameter}
             frameType={configs[0].type as string}
           />
