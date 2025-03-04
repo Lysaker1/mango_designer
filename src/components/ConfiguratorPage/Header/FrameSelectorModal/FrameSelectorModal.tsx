@@ -127,7 +127,8 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
             </div>
             <div className="bg-black text-white p-5 flex flex-col h-full">
               <div className="flex-grow">
-                <h2 className="text-2xl font-bold mb-3">SINGLESPEED</h2>
+                <h2 className="text-2xl font-bold mb-1">SINGLE SPEED</h2>
+                <h3 className="text-xl font-medium mb-3">Fixie</h3>
                 <ul className="space-y-2">
                   <li className="text-sm md:text-base">• No nonsense lightweight design</li>
                   <li className="text-sm md:text-base">• Single Gear to keep your ride low maintenance</li>
@@ -155,7 +156,8 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
             </div>
             <div className="bg-black text-white p-5 flex flex-col h-full">
               <div className="flex-grow">
-                <h2 className="text-2xl font-bold mb-3">STEP-THRU</h2>
+                <h2 className="text-2xl font-bold mb-1">MOOSHER</h2>
+                <h3 className="text-xl font-medium mb-3">Single Speed Step-Through</h3>
                 <ul className="space-y-2">
                   <li className="text-sm md:text-base">• Classic design for a relaxed ride</li>
                   <li className="text-sm md:text-base">• Wider tyres improve your comfort and grant you extra grip</li>
@@ -183,7 +185,8 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
             </div>
             <div className="bg-black text-white p-5 flex flex-col h-full">
               <div className="flex-grow">
-                <h2 className="text-2xl font-bold mb-3">GEARED</h2>
+                <h2 className="text-2xl font-bold mb-1">OG</h2>
+                <h3 className="text-xl font-medium mb-3">Original 8-Speed</h3>
                 <ul className="space-y-2">
                   <li className="text-sm md:text-base">• 9-speed gearing gives you the versatility to tackle varied terrain</li>
                   <li className="text-sm md:text-base">• Seamless shifting to make everyday riding easier</li>
@@ -211,7 +214,8 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
             </div>
             <div className="bg-black text-white p-5 flex flex-col h-full">
               <div className="flex-grow">
-                <h2 className="text-2xl font-bold mb-3">GEARS & DISC BRAKES</h2>
+                <h2 className="text-2xl font-bold mb-1">DOGG</h2>
+                <h3 className="text-xl font-medium mb-3">Disc Brake Geared Bike</h3>
                 <ul className="space-y-2">
                   <li className="text-sm md:text-base">• 9-speeds for top performance everywhere you go</li>
                   <li className="text-sm md:text-base">• Disc brakes make stopping easier in all conditions</li>

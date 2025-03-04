@@ -44,8 +44,8 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     type: 'grid',
     value: '/models/Mango_OSS_Frame.glb',
     options: [
-      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 429.99 }, 
-      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 429.99 },
+      { label: 'OSS', value: '/models/Mango_OSS_Frame.glb', price: 429 }, 
+      { label: 'Moosher', value: '/models/Mango_Moosher_Frame.glb', price: 429 },
       { label: 'OG', value: '/models/Mango_OG_Frame.glb', price: 529 }, 
       { label: 'DOG', value: '/models/Mango_DOG_Frame.glb', price: 649 }, 
     ],
