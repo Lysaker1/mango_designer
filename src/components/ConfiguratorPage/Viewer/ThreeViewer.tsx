@@ -241,7 +241,7 @@ const ThreeViewer: React.FC<{ configs: ModelConfig[]; setConfigs: (configs: Mode
     <div className="w-full h-full min-h-[500px] relative">
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }}>
         <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.5}>
+          <Stage environment="city" intensity={0.5} shadows={false}>
             {/* Model Rendering Logic */}
             <Model modelPath={configs[0].path} meshRequired={configs[0].meshRequired} color={configs[0]?.color} setUpdatedConfigs={setConfigs} setIsLoading={setIsLoading} configs={configs} subParts={configs[0]?.subParts} />
             {!isLoading &&
