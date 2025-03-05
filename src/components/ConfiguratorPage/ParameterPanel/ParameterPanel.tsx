@@ -448,9 +448,9 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({ configs, onConfigChange
                 ) : param.type === 'grid' ? (
                   (() => {
                     const price = param.options?.find(option => 
-                      option.value === configs.find(config => 
+                      option.label === configs.find(config => 
                         config.name === param.model
-                      )?.path
+                      )?.type
                     )?.price;
                     return price && price > 0 ? (
                       <label className="text-gray-300 text-sm font-medium">
