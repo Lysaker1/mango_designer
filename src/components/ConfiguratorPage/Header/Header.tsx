@@ -119,16 +119,41 @@ const Header = ({configs, onConfigChange, onBackgroundColorChange}: {configs: Mo
     setTotalPrice(total);
   }, [configs]);
 
-  const addToCart = () => {
+  const addToCart = async () => {
     const newItem: CartItem = {
-      id: Date.now().toString(), // Unique ID
-      configs: JSON.parse(JSON.stringify(configs)), // Copy of current configs
+      id: Date.now().toString(),
+      configs: JSON.parse(JSON.stringify(configs)),
       totalPrice: totalPrice,
       quantity: 1,
       frameName: `Custom ${frameName}`
     };
+    
     setCart([...cart, newItem]);
-    setShowCart(true); // Show cart after adding item
+    setShowCart(true);
+    
+    // Track the add to cart event
+    try {
+      const response = await fetch('/api/track-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventType: 'add_to_cart',
+          metadata: {
+            bikeType: frameName,
+            totalPrice: totalPrice,
+            bikeConfig: configs
+          }
+        }),
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to track add to cart event');
+      }
+    } catch (error) {
+      console.error('Error tracking add to cart event:', error);
+    }
   };
 
   // Count total number of items in the cart

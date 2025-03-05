@@ -26,7 +26,16 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
 }) => {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (isOpen && !document.getElementById('frame-selector-modal')?.contains(event.target as Node) && !document.getElementById('bike-selector-button')?.contains(event.target as Node)) {
+      // Get the target element
+      const target = event.target as Node;
+      
+      // Check if the click is outside the modal AND not inside the cookie banner
+      const isInsideModal = document.getElementById('frame-selector-modal')?.contains(target);
+      const isBikeSelector = document.getElementById('bike-selector-button')?.contains(target);
+      const isInsideCookieBanner = document.querySelector('.cookie-banner')?.contains(target);
+      
+      // Only close if the click is outside modal, outside bike selector, AND outside cookie banner
+      if (isOpen && !isInsideModal && !isBikeSelector && !isInsideCookieBanner) {
         onClose();
       }
     };
@@ -40,7 +49,7 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
   if (!isOpen) return null;
 
   // Function to handle bike selection with full component update
-  const handleBikeSelection = (bikeValue: string, bikeLabel: string): void => {
+  const handleBikeSelection = async (bikeValue: string, bikeLabel: string): Promise<void> => {
     const bikePrice = getBikePrice(bikeLabel);
     
     // First, call the original onChange to update the frame
@@ -94,6 +103,27 @@ const FrameSelectorModal: React.FC<FrameSelectorModalProps> = ({
     
     // Update all configurations
     onFullConfigChange(updatedConfigs);
+    
+    // Track the selection with detailed bike type
+    try {
+      await fetch('/api/track-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventType: 'bike_selected',
+          metadata: {
+            bikeType: bikeLabel,
+            timestamp: new Date().toISOString()
+          }
+        }),
+      });
+      console.log(`Tracked selection of ${bikeLabel} bike`);
+    } catch (error) {
+      console.error('Failed to track bike selection:', error);
+      // Continue with normal flow - tracking failure shouldn't break UX
+    }
     
     // Close the modal
     onClose();

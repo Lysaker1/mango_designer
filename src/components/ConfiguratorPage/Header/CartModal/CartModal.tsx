@@ -46,6 +46,32 @@ const CartModal: React.FC<CartModalProps> = ({
     try {
       console.log('Checking out');
       setIsLoading(true);
+      
+      // Track checkout initiated event first
+      try {
+        const trackResponse = await fetch('/api/track-event', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventType: 'checkout_initiated',
+            metadata: {
+              cartItems: cart,
+              cartTotal: cart.reduce((total, item) => 
+                total + (item.totalPrice * item.quantity), 0)
+            }
+          }),
+        });
+        
+        if (!trackResponse.ok) {
+          console.error('Failed to track checkout event');
+        }
+      } catch (trackError) {
+        console.error('Error tracking checkout event:', trackError);
+      }
+      
+      // Continue with existing checkout process
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -79,22 +105,32 @@ const CartModal: React.FC<CartModalProps> = ({
           })),
         }),
       });
+      
       const session = await response.json();
       
       if (!session.id) {
         throw new Error('Error creating checkout session');
       }
-  
-      console.log('Stripe publishable key', process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-      if (!stripe) {
-        throw new Error('Could not load Stripe');
-      } else {
-        console.log(stripe);
-      }
       
-      await stripe.redirectToCheckout({ sessionId: session.id });
+      // Store the Stripe session ID with our tracking event
+      await fetch('/api/update-tracking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventType: 'checkout_initiated',
+          stripeSessionId: session.id
+        }),
+      });
+
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+      // Continue with redirect to checkout...
+      if (stripe) {
+        await stripe.redirectToCheckout({ sessionId: session.id });
+      } else {
+        console.error('Stripe is not loaded');
+      }
     } catch (error) {
       console.error('Error during checkout:', error);
       alert('Sorry, an error occurred during checkout. Please try again.');
