@@ -156,20 +156,25 @@ async function handleCheckoutCompleted(
       console.error('Error recording purchase completion:', insertError);
     }
     
-    // Send notification (WhatsApp or any other method)
-    if (!error) {
+    // Only send notification for production transactions
+    const isTestTransaction = session.cancel_url?.includes('localhost') || 
+                              !session.livemode ||
+                              process.env.NODE_ENV !== 'production';
+    
+    if (!isTestTransaction) {
       try {
         await sendWhatsAppNotification({
           sessionId: session.id,
           amount: session.amount_total ? session.amount_total / 100 : 0,
           customerEmail: session.customer_details?.email || 'Unknown',
           customerName: session.customer_details?.name || 'Unknown',
-          bikeType: bikeDetails || 'Custom Bike',
-          isTestEnvironment: session.cancel_url?.includes('localhost') || !session.livemode
+          bikeType: bikeDetails || 'Custom Bike'
         });
       } catch (notifyError) {
         console.error('Error sending notification:', notifyError);
       }
+    } else {
+      console.log('Skipping notification for test transaction:', session.id);
     }
     
     // Update the total revenue counter

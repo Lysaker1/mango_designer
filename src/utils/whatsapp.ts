@@ -4,18 +4,23 @@ import { getAndUpdateTotalRevenue } from '@/utils/revenue-tracker';
 // Send WhatsApp notification about new orders
 export async function sendWhatsAppNotification(orderDetails: any) {
   try {
-    // Calculate 5% transaction fee
-    const amount = parseFloat(orderDetails.amount);
-    const transactionFee = amount * 0.05;
-    
     // Check if this is a test transaction
     const isTestTransaction = orderDetails.isTestEnvironment || 
                               process.env.NODE_ENV !== 'production' || 
                               !process.env.STRIPE_SECRET_KEY?.startsWith('sk_live_');
     
-    const testPrefix = isTestTransaction ? '🧪 TEST TRANSACTION - ' : '';
+    // Skip entirely for test transactions unless explicitly forced
+    if (isTestTransaction && !orderDetails.forceNotification) {
+      console.log('Skipping notification for test transaction:', orderDetails.sessionId);
+      return { success: true, skipped: true, reason: 'test_transaction' };
+    }
     
-    const message = `${testPrefix}🎉 New Custom Bike Order!\n\n` + 
+    // Calculate 5% transaction fee
+    const amount = parseFloat(orderDetails.amount);
+    const transactionFee = amount * 0.05;
+    
+    // No prefix needed anymore since we'll only send real notifications
+    const message = `🎉 New Custom Bike Order!\n\n` + 
       `💰 Amount: £${amount.toFixed(2)}\n` +
       `💸 Your 5% Fee: £${transactionFee.toFixed(2)}\n` +
       `👤 Customer: ${orderDetails.customerName}\n` +
@@ -23,7 +28,7 @@ export async function sendWhatsAppNotification(orderDetails: any) {
       `🆔 Order ID: ${orderDetails.sessionId.slice(-6)}\n\n` +
       `🚲 Bike: ${orderDetails.bikeType || 'Custom'}\n` +
       `🗓️ Date: ${new Date().toLocaleString()}`;
-
+    
     // Send to your number
     await sendTwilioMessage(process.env.NOTIFICATION_PHONE_NUMBER!, message);
     
@@ -49,8 +54,23 @@ export async function sendDailySummary() {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
     
-    // Get today's date range (UTC)
+    // Get today's date in YYYY-MM-DD format based on UTC
     const today = new Date();
+    const dateKey = today.toISOString().split('T')[0];
+    
+    // Check if we've already sent a summary today
+    const { data: lastSend } = await supabase
+      .from('settings')
+      .select('value')
+      .eq('key', 'last_daily_summary')
+      .single();
+    
+    if (lastSend && lastSend.value === dateKey) {
+      console.log(`Daily summary already sent today (${dateKey})`);
+      return { success: false, skipped: true, reason: 'already_sent_today' };
+    }
+    
+    // Get today's date range (UTC)
     const startOfDay = new Date(today.setHours(0,0,0,0)).toISOString();
     const endOfDay = new Date(today.setHours(23,59,59,999)).toISOString();
     
@@ -187,7 +207,15 @@ export async function sendDailySummary() {
       }
     );
     
-    return response.data;
+    // Update the last sent date
+    await supabase
+      .from('settings')
+      .upsert({ 
+        key: 'last_daily_summary', 
+        value: dateKey 
+      });
+    
+    return { success: true, date: dateKey };
   } catch (error) {
     console.error('Error sending daily summary:', error);
     throw error;

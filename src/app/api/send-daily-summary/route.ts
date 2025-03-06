@@ -17,7 +17,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    await sendDailySummary();
+    const result = await sendDailySummary();
+    
+    // If the summary was skipped because already sent today, return 200 but with skipped flag
+    if (result.skipped) {
+      return NextResponse.json({ 
+        success: true, 
+        skipped: true, 
+        reason: result.reason 
+      });
+    }
+    
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error('Error sending daily summary:', error);
