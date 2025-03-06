@@ -58,6 +58,7 @@ export async function POST(request: Request) {
         };
       }),
       mode: 'payment',
+      allow_promotion_codes: true,
       success_url: `https://mangobikes.com/`,
       cancel_url: `${request.headers.get('origin')}`,
     });
